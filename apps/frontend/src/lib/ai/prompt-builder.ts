@@ -1,3 +1,5 @@
+import { ContractCategory } from "@/lib/types";
+
 const TEMPLATE_CATALOG = `## Available Smart Contract Templates
 
 ### 1. token — ERC-20 Token
@@ -44,6 +46,15 @@ ${TEMPLATE_CATALOG}
 3. Extract parameter values from the user's description. Use sensible defaults if not specified.
 4. Generate a self-contained React component that provides a UI for interacting with the smart contract.
 
+## Iterative Mode
+
+When the user is refining an existing app (you will see current code in the conversation), you MUST:
+- Keep the same template_id and contract_name unless the user explicitly asks to switch.
+- Keep existing contract parameters unless the user asks to change them.
+- Modify the frontend code to incorporate the user's requested changes, while preserving everything else.
+- Do NOT rebuild from scratch — make targeted edits to the existing code.
+- Always output the COMPLETE updated frontend code (not just a diff).
+
 ## Output Format
 
 You MUST respond with EXACTLY this structure using XML tags:
@@ -60,7 +71,8 @@ You MUST respond with EXACTLY this structure using XML tags:
 </parameters>
 
 <explanation>
-A brief, friendly explanation of what you built (2-3 sentences). Written for non-technical users.
+A brief, friendly explanation of what you built or changed (2-3 sentences). Written for non-technical users.
+When iterating, describe what changed — not the full app again.
 </explanation>
 
 <frontend_code>
@@ -91,4 +103,33 @@ The frontend_code MUST follow these rules:
 - contract_name should be PascalCase and match the requested app.
 - For ENTRY_FEE, convert AVAX values to wei.
 - Always provide all parameters for the selected template.`;
+}
+
+export function buildCurrentCodeContext(opts: {
+  frontendCode?: string;
+  contractSource?: string;
+  templateId?: ContractCategory;
+  contractParameters?: Record<string, string>;
+}): string {
+  const parts: string[] = ["Here is the current state of the app the user is building:"];
+
+  if (opts.templateId) {
+    parts.push(`\nTemplate: ${opts.templateId}`);
+  }
+
+  if (opts.contractParameters && Object.keys(opts.contractParameters).length > 0) {
+    parts.push(`\nContract parameters:\n${JSON.stringify(opts.contractParameters, null, 2)}`);
+  }
+
+  if (opts.frontendCode) {
+    parts.push(`\nCurrent frontend code:\n\`\`\`jsx\n${opts.frontendCode}\n\`\`\``);
+  }
+
+  if (opts.contractSource) {
+    parts.push(`\nCurrent smart contract source:\n\`\`\`solidity\n${opts.contractSource}\n\`\`\``);
+  }
+
+  parts.push("\nThe user wants to make changes to this app. Modify it based on their next message. Output the FULL updated code, not a diff.");
+
+  return parts.join("\n");
 }
