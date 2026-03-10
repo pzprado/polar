@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 import {
   ArrowRight,
   ArrowUp,
@@ -20,6 +21,16 @@ import {
 } from "lucide-react";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { SUGGESTED_PROMPTS } from "@/lib/constants";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,7 +57,12 @@ export default function HomePage() {
       className={`${inter.variable} ${spaceGrotesk.variable} min-h-screen bg-[#0B101B] text-slate-100`}
       style={{ fontFamily: "var(--font-inter)" }}
     >
-      <nav className="glass-panel fixed top-0 z-50 w-full border-b border-white/10">
+      <motion.nav
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="glass-panel fixed top-0 z-50 w-full border-b border-white/10"
+      >
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <Snowflake className="h-6 w-6 text-[#E84142]" />
@@ -76,7 +92,7 @@ export default function HomePage() {
             <Menu className="h-4 w-4" />
           </button>
         </div>
-      </nav>
+      </motion.nav>
 
       <div className="relative flex h-screen flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -89,25 +105,30 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay" />
         </div>
 
-        <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-4 pt-24 text-center sm:px-6 lg:px-8">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/30 px-3 py-1 glass-panel">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          transition={{ staggerChildren: 0.08, delayChildren: 0.3 }}
+          className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-4 pt-24 text-center sm:px-6 lg:px-8"
+        >
+          <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/30 px-3 py-1 glass-panel">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#E84142]" />
             <span className="text-[11px] font-medium uppercase tracking-wide text-blue-200">Powered by Avalanche</span>
-          </div>
+          </motion.div>
 
-          <h1 className="text-display mb-4 text-4xl leading-tight font-bold tracking-tight text-white drop-shadow-2xl md:text-6xl">
+          <motion.h1 variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="text-display mb-4 text-4xl leading-tight font-bold tracking-tight text-white drop-shadow-2xl md:text-6xl">
             Build apps that <br />
             <span className="bg-gradient-to-r from-white via-[#A5C9E5] to-blue-400 bg-clip-text text-transparent">
               live forever
             </span>
-          </h1>
+          </motion.h1>
 
-          <p className="mb-8 max-w-xl text-base font-light text-gray-300 md:text-lg">
+          <motion.p variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="mb-8 max-w-xl text-base font-light text-gray-300 md:text-lg">
             Describe your idea. Polar AI generates, deploys, and hosts your decentralized application on Avalanche
             instantly. No downtime, ever.
-          </p>
+          </motion.p>
 
-          <div className="w-full max-w-3xl mx-auto flex flex-col items-center">
+          <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="w-full max-w-3xl mx-auto flex flex-col items-center">
             {/* Main Prompt Container */}
             <div className="w-full glass-panel border border-white/10 rounded-2xl p-5 mb-5 shadow-2xl flex flex-col min-h-[180px] bg-gray-900/40">
               <textarea
@@ -151,7 +172,7 @@ export default function HomePage() {
             </div>
 
             {/* Suggestion Chips */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6">
+            <motion.div variants={fadeUp} transition={{ duration: 0.4, ease: "easeOut" }} className="flex flex-wrap items-center justify-center gap-2.5 mb-6">
               <span className="text-gray-400 text-xs flex items-center gap-1">
                 Try one <ArrowRight className="h-3 w-3" />
               </span>
@@ -165,15 +186,15 @@ export default function HomePage() {
                   {item.label}
                 </button>
               ))}
-            </div>
+            </motion.div>
 
             {/* Social Validation */}
-            <div className="text-gray-400 text-sm font-medium opacity-80">
+            <motion.div variants={fadeIn} transition={{ duration: 0.5 }} className="text-gray-400 text-sm font-medium opacity-80">
               Trusted by 100k+ users
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 border-t border-white/10 pt-6 w-full max-w-3xl opacity-70">
+          <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 border-t border-white/10 pt-6 w-full max-w-3xl opacity-70">
             <div className="text-center">
               <p className="text-display text-2xl font-bold text-white">100%</p>
               <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">Uptime</p>
@@ -190,23 +211,36 @@ export default function HomePage() {
               <p className="text-display text-2xl font-bold text-white">Infinite</p>
               <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">Scale</p>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       <section className="relative bg-[#0B101B] py-24">
         <div className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-blue-600/10 blur-3xl" />
         <div className="absolute -bottom-20 -left-20 h-96 w-96 rounded-full bg-[#E84142]/10 blur-3xl" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-16 text-center">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            variants={fadeUp}
+            className="mb-16 text-center"
+          >
             <h2 className="text-display mb-4 text-3xl font-bold text-white md:text-5xl">Code Freeze Technology</h2>
             <p className="mx-auto max-w-2xl text-gray-400">
               Our AI handles the complexity of decentralized infrastructure. Your apps are frozen in perfection.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="glass-panel group rounded-2xl border border-white/5 p-8 transition-all hover:border-[#E84142]/50">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ staggerChildren: 0.12 }}
+            className="grid gap-8 md:grid-cols-3"
+          >
+            <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="glass-panel group rounded-2xl border border-white/5 p-8 transition-all hover:border-[#E84142]/50">
               <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-900/50 transition-transform group-hover:scale-110">
                 <Database className="h-5 w-5 text-blue-300" />
               </div>
@@ -215,9 +249,9 @@ export default function HomePage() {
                 Say goodbye to AWS bills. Your database and logic live on the Avalanche blockchain, immutable and
                 unstoppable.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="glass-panel group relative overflow-hidden rounded-2xl border border-white/5 p-8 transition-all hover:border-[#E84142]/50">
+            <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="glass-panel group relative overflow-hidden rounded-2xl border border-white/5 p-8 transition-all hover:border-[#E84142]/50">
               <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-white/5 blur-2xl transition-colors group-hover:bg-[#E84142]/10" />
               <div className="relative z-10 mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-900/50 transition-transform group-hover:scale-110">
                 <Bot className="h-5 w-5 text-blue-300" />
@@ -227,9 +261,9 @@ export default function HomePage() {
                 Describe the logic in plain English. Polar generates secure, audited Solidity contracts tailored to
                 your needs.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="glass-panel group rounded-2xl border border-white/5 p-8 transition-all hover:border-[#E84142]/50">
+            <motion.div variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="glass-panel group rounded-2xl border border-white/5 p-8 transition-all hover:border-[#E84142]/50">
               <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-900/50 transition-transform group-hover:scale-110">
                 <Rocket className="h-5 w-5 text-blue-300" />
               </div>
@@ -238,14 +272,19 @@ export default function HomePage() {
                 From prompt to live dApp in minutes. We handle the compiling, deploying, and verification
                 automatically.
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       <section className="overflow-hidden bg-gradient-to-b from-[#0B101B] to-slate-900 py-24">
         <div className="mx-auto grid max-w-7xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <div className="mb-4 inline-block rounded-full border border-[#E84142]/20 bg-[#E84142]/10 px-3 py-1 text-xs font-semibold tracking-wider text-[#E84142] uppercase">
               The Engine
             </div>
@@ -285,9 +324,15 @@ export default function HomePage() {
                 Explore Documentation <ArrowRight className="ml-2 h-4 w-4" />
               </a>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="relative">
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
+            className="relative"
+          >
             <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-3xl" />
             <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl transition-transform duration-500 hover:rotate-0 lg:rotate-1">
               <img
@@ -310,7 +355,7 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -324,9 +369,15 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B101B] via-[#0B101B]/90 to-[#0B101B]/80" />
 
-        <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
-          <h2 className="text-display mb-12 text-4xl font-bold text-white">Win the Infinite Game</h2>
-          <div className="glass-panel inline-block w-full rounded-3xl border border-white/10 p-1">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ staggerChildren: 0.12 }}
+          className="relative z-10 mx-auto max-w-4xl px-4 text-center"
+        >
+          <motion.h2 variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="text-display mb-12 text-4xl font-bold text-white">Win the Infinite Game</motion.h2>
+          <motion.div variants={fadeUp} transition={{ duration: 0.6, ease: "easeOut" }} className="glass-panel inline-block w-full rounded-3xl border border-white/10 p-1">
             <div className="grid items-center overflow-hidden rounded-2xl bg-slate-900/50 md:grid-cols-2">
               <div className="p-8 text-left md:p-12">
                 <h3 className="mb-4 text-2xl font-bold text-white">Start Building Today</h3>
@@ -362,11 +413,18 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-transparent" />
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-      <footer className="border-t border-white/5 bg-[#05080f] pt-16 pb-8">
+      <motion.footer
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        variants={fadeIn}
+        className="border-t border-white/5 bg-[#05080f] pt-16 pb-8"
+      >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 grid grid-cols-2 gap-8 md:grid-cols-4">
             <div className="col-span-2 md:col-span-1">
@@ -472,7 +530,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </footer>
+      </motion.footer>
 
       <style jsx global>{`
         .text-display {
