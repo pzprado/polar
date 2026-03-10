@@ -8,9 +8,13 @@ import {
   ArrowRight,
   ArrowUp,
   CheckCircle2,
+  Globe,
+  Image,
   Menu,
   Snowflake,
+  Wrench,
   X,
+  Zap,
 } from "lucide-react";
 import NextImage from "next/image";
 import { DM_Sans, Space_Grotesk } from "next/font/google";
@@ -89,24 +93,30 @@ export default function HomePage() {
         className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#0B101B]/90 backdrop-blur-md"
       >
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Snowflake className="h-6 w-6 text-[#E84142]" />
-              <span className="text-display text-xl font-bold tracking-tight text-white">
-                POLAR
-              </span>
-            </div>
-            <span className="hidden text-xs text-[#5c6370] md:block">
-              AI-native web3 builder
+          <div className="flex items-center gap-2">
+            <Snowflake className="h-6 w-6 text-[#E84142]" />
+            <span className="text-display text-xl font-bold tracking-tight text-white">
+              POLAR
             </span>
           </div>
 
-          <Link
-            href="/app/new"
-            className="hidden rounded-full bg-[#E84142] px-5 py-2 text-xs font-medium text-white shadow-lg shadow-red-900/20 transition-colors hover:bg-red-600 md:inline-block"
-          >
-            Launch App
-          </Link>
+          <div className="hidden items-center gap-8 md:flex">
+            <a className="px-1 py-2 text-xs font-medium text-[#8b919e] transition-colors hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+              Features
+            </a>
+            <a className="px-1 py-2 text-xs font-medium text-[#8b919e] transition-colors hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+              Showcase
+            </a>
+            <a className="px-1 py-2 text-xs font-medium text-[#8b919e] transition-colors hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+              Docs
+            </a>
+            <Link
+              href="/app/new"
+              className="rounded-full bg-[#E84142] px-5 py-2 text-xs font-medium text-white shadow-lg shadow-red-900/20 transition-colors hover:bg-red-600"
+            >
+              Launch App
+            </Link>
+          </div>
 
           <button
             className="p-2 text-[#8b919e] hover:text-white md:hidden"
@@ -125,12 +135,23 @@ export default function HomePage() {
 
         {mobileMenuOpen && (
           <div className="border-t border-white/10 px-4 pb-4 pt-2 md:hidden">
-            <Link
-              href="/app/new"
-              className="block rounded-lg bg-[#E84142] px-3 py-2 text-center text-sm font-medium text-white transition-all hover:bg-red-600"
-            >
-              Launch App
-            </Link>
+            <div className="flex flex-col space-y-3">
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#8b919e] transition-colors hover:bg-white/5 hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+                Features
+              </a>
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#8b919e] transition-colors hover:bg-white/5 hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+                Showcase
+              </a>
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#8b919e] transition-colors hover:bg-white/5 hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+                Docs
+              </a>
+              <Link
+                href="/app/new"
+                className="rounded-lg bg-[#E84142] px-3 py-2 text-center text-sm font-medium text-white transition-all hover:bg-red-600"
+              >
+                Launch App
+              </Link>
+            </div>
           </div>
         )}
       </motion.nav>
@@ -223,7 +244,7 @@ export default function HomePage() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="mx-auto flex w-full max-w-3xl flex-col items-center"
             >
-              <div className="mb-5 flex w-full flex-col rounded-2xl border border-white/15 bg-[#111827]/80 p-6 backdrop-blur-sm">
+              <div className="glass-panel mb-5 flex w-full flex-col rounded-2xl border border-white/15 p-6 shadow-xl shadow-black/20">
                 <textarea
                   aria-label="Describe your web3 app"
                   className="h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-white placeholder-[#5c6370] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84142]/40"
@@ -237,7 +258,24 @@ export default function HomePage() {
                     }
                   }}
                 />
-                <div className="mt-auto flex items-center justify-end pt-4">
+                <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
+                  <div className="flex items-center gap-3 overflow-x-auto">
+                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-white transition-colors text-xs py-2 px-1" type="button" aria-label="Attach image">
+                      <Image className="h-4 w-4" />
+                      <span className="hidden sm:inline">Attach</span>
+                    </button>
+                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-white transition-colors text-xs py-2 px-1" type="button" aria-label="Quick actions">
+                      <Zap className="h-4 w-4" />
+                    </button>
+                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-white transition-colors text-xs py-2 px-1" type="button" aria-label="Build mode">
+                      <Wrench className="h-4 w-4" />
+                      <span className="hidden sm:inline">Build</span>
+                    </button>
+                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-white transition-colors text-xs py-2 px-1" type="button" aria-label="Visibility">
+                      <Globe className="h-4 w-4" />
+                      <span className="hidden sm:inline">Public</span>
+                    </button>
+                  </div>
                   <button
                     className="flex items-center justify-center rounded-full bg-[#E84142] p-3 text-white shadow-lg transition-colors hover:bg-red-500"
                     onClick={submitPrompt}
