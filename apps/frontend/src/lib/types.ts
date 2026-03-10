@@ -6,7 +6,7 @@ export interface ContractTemplate {
   description: string;
   soliditySource: string;
   parameters: TemplateParameter[];
-  abi: any[];
+  abi: unknown[];
 }
 
 export interface TemplateParameter {
@@ -40,7 +40,7 @@ export interface DeployResult {
   contractAddress?: string;
   transactionHash?: string;
   explorerUrl?: string;
-  abi?: any[];
+  abi?: unknown[];
   error?: string;
 }
 
