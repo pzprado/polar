@@ -23,7 +23,7 @@ export function PreviewPanel({ frontendCode, contractAddress }: PreviewPanelProp
   const files = getSandpackFiles(frontendCode, contractAddress);
 
   return (
-    <div className="h-full overflow-hidden rounded-lg border border-white/10">
+    <div className="h-full overflow-hidden rounded-lg border border-white/10 [&_.sp-wrapper]:!h-full [&_.sp-layout]:!h-full [&_.sp-preview-container]:!h-full [&_.sp-preview-iframe]:!h-full">
       <SandpackProvider
         template="react"
         theme={polarSandpackTheme}
@@ -35,7 +35,11 @@ export function PreviewPanel({ frontendCode, contractAddress }: PreviewPanelProp
           externalResources: [],
         }}
       >
-        <SandpackPreview style={{ height: "100%" }} showOpenInCodeSandbox={false} showRefreshButton />
+        <SandpackPreview
+          style={{ height: "100%", minHeight: 0 }}
+          showOpenInCodeSandbox={false}
+          showRefreshButton
+        />
       </SandpackProvider>
     </div>
   );
