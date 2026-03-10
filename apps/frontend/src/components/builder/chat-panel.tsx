@@ -29,7 +29,20 @@ export function ChatPanel({ messages, generating, onSendMessage }: ChatPanelProp
       <ScrollArea className="min-h-0 flex-1 px-4">
         <div className="space-y-4 py-4">
           {messages.length === 0 && !generating && (
-            <p className="py-8 text-center text-sm text-[#5c6370]">Send a message to start building</p>
+            <div className="flex flex-col items-center gap-3 py-12">
+              <p className="text-sm text-[#8b919e]">What do you want to build today?</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {["A token for my community", "An NFT collection", "A tipping jar"].map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    onClick={() => onSendMessage(suggestion)}
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-[#8b919e] transition-colors hover:border-[#E84142]/30 hover:text-white"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
 
           {messages.map((message, index) => (
