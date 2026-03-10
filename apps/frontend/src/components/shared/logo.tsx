@@ -6,8 +6,8 @@ interface LogoProps {
 }
 
 export function Logo({ variant = "dark" }: LogoProps) {
-  const textColor = variant === "dark" ? "text-white" : "text-gray-900";
-  const hoverColor = variant === "dark" ? "hover:text-gray-200" : "hover:text-gray-700";
+  const textColor = variant === "dark" ? "text-[#1C1917]" : "text-gray-900";
+  const hoverColor = variant === "dark" ? "hover:text-[#57534E]" : "hover:text-gray-700";
 
   return (
     <Link href="/" className={`inline-flex items-center gap-2 ${textColor} ${hoverColor} transition-colors`}>

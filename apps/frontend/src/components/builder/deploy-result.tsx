@@ -20,16 +20,16 @@ export function DeployResultPanel({ result }: DeployResultPanelProps) {
   if (!result.success) {
     return (
       <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4">
-        <p className="text-sm font-medium text-red-400">Deployment Failed</p>
-        <p className="mt-1 text-xs text-red-400/70">{result.error}</p>
+        <p className="text-sm font-medium text-red-600">Deployment Failed</p>
+        <p className="mt-1 text-xs text-red-600/70">{result.error}</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3 rounded-lg border border-white/10 bg-white/5 p-4">
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-400">
-        <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+    <div className="space-y-3 rounded-lg border border-black/[0.06] bg-black/[0.02] p-4">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-600">
+        <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
         Live on Fuji
       </span>
 
@@ -51,7 +51,7 @@ export function DeployResultPanel({ result }: DeployResultPanelProps) {
         />
       )}
 
-      <div className="border-t border-white/10 pt-3">
+      <div className="border-t border-black/[0.06] pt-3">
         {result.explorerUrl && (
           <a
             href={result.explorerUrl}
@@ -65,7 +65,7 @@ export function DeployResultPanel({ result }: DeployResultPanelProps) {
         )}
       </div>
 
-      <p className="text-xs text-[#5c6370]">Enable Kite AI payments — coming soon</p>
+      <p className="text-xs text-[#A8A29E]">Enable Kite AI payments — coming soon</p>
     </div>
   );
 }
@@ -83,11 +83,11 @@ function CopyField({
 }) {
   return (
     <div>
-      <p className="mb-1 text-xs text-[#8b919e]">{label}</p>
+      <p className="mb-1 text-xs text-[#78716C]">{label}</p>
       <div className="flex items-center gap-2">
-        <code className="flex-1 truncate rounded bg-white/5 px-2 py-1 font-mono text-xs text-[#b8bcc6]">{value}</code>
+        <code className="flex-1 truncate rounded bg-black/[0.03] px-2 py-1 font-mono text-xs text-[#57534E]">{value}</code>
         <button
-          className="flex h-7 w-7 items-center justify-center rounded text-[#8b919e] transition-colors hover:text-white"
+          className="flex h-7 w-7 items-center justify-center rounded text-[#78716C] transition-colors hover:text-[#1C1917]"
           onClick={onCopy}
           aria-label={`Copy ${label}`}
           type="button"

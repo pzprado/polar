@@ -37,7 +37,7 @@ function drawSnowflake(
   ctx.translate(x, y);
   ctx.rotate(rotation);
   ctx.globalAlpha = opacity;
-  ctx.strokeStyle = "#fff";
+  ctx.strokeStyle = "#D6D3D1";
   ctx.lineWidth = size > 3 ? 1 : 0.7;
   ctx.lineCap = "round";
 

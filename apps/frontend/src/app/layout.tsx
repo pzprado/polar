@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   other: {
-    "theme-color": "#0B101B",
+    "theme-color": "#F8F6F3",
   },
 };
 
@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[#0B101B] text-foreground antialiased">
+      <body className="min-h-screen bg-[#F8F6F3] text-foreground antialiased">
         {children}
         <Analytics />
       </body>
