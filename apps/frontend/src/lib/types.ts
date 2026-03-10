@@ -19,6 +19,11 @@ export interface TemplateParameter {
 
 export interface GenerationRequest {
   prompt: string;
+  history?: { role: "user" | "assistant"; content: string }[];
+  currentFrontendCode?: string;
+  currentContractSource?: string;
+  currentTemplateId?: ContractCategory;
+  currentContractParameters?: Record<string, string>;
 }
 
 export interface GenerationResult {
