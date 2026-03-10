@@ -3,22 +3,22 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Polar — Build Web3 Apps on Avalanche",
+  title: "Polar — Build Apps That Live Forever",
   description:
-    "Describe your web3 app in plain English. Polar generates the code and deploys it to Avalanche — instantly.",
+    "Describe your app in plain English. Polar generates the code and publishes it — permanently. No servers, no hosting fees.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_URL || "https://polar-app.vercel.app"),
   openGraph: {
-    title: "Polar — Build Web3 Apps on Avalanche",
+    title: "Polar — Build Apps That Live Forever",
     description:
-      "Describe your idea. Polar generates, deploys, and hosts your decentralized application on Avalanche — instantly.",
+      "Describe your idea. Polar builds, publishes, and hosts your app permanently. No servers, no hosting, no downtime.",
     type: "website",
     siteName: "Polar",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Polar — Build Web3 Apps on Avalanche",
+    title: "Polar — Build Apps That Live Forever",
     description:
-      "AI-powered web3 app builder. From prompt to live dApp on Avalanche in minutes.",
+      "AI app builder. From prompt to live, permanent app in minutes. No servers needed.",
   },
   appleWebApp: {
     capable: true,

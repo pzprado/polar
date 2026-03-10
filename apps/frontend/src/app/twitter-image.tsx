@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Polar — Build Web3 Apps on Avalanche";
+export const alt = "Polar — Build Apps That Live Forever";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -69,7 +69,7 @@ export default function TwitterImage() {
             fontWeight: 400,
           }}
         >
-          AI-powered web3 app builder for Avalanche
+          AI app builder. No servers needed.
         </div>
 
         <div

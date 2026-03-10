@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Polar — Build Web3 Apps on Avalanche";
+export const alt = "Polar — Build Apps That Live Forever";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -80,7 +80,7 @@ export default function OGImage() {
             lineHeight: 1.4,
           }}
         >
-          Build apps that live forever on Avalanche
+          Build apps that live forever
         </div>
 
         {/* Bottom accent line */}

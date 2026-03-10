@@ -45,20 +45,20 @@ const spaceGrotesk = Space_Grotesk({
 const FEATURES = [
   {
     num: "01",
-    title: "Decentralized Backend",
-    desc: "Your database and logic live on Avalanche. No AWS bills, no single points of failure — just immutable infrastructure that runs forever.",
+    title: "Permanent Backend",
+    desc: "Your app logic runs on infrastructure that never shuts down. No AWS bills, no servers to babysit — just code that keeps running.",
     numColor: "text-[#E84142]/25",
   },
   {
     num: "02",
-    title: "AI Smart Contracts",
-    desc: "Describe your logic in plain English. Polar selects from vetted Solidity templates and parameterizes them for your use case.",
+    title: "AI-Powered Code",
+    desc: "Describe what you want in plain English. Polar picks the right architecture and writes the code for you.",
     numColor: "text-[#60A5FA]/25",
   },
   {
     num: "03",
-    title: "Instant Deployment",
-    desc: "From prompt to live dApp in minutes. Compiling, deploying, and verification happen automatically on Avalanche Fuji.",
+    title: "Instant Launch",
+    desc: "From prompt to live app in minutes. Building, testing, and publishing happen automatically.",
     numColor: "text-[#FBBF24]/25",
   },
 ];
@@ -242,8 +242,8 @@ export default function HomePage() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="mb-10 max-w-xl text-base font-light text-[#8b919e] md:text-lg"
             >
-              Describe your idea. Polar generates, deploys, and hosts your
-              decentralized application on Avalanche — instantly.
+              Describe your idea. Polar builds, publishes, and hosts your
+              app — permanently. No servers. No hosting fees. Ever.
             </motion.p>
 
             <motion.div
@@ -256,7 +256,7 @@ export default function HomePage() {
                   <AnimatedPlaceholder visible={prompt.length === 0} />
                   <textarea
                     autoFocus
-                    aria-label="Describe your web3 app"
+                    aria-label="Describe your app"
                     className="relative z-10 h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-white focus-visible:outline-none"
                     value={prompt}
                     onChange={(event) => setPrompt(event.target.value)}
@@ -351,8 +351,8 @@ export default function HomePage() {
                 How it works
               </h2>
               <p className="mt-4 max-w-2xl text-[#8b919e]">
-                From idea to deployed dApp in three steps. No DevOps, no
-                infrastructure management.
+                From idea to live app in three steps. No DevOps, no
+                infrastructure to manage.
               </p>
             </motion.div>
 
@@ -396,16 +396,16 @@ export default function HomePage() {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <div className="mb-4 inline-block rounded-full border border-[#E84142]/20 bg-[#E84142]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#E84142]">
-                The Engine
+                Why Polar
               </div>
               <h2 className="text-display mb-6 text-4xl leading-tight font-bold text-white md:text-5xl">
-                Built for the <br />
-                <span className="text-[#E84142]">Crypto-Native</span> Future
+                Built to <br />
+                <span className="text-[#E84142]">Last Forever</span>
               </h2>
               <p className="mb-8 text-lg text-[#8b919e]">
-                Traditional apps are fragile. They rely on centralized servers
-                that can be turned off. Polar apps are built on Avalanche,
-                inheriting the security and durability of the network itself.
+                Traditional apps depend on servers that cost money and can go
+                offline. Polar apps run on permanent infrastructure — once
+                published, they can't be taken down.
               </p>
 
               <div className="space-y-6">
@@ -413,11 +413,11 @@ export default function HomePage() {
                   <CheckCircle2 className="mr-4 mt-1 h-5 w-5 shrink-0 text-[#E84142]" />
                   <div>
                     <h4 className="font-semibold text-white">
-                      Censorship Resistant
+                      Always Online
                     </h4>
                     <p className="text-sm text-[#8b919e]">
-                      Your code belongs to you and the network. No one can take
-                      it down.
+                      Your code runs independently. No company, no server, no
+                      single point of failure.
                     </p>
                   </div>
                 </div>
@@ -425,11 +425,11 @@ export default function HomePage() {
                   <CheckCircle2 className="mr-4 mt-1 h-5 w-5 shrink-0 text-[#60A5FA]" />
                   <div>
                     <h4 className="font-semibold text-white">
-                      Composability First
+                      Zero Maintenance
                     </h4>
                     <p className="text-sm text-[#8b919e]">
-                      Integrate with existing protocols like Trader Joe, Benqi,
-                      and Aave.
+                      No servers to manage, no databases to back up, no hosting
+                      bills to pay.
                     </p>
                   </div>
                 </div>
@@ -458,7 +458,7 @@ export default function HomePage() {
                 <div className="absolute right-6 bottom-6 left-6 rounded-xl border border-white/10 bg-[#0B101B]/90 p-4 backdrop-blur-sm">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-xs tracking-wide text-[#8b919e]">
-                      Contract Status
+                      App Status
                     </span>
                     <span className="flex items-center gap-1 text-xs text-green-400">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
@@ -469,7 +469,7 @@ export default function HomePage() {
                     <div className="h-full w-full bg-[#E84142]" />
                   </div>
                   <div className="mt-2 break-all font-mono text-xs text-[#5c6370]">
-                    0x1A4...9e2F deployed to Avalanche C-Chain
+                    polar-app-9e2F published and running
                   </div>
                 </div>
               </div>
@@ -503,8 +503,8 @@ export default function HomePage() {
               <div className="grid items-center md:grid-cols-2">
                 <div className="bg-[#111827] p-8 text-left md:p-12">
                   <p className="mb-8 text-[#8b919e]">
-                    Deploy unstoppable applications with AI-generated smart
-                    contracts and instant Avalanche deployment.
+                    Build permanent apps with AI-generated code and instant
+                    publishing. No infrastructure to set up or maintain.
                   </p>
                   <ul className="mb-8 space-y-4">
                     <li className="flex items-center text-sm text-[#b8bcc6]">
@@ -513,11 +513,11 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center text-sm text-[#b8bcc6]">
                       <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#60A5FA]" />
-                      Gas-optimized contracts
+                      No hosting costs
                     </li>
                     <li className="flex items-center text-sm text-[#b8bcc6]">
                       <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#FBBF24]" />
-                      One-click verification
+                      One-click publishing
                     </li>
                   </ul>
                   <Link
@@ -563,7 +563,7 @@ export default function HomePage() {
               </span>
             </div>
             <p className="text-xs text-[#5c6370]">
-              © 2026 Polar Labs · Built on Avalanche · Build Games 2026
+              © 2026 Polar Labs · Powered by Avalanche · Build Games 2026
             </p>
           </div>
         </div>

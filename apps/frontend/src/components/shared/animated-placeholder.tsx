@@ -6,12 +6,12 @@ import { AnimatePresence, motion } from "motion/react";
 const STATIC_PREFIX = "Ask Polar to build ";
 
 const ROTATING_OPTIONS = [
-  "a loyalty token",
-  "an NFT drop",
-  "a betting game",
-  "a tipping jar",
-  "a token sale",
-  "a rewards app",
+  "a rewards program",
+  "a fan membership",
+  "a coin flip game",
+  "a tipping page",
+  "a voting app",
+  "a loyalty system",
 ];
 
 const TYPE_SPEED = 45; // ms per character

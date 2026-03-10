@@ -6,10 +6,10 @@ import { motion, AnimatePresence } from "motion/react";
 
 const THINKING_STEPS = [
   "Reading your mind... just kidding, reading your prompt",
-  "Picking the perfect smart contract template",
-  "Teaching your contract some new tricks",
+  "Choosing the best architecture",
+  "Writing your backend logic",
   "Crafting a shiny frontend",
-  "Wiring everything to the blockchain",
+  "Connecting all the pieces",
   "Almost there... adding the finishing touches",
 ];
 

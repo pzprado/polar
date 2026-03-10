@@ -132,8 +132,8 @@ export default function BuilderPage() {
               )}
               {activeView === "backend" && (
                 <>
-                  <p className="text-sm font-semibold text-white">Smart Contract</p>
-                  <p className={`text-xs ${VIEW_CONFIG.backend.activeText} opacity-60`}>Solidity source code</p>
+                  <p className="text-sm font-semibold text-white">Backend Logic</p>
+                  <p className={`text-xs ${VIEW_CONFIG.backend.activeText} opacity-60`}>Generated backend code</p>
                 </>
               )}
             </div>
@@ -209,7 +209,7 @@ export default function BuilderPage() {
               {/* Mobile panel header with compact toggle */}
               <div className="flex items-center justify-between border-b border-white/10 px-3 py-2.5">
                 <p className="text-sm font-semibold text-white">
-                  {activeView === "preview" ? "Preview" : activeView === "frontend" ? "Frontend" : "Contract"}
+                  {activeView === "preview" ? "Preview" : activeView === "frontend" ? "Frontend" : "Backend"}
                 </p>
 
                 <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5">

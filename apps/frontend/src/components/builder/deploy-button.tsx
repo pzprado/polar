@@ -22,7 +22,7 @@ export function DeployButton({ onDeploy, deploying, deployed, disabled, error }:
         className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white"
       >
         <PartyPopper className="h-4 w-4" />
-        Live on Avalanche!
+        Your app is live!
       </motion.button>
     );
   }
@@ -58,7 +58,7 @@ export function DeployButton({ onDeploy, deploying, deployed, disabled, error }:
             className="flex items-center gap-2"
           >
             <Loader2 className="h-4 w-4 animate-spin" />
-            Launching to the blockchain...
+            Publishing your app...
           </motion.span>
         ) : (
           <motion.span
@@ -69,7 +69,7 @@ export function DeployButton({ onDeploy, deploying, deployed, disabled, error }:
             className="flex items-center gap-2"
           >
             <Rocket className="h-4 w-4" />
-            Deploy to Avalanche
+            Publish App
           </motion.span>
         )}
       </AnimatePresence>

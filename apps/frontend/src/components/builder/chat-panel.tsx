@@ -33,9 +33,9 @@ export function ChatPanel({ messages, generating, onSendMessage }: ChatPanelProp
               <p className="text-sm text-[#8b919e]">What do you want to build today?</p>
               <div className="flex flex-wrap justify-center gap-2">
                 {([
-                  { text: "A token for my community", hoverBorder: "hover:border-[#FBBF24]/30", hoverText: "hover:text-[#FBBF24]" },
-                  { text: "An NFT collection", hoverBorder: "hover:border-[#60A5FA]/30", hoverText: "hover:text-[#60A5FA]" },
-                  { text: "A tipping jar", hoverBorder: "hover:border-[#34D399]/30", hoverText: "hover:text-[#34D399]" },
+                  { text: "A rewards program", hoverBorder: "hover:border-[#FBBF24]/30", hoverText: "hover:text-[#FBBF24]" },
+                  { text: "A fan membership", hoverBorder: "hover:border-[#60A5FA]/30", hoverText: "hover:text-[#60A5FA]" },
+                  { text: "A tipping page", hoverBorder: "hover:border-[#34D399]/30", hoverText: "hover:text-[#34D399]" },
                 ] as const).map((suggestion) => (
                   <button
                     key={suggestion.text}

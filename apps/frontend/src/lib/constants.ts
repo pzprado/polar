@@ -15,22 +15,22 @@ export const TEMPLATE_SUMMARIES: Record<
   { name: string; description: string; icon: string }
 > = {
   token: {
-    name: "Token (ERC-20)",
-    description: "Fungible token with customizable name, symbol, and supply",
+    name: "Points & Rewards",
+    description: "Custom points system with configurable name and supply",
     icon: "Coins",
   },
   nft: {
-    name: "NFT Collection (ERC-721)",
-    description: "Non-fungible token collection with metadata and minting",
+    name: "Digital Collectibles",
+    description: "Unique digital items with metadata and limited supply",
     icon: "Image",
   },
   game: {
-    name: "On-Chain Game",
-    description: "Simple betting/lottery game with entry fees and prizes",
+    name: "Mini Game",
+    description: "Simple game with entry fees and prizes",
     icon: "Gamepad2",
   },
   tipping: {
-    name: "Tipping / Payments",
+    name: "Tips & Payments",
     description: "Accept tips and payments with optional fee splitting",
     icon: "Heart",
   },
@@ -38,17 +38,17 @@ export const TEMPLATE_SUMMARIES: Record<
 
 export const SUGGESTED_PROMPTS = [
   {
-    label: "Loyalty Token",
+    label: "Loyalty Program",
     prompt:
-      "Create a loyalty token called CafePoints for my coffee shop with 1 million initial supply",
+      "Create a loyalty points system called CafePoints for my coffee shop with 1 million points",
   },
   {
-    label: "NFT Collection",
-    prompt: "Create an NFT collection called PixelPals for digital art with a max supply of 100",
+    label: "Fan Membership",
+    prompt: "Create a digital membership called PixelPals for my art community with 100 spots",
   },
   {
-    label: "Betting Game",
-    prompt: "Create a coin flip betting game where players can wager AVAX",
+    label: "Coin Flip Game",
+    prompt: "Create a coin flip game where players can bet and win prizes",
   },
   {
     label: "Tipping Page",
