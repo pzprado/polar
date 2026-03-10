@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import NextImage from "next/image";
 import { DM_Sans, Space_Grotesk } from "next/font/google";
+import { Snowfall } from "@/components/shared/snowfall";
 import { SUGGESTED_PROMPTS } from "@/lib/constants";
 
 const fadeUp = {
@@ -170,6 +171,8 @@ export default function HomePage() {
             />
             <div className="bg-hero-gradient absolute inset-0" />
           </div>
+
+          <Snowfall />
 
           <motion.div
             initial={motionInitial}
