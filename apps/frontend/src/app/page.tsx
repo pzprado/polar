@@ -5,16 +5,21 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
+  ArrowUp,
   BadgeCheck,
   Bot,
   CheckCircle2,
   Database,
+  Globe,
+  Image,
   Menu,
   Rocket,
   Snowflake,
-  Sparkles,
+  Wrench,
+  Zap,
 } from "lucide-react";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { SUGGESTED_PROMPTS } from "@/lib/constants";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,24 +47,24 @@ export default function HomePage() {
       style={{ fontFamily: "var(--font-inter)" }}
     >
       <nav className="glass-panel fixed top-0 z-50 w-full border-b border-white/10">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
-            <Snowflake className="h-7 w-7 text-[#E84142]" />
-            <span className="text-display text-2xl font-bold tracking-tight text-white">POLAR</span>
+            <Snowflake className="h-6 w-6 text-[#E84142]" />
+            <span className="text-display text-xl font-bold tracking-tight text-white">POLAR</span>
           </div>
 
-          <div className="hidden items-center space-x-8 md:flex">
-            <a className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="#">
+          <div className="hidden items-center space-x-7 md:flex">
+            <a className="text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
               Features
             </a>
-            <a className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="#">
+            <a className="text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
               Showcase
             </a>
-            <a className="text-sm font-medium text-gray-300 transition-colors hover:text-white" href="#">
+            <a className="text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
               Docs
             </a>
             <button
-              className="rounded-full bg-[#E84142] px-5 py-2 text-sm font-medium text-white shadow-lg shadow-red-900/20 transition-all hover:bg-red-600"
+              className="rounded-full bg-[#E84142] px-4 py-1.5 text-xs font-medium text-white shadow-lg shadow-red-900/20 transition-all hover:bg-red-600"
               onClick={() => router.push("/app/new")}
               type="button"
             >
@@ -68,12 +73,12 @@ export default function HomePage() {
           </div>
 
           <button className="text-gray-300 hover:text-white md:hidden" type="button">
-            <Menu className="h-5 w-5" />
+            <Menu className="h-4 w-4" />
           </button>
         </div>
       </nav>
 
-      <div className="relative flex min-h-screen items-center justify-center overflow-hidden pt-16">
+      <div className="relative flex h-screen flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             alt="Majestic snowy mountain landscape"
@@ -84,65 +89,106 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay" />
         </div>
 
-        <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-4 text-center sm:px-6 lg:px-8">
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-400/30 px-4 py-1.5 glass-panel">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-[#E84142]" />
-            <span className="text-xs font-medium uppercase tracking-wide text-blue-200">Powered by Avalanche</span>
+        <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-4 pt-24 text-center sm:px-6 lg:px-8">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/30 px-3 py-1 glass-panel">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#E84142]" />
+            <span className="text-[11px] font-medium uppercase tracking-wide text-blue-200">Powered by Avalanche</span>
           </div>
 
-          <h1 className="text-display mb-6 text-5xl leading-tight font-bold tracking-tight text-white drop-shadow-2xl md:text-7xl">
+          <h1 className="text-display mb-4 text-4xl leading-tight font-bold tracking-tight text-white drop-shadow-2xl md:text-6xl">
             Build apps that <br />
             <span className="bg-gradient-to-r from-white via-[#A5C9E5] to-blue-400 bg-clip-text text-transparent">
               live forever
             </span>
           </h1>
 
-          <p className="mb-10 max-w-2xl text-lg font-light text-gray-300 md:text-xl">
+          <p className="mb-8 max-w-xl text-base font-light text-gray-300 md:text-lg">
             Describe your idea. Polar AI generates, deploys, and hosts your decentralized application on Avalanche
             instantly. No downtime, ever.
           </p>
 
-          <div className="group relative w-full max-w-3xl">
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-blue-400 to-[#E84142] opacity-25 blur transition duration-1000 group-hover:opacity-50 group-hover:duration-200" />
-            <div className="relative flex items-center rounded-2xl border border-white/10 bg-gray-900/80 p-2 shadow-2xl backdrop-blur-xl">
-              <Sparkles className="ml-4 h-5 w-5 text-gray-400" />
-              <input
-                className="w-full border-none bg-transparent px-4 py-4 text-lg font-light text-white placeholder-gray-500 focus:outline-none"
+          <div className="w-full max-w-3xl mx-auto flex flex-col items-center">
+            {/* Main Prompt Container */}
+            <div className="w-full glass-panel border border-white/10 rounded-2xl p-5 mb-5 shadow-2xl flex flex-col min-h-[180px] bg-gray-900/40">
+              <textarea
+                className="w-full bg-transparent border-none text-white placeholder-gray-400 focus:ring-0 focus:outline-none text-xl py-1.5 px-1.5 font-light resize-none h-24"
+                placeholder="Ask Polar to build a prototype of..."
+                value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter") submitPrompt();
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    submitPrompt();
+                  }
                 }}
-                placeholder="Describe the app you want to build (e.g. 'A decentralized marketplace for digital ice sculptures')"
-                type="text"
-                value={prompt}
               />
-              <button
-                className="flex shrink-0 items-center gap-2 rounded-xl bg-[#E84142] px-6 py-3 font-medium text-white transition-colors hover:bg-red-600"
-                onClick={submitPrompt}
-                type="button"
-              >
-                <span>Generate</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
+              <div className="mt-auto flex items-center justify-between pt-3 border-t border-white/5">
+                <div className="flex items-center gap-5 overflow-x-auto">
+                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs" type="button">
+                    <Image className="h-4 w-4" />
+                    <span>Attach Image</span>
+                  </button>
+                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs" type="button">
+                    <Zap className="h-4 w-4" />
+                  </button>
+                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs" type="button">
+                    <Wrench className="h-4 w-4" />
+                    <span>Build mode</span>
+                  </button>
+                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs" type="button">
+                    <Globe className="h-4 w-4" />
+                    <span>Public</span>
+                  </button>
+                </div>
+                <button
+                  className="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2.5 shadow-lg transition-transform hover:scale-105 flex items-center justify-center"
+                  onClick={submitPrompt}
+                  type="button"
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Suggestion Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6">
+              <span className="text-gray-400 text-xs flex items-center gap-1">
+                Try one <ArrowRight className="h-3 w-3" />
+              </span>
+              {SUGGESTED_PROMPTS.map((item) => (
+                <button
+                  key={item.label}
+                  className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs hover:bg-white/10 transition-colors"
+                  onClick={() => setPrompt(item.prompt)}
+                  type="button"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Social Validation */}
+            <div className="text-gray-400 text-sm font-medium opacity-80">
+              Trusted by 100k+ users
             </div>
           </div>
 
-          <div className="mt-16 grid w-full max-w-4xl grid-cols-2 gap-8 border-t border-white/10 pt-8 opacity-70 md:grid-cols-4 md:gap-16">
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 border-t border-white/10 pt-6 w-full max-w-3xl opacity-70">
             <div className="text-center">
-              <p className="text-display text-3xl font-bold text-white">100%</p>
-              <p className="mt-1 text-xs uppercase tracking-wider text-gray-400">Uptime</p>
+              <p className="text-display text-2xl font-bold text-white">100%</p>
+              <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">Uptime</p>
             </div>
             <div className="text-center">
-              <p className="text-display text-3xl font-bold text-white">&lt;1s</p>
-              <p className="mt-1 text-xs uppercase tracking-wider text-gray-400">Finality</p>
+              <p className="text-display text-2xl font-bold text-white">&lt;1s</p>
+              <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">Finality</p>
             </div>
             <div className="text-center">
-              <p className="text-display text-3xl font-bold text-white">0</p>
-              <p className="mt-1 text-xs uppercase tracking-wider text-gray-400">Server Costs</p>
+              <p className="text-display text-2xl font-bold text-white">0</p>
+              <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">Server Costs</p>
             </div>
             <div className="text-center">
-              <p className="text-display text-3xl font-bold text-white">Infinite</p>
-              <p className="mt-1 text-xs uppercase tracking-wider text-gray-400">Scale</p>
+              <p className="text-display text-2xl font-bold text-white">Infinite</p>
+              <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-400">Scale</p>
             </div>
           </div>
         </div>
