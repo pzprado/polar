@@ -59,7 +59,7 @@
   html,
   body {
     @apply text-foreground;
-    background-color: #0B101B;
+    background-color: #F8F6F3;
   }
 
   body {
@@ -78,14 +78,13 @@ a[href] {
 }
 
 .glass-panel {
-  background: rgba(18, 26, 43, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #FEFDFB;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .bg-hero-gradient {
-  background: linear-gradient(to bottom, rgba(11, 16, 27, 0.3), rgba(11, 16, 27, 1));
+  background: linear-gradient(to bottom, rgba(248, 246, 243, 0.2), rgba(248, 246, 243, 1));
 }
 
 /* Scrollbar */
@@ -94,20 +93,20 @@ a[href] {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b101b;
+  background: #F8F6F3;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2d3a52;
+  background: #D6D3D1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3e4c66;
+  background: #A8A29E;
 }
 
 /* Firefox scrollbar */
 body {
   scrollbar-width: thin;
-  scrollbar-color: #2d3a52 #0b101b;
+  scrollbar-color: #D6D3D1 #F8F6F3;
 }

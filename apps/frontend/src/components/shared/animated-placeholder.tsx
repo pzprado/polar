@@ -61,9 +61,9 @@ export function AnimatedPlaceholder({ visible }: { visible: boolean }) {
 
   return (
     <div className="pointer-events-none absolute inset-0 px-2 py-2 text-lg font-light">
-      <span className="text-[#5c6370]">{typedPrefix}</span>
+      <span className="text-[#A8A29E]">{typedPrefix}</span>
       {typedPrefix.length < STATIC_PREFIX.length && (
-        <span className="inline-block w-px h-5 align-middle bg-[#5c6370] animate-pulse" />
+        <span className="inline-block w-px h-5 align-middle bg-[#A8A29E] animate-pulse" />
       )}
       {prefixDone && (
         <AnimatePresence mode="wait">
@@ -76,8 +76,8 @@ export function AnimatedPlaceholder({ visible }: { visible: boolean }) {
             className="relative inline-block"
           >
             <span
-              className="text-[#E84142]/60"
-              style={{ textShadow: "0 0 12px rgba(232, 65, 66, 0.4)" }}
+              className="text-[#E84142]/80"
+              style={{ textShadow: "0 0 16px rgba(232, 65, 66, 0.25)" }}
             >
               {ROTATING_OPTIONS[activeOption]}
             </span>

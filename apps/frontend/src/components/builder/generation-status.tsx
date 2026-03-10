@@ -46,7 +46,7 @@ export function GenerationStatus() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
                 className={`flex items-center gap-2 text-sm ${
-                  isActive ? "text-[#b8bcc6]" : "text-[#5c6370]"
+                  isActive ? "text-[#57534E]" : "text-[#A8A29E]"
                 }`}
               >
                 {isDone ? (
@@ -55,7 +55,7 @@ export function GenerationStatus() {
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
                   >
-                    <Check className="h-3 w-3 shrink-0 text-green-400" />
+                    <Check className="h-3 w-3 shrink-0 text-green-600" />
                   </motion.span>
                 ) : (
                   <Loader2 className="h-3 w-3 shrink-0 animate-spin text-[#E84142]" />

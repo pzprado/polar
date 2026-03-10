@@ -31,7 +31,7 @@ export function DeployButton({ onDeploy, deploying, deployed, disabled, error }:
     return (
       <button
         onClick={onDeploy}
-        className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
+        className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-500/20"
       >
         <AlertCircle className="h-4 w-4" />
         Retry Deploy

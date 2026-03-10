@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
@@ -47,19 +47,22 @@ const FEATURES = [
     num: "01",
     title: "Permanent Backend",
     desc: "Your app logic runs on infrastructure that never shuts down. No AWS bills, no servers to babysit — just code that keeps running.",
-    numColor: "text-[#E84142]/25",
+    numColor: "text-[#E84142]/40",
+    accent: "border-t-2 border-[#E84142]/30",
   },
   {
     num: "02",
     title: "AI-Powered Code",
     desc: "Describe what you want in plain English. Polar picks the right architecture and writes the code for you.",
-    numColor: "text-[#60A5FA]/25",
+    numColor: "text-[#2563EB]/40",
+    accent: "border-t-2 border-[#2563EB]/30",
   },
   {
     num: "03",
     title: "Instant Launch",
     desc: "From prompt to live app in minutes. Building, testing, and publishing happen automatically.",
-    numColor: "text-[#FBBF24]/25",
+    numColor: "text-[#D97706]/40",
+    accent: "border-t-2 border-[#D97706]/30",
   },
 ];
 
@@ -67,7 +70,15 @@ export default function HomePage() {
   const router = useRouter();
   const [prompt, setPrompt] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const submitPrompt = () => {
     const cleaned = prompt.trim();
@@ -79,12 +90,12 @@ export default function HomePage() {
 
   return (
     <div
-      className={`${dmSans.variable} ${spaceGrotesk.variable} min-h-screen bg-[#0B101B] text-[#b8bcc6]`}
+      className={`${dmSans.variable} ${spaceGrotesk.variable} min-h-screen bg-[#F8F6F3] text-[#57534E]`}
       style={{ fontFamily: "var(--font-dm-sans)" }}
     >
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[#0B101B]"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-lg focus:bg-[#1C1917] focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
       >
         Skip to content
       </a>
@@ -95,24 +106,28 @@ export default function HomePage() {
         initial={prefersReducedMotion ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#0B101B]/90 backdrop-blur-md"
+        className={`fixed top-0 z-50 w-full transition-[background-color,border-color,backdrop-filter] duration-300 ${
+          scrolled
+            ? "border-b border-black/[0.06] bg-[#F8F6F3]/90 backdrop-blur-md"
+            : "border-b border-transparent bg-transparent"
+        }`}
       >
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <Snowflake className="h-6 w-6 text-[#E84142]" />
-            <span className="text-display text-xl font-bold tracking-tight text-white">
+            <span className="text-display text-xl font-bold tracking-tight text-[#1C1917]">
               POLAR
             </span>
           </div>
 
           <div className="hidden items-center gap-8 md:flex">
-            <a className="px-1 py-2 text-xs font-medium text-[#8b919e] transition-colors hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+            <a className="px-1 py-2 text-xs font-medium text-[#78716C] transition-colors hover:text-[#1C1917]" href="#" onClick={(e) => e.preventDefault()}>
               Features
             </a>
-            <a className="px-1 py-2 text-xs font-medium text-[#8b919e] transition-colors hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+            <a className="px-1 py-2 text-xs font-medium text-[#78716C] transition-colors hover:text-[#1C1917]" href="#" onClick={(e) => e.preventDefault()}>
               Showcase
             </a>
-            <a className="px-1 py-2 text-xs font-medium text-[#8b919e] transition-colors hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+            <a className="px-1 py-2 text-xs font-medium text-[#78716C] transition-colors hover:text-[#1C1917]" href="#" onClick={(e) => e.preventDefault()}>
               Docs
             </a>
             <Link
@@ -124,7 +139,7 @@ export default function HomePage() {
           </div>
 
           <button
-            className="p-2 text-[#8b919e] hover:text-white md:hidden"
+            className="p-2 text-[#78716C] hover:text-[#1C1917] md:hidden"
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
@@ -139,15 +154,15 @@ export default function HomePage() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-t border-white/10 px-4 pb-4 pt-2 md:hidden">
+          <div className="border-t border-black/[0.06] px-4 pb-4 pt-2 md:hidden">
             <div className="flex flex-col space-y-3">
-              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#8b919e] transition-colors hover:bg-white/5 hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#78716C] transition-colors hover:bg-black/[0.03] hover:text-[#1C1917]" href="#" onClick={(e) => e.preventDefault()}>
                 Features
               </a>
-              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#8b919e] transition-colors hover:bg-white/5 hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#78716C] transition-colors hover:bg-black/[0.03] hover:text-[#1C1917]" href="#" onClick={(e) => e.preventDefault()}>
                 Showcase
               </a>
-              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#8b919e] transition-colors hover:bg-white/5 hover:text-white" href="#" onClick={(e) => e.preventDefault()}>
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-[#78716C] transition-colors hover:bg-black/[0.03] hover:text-[#1C1917]" href="#" onClick={(e) => e.preventDefault()}>
                 Docs
               </a>
               <Link
@@ -167,8 +182,8 @@ export default function HomePage() {
           <div className="absolute inset-0 z-0">
             <NextImage
               alt="Majestic snowy mountain landscape"
-              className="h-full w-full object-cover opacity-50"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5O49QrKH-qB3ziL7XX6rMotMvVLnHK-A3WaZKqel-F19elGC1IKL8Nus2HoOwbhENA1UDAyjhOIrSkhkEdNUfyu8sZO5qVQoKgqEDcubqFwFw9K2OaZaQiVXqUcbtIXDQZxXRhTVv5FNgSSnugxGY5ZnBPmzPAunW2RDuJdvvsttnbTdkP4x8jxOeXnF1nudaqdaN8s2Uxh3L4B-bxWc8wWs3MZV2Lsqi5HnRLrLU3fbDqYi8v8ySm7KFMqEyiFXfGVp8wUr0hA4"
+              className="h-full w-full object-cover opacity-60"
+              src="/images/hero-matterhorn-day.jpg"
               fill
               priority
               sizes="100vw"
@@ -187,10 +202,10 @@ export default function HomePage() {
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#E84142]/15 bg-[#E84142]/[0.04] px-3 py-1"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-[#E84142]" />
-              <span className="text-[11px] font-medium uppercase tracking-wide text-[#8b919e]">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-[#78716C]">
                 Powered by Avalanche
               </span>
             </motion.div>
@@ -198,7 +213,7 @@ export default function HomePage() {
             <motion.h1
               variants={fadeUp}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="text-display mb-4 text-4xl leading-tight font-bold tracking-tight text-white md:text-6xl"
+              className="text-display mb-4 text-4xl leading-tight font-bold tracking-tight text-[#1C1917] md:text-6xl"
             >
               {["Build", "apps", "that"].map((word, i) => (
                 <motion.span
@@ -240,7 +255,7 @@ export default function HomePage() {
             <motion.p
               variants={fadeUp}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mb-10 max-w-xl text-base font-light text-[#8b919e] md:text-lg"
+              className="mb-10 max-w-xl text-base font-light text-[#78716C] md:text-lg"
             >
               Describe your idea. Polar builds, publishes, and hosts your
               app — permanently. No servers. No hosting fees. Ever.
@@ -251,13 +266,13 @@ export default function HomePage() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="mx-auto flex w-full max-w-3xl flex-col items-center"
             >
-              <div className="glass-panel mb-5 flex w-full flex-col rounded-2xl border border-white/15 p-6 shadow-xl shadow-black/20">
+              <div className="glass-panel mb-5 flex w-full flex-col rounded-2xl border border-black/[0.08] p-6 shadow-xl shadow-black/20">
                 <div className="relative text-left">
                   <AnimatedPlaceholder visible={prompt.length === 0} />
                   <textarea
                     autoFocus
                     aria-label="Describe your app"
-                    className="relative z-10 h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-white focus-visible:outline-none"
+                    className="relative z-10 h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-[#1C1917] focus-visible:outline-none"
                     value={prompt}
                     onChange={(event) => setPrompt(event.target.value)}
                     onKeyDown={(event) => {
@@ -268,20 +283,20 @@ export default function HomePage() {
                     }}
                   />
                 </div>
-                <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
+                <div className="mt-auto flex items-center justify-between pt-4 border-t border-black/[0.04]">
                   <div className="flex items-center gap-3 overflow-x-auto">
-                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-[#60A5FA] transition-colors text-xs py-2 px-1" type="button" aria-label="Attach image">
+                    <button className="flex items-center gap-1.5 text-[#A8A29E] hover:text-[#2563EB] transition-colors text-xs py-2 px-1" type="button" aria-label="Attach image">
                       <Image className="h-4 w-4" />
                       <span className="hidden sm:inline">Attach</span>
                     </button>
-                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-[#FBBF24] transition-colors text-xs py-2 px-1" type="button" aria-label="Quick actions">
+                    <button className="flex items-center gap-1.5 text-[#A8A29E] hover:text-[#D97706] transition-colors text-xs py-2 px-1" type="button" aria-label="Quick actions">
                       <Zap className="h-4 w-4" />
                     </button>
-                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-[#E84142] transition-colors text-xs py-2 px-1" type="button" aria-label="Build mode">
+                    <button className="flex items-center gap-1.5 text-[#A8A29E] hover:text-[#E84142] transition-colors text-xs py-2 px-1" type="button" aria-label="Build mode">
                       <Wrench className="h-4 w-4" />
                       <span className="hidden sm:inline">Build</span>
                     </button>
-                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-[#60A5FA] transition-colors text-xs py-2 px-1" type="button" aria-label="Visibility">
+                    <button className="flex items-center gap-1.5 text-[#A8A29E] hover:text-[#2563EB] transition-colors text-xs py-2 px-1" type="button" aria-label="Visibility">
                       <Globe className="h-4 w-4" />
                       <span className="hidden sm:inline">Public</span>
                     </button>
@@ -302,20 +317,20 @@ export default function HomePage() {
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 className="mb-6 flex flex-wrap items-center justify-center gap-2.5"
               >
-                <span className="flex items-center gap-1 text-xs text-[#5c6370]">
+                <span className="flex items-center gap-1 text-xs text-[#A8A29E]">
                   Try one <ArrowRight className="h-3 w-3" />
                 </span>
                 {SUGGESTED_PROMPTS.map((item, i) => {
                   const chipColors = [
                     "hover:border-[#E84142]/30 hover:bg-[#E84142]/10 hover:text-[#E84142]",
-                    "hover:border-[#60A5FA]/30 hover:bg-[#60A5FA]/10 hover:text-[#60A5FA]",
-                    "hover:border-[#FBBF24]/30 hover:bg-[#FBBF24]/10 hover:text-[#FBBF24]",
-                    "hover:border-[#60A5FA]/30 hover:bg-[#60A5FA]/10 hover:text-[#60A5FA]",
+                    "hover:border-[#2563EB]/30 hover:bg-[#2563EB]/10 hover:text-[#2563EB]",
+                    "hover:border-[#D97706]/30 hover:bg-[#D97706]/10 hover:text-[#D97706]",
+                    "hover:border-[#2563EB]/30 hover:bg-[#2563EB]/10 hover:text-[#2563EB]",
                   ];
                   return (
                     <button
                       key={item.label}
-                      className={`rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-[#b8bcc6] transition-colors ${chipColors[i % chipColors.length]}`}
+                      className={`rounded-full border border-black/[0.06] bg-black/[0.03] px-4 py-2 text-xs text-[#57534E] transition-colors ${chipColors[i % chipColors.length]}`}
                       onClick={() => setPrompt(item.prompt)}
                       type="button"
                     >
@@ -328,7 +343,7 @@ export default function HomePage() {
               <motion.p
                 variants={fadeIn}
                 transition={{ duration: 0.5 }}
-                className="text-sm font-medium text-[#8b919e] opacity-80"
+                className="text-sm font-medium text-[#78716C] opacity-80"
               >
                 Trusted by 100k+ users
               </motion.p>
@@ -337,7 +352,7 @@ export default function HomePage() {
         </div>
 
         {/* ─── How It Works ─── */}
-        <section className="relative bg-[#0B101B] py-20">
+        <section className="relative bg-[#F8F6F3] py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={motionInitial}
@@ -347,10 +362,10 @@ export default function HomePage() {
               variants={fadeUp}
               className="mb-16"
             >
-              <h2 className="text-display text-3xl font-bold text-white md:text-5xl">
+              <h2 className="text-display text-3xl font-bold text-[#1C1917] md:text-5xl">
                 How it works
               </h2>
-              <p className="mt-4 max-w-2xl text-[#8b919e]">
+              <p className="mt-4 max-w-2xl text-[#78716C]">
                 From idea to live app in three steps. No DevOps, no
                 infrastructure to manage.
               </p>
@@ -368,14 +383,15 @@ export default function HomePage() {
                   key={feature.num}
                   variants={fadeUp}
                   transition={{ duration: 0.5, ease: "easeOut" }}
+                  className={`pt-6 ${feature.accent}`}
                 >
                   <span className={`text-display text-5xl font-bold ${feature.numColor}`}>
                     {feature.num}
                   </span>
-                  <h3 className="text-display mt-4 text-xl font-bold text-white">
+                  <h3 className="text-display mt-4 text-xl font-bold text-[#1C1917]">
                     {feature.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-[#8b919e]">
+                  <p className="mt-3 text-sm leading-relaxed text-[#78716C]">
                     {feature.desc}
                   </p>
                 </motion.div>
@@ -385,7 +401,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── The Engine ─── */}
-        <section className="overflow-hidden bg-gradient-to-b from-[#0B101B] to-[#0f1520] py-32">
+        <section className="overflow-hidden bg-gradient-to-b from-[#FEF7F4] to-[#F5F0ED] py-32">
           <div className="mx-auto grid max-w-7xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
             <motion.div
               initial={
@@ -398,11 +414,11 @@ export default function HomePage() {
               <div className="mb-4 inline-block rounded-full border border-[#E84142]/20 bg-[#E84142]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#E84142]">
                 Why Polar
               </div>
-              <h2 className="text-display mb-6 text-4xl leading-tight font-bold text-white md:text-5xl">
+              <h2 className="text-display mb-6 text-4xl leading-tight font-bold text-[#1C1917] md:text-5xl">
                 Built to <br />
                 <span className="text-[#E84142]">Last Forever</span>
               </h2>
-              <p className="mb-8 text-lg text-[#8b919e]">
+              <p className="mb-8 text-lg text-[#78716C]">
                 Traditional apps depend on servers that cost money and can go
                 offline. Polar apps run on permanent infrastructure — once
                 published, they can't be taken down.
@@ -412,22 +428,22 @@ export default function HomePage() {
                 <div className="flex items-start">
                   <CheckCircle2 className="mr-4 mt-1 h-5 w-5 shrink-0 text-[#E84142]" />
                   <div>
-                    <h4 className="font-semibold text-white">
+                    <h4 className="font-semibold text-[#1C1917]">
                       Always Online
                     </h4>
-                    <p className="text-sm text-[#8b919e]">
+                    <p className="text-sm text-[#78716C]">
                       Your code runs independently. No company, no server, no
                       single point of failure.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle2 className="mr-4 mt-1 h-5 w-5 shrink-0 text-[#60A5FA]" />
+                  <CheckCircle2 className="mr-4 mt-1 h-5 w-5 shrink-0 text-[#2563EB]" />
                   <div>
-                    <h4 className="font-semibold text-white">
+                    <h4 className="font-semibold text-[#1C1917]">
                       Zero Maintenance
                     </h4>
-                    <p className="text-sm text-[#8b919e]">
+                    <p className="text-sm text-[#78716C]">
                       No servers to manage, no databases to back up, no hosting
                       bills to pay.
                     </p>
@@ -445,7 +461,7 @@ export default function HomePage() {
               transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
               className="relative"
             >
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl transition-transform duration-500 hover:rotate-0 lg:rotate-1">
+              <div className="relative overflow-hidden rounded-2xl border border-black/[0.06] shadow-2xl transition-transform duration-500 hover:rotate-0 lg:rotate-1">
                 <NextImage
                   alt="Code editor showing deployed smart contract"
                   className="w-full object-cover opacity-90 transition-opacity hover:opacity-100"
@@ -455,20 +471,20 @@ export default function HomePage() {
                   loading="lazy"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-                <div className="absolute right-6 bottom-6 left-6 rounded-xl border border-white/10 bg-[#0B101B]/90 p-4 backdrop-blur-sm">
+                <div className="absolute right-6 bottom-6 left-6 rounded-xl border border-black/[0.06] bg-[#F8F6F3]/90 p-4 backdrop-blur-sm">
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs tracking-wide text-[#8b919e]">
+                    <span className="text-xs tracking-wide text-[#78716C]">
                       App Status
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-green-400">
-                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
+                    <span className="flex items-center gap-1 text-xs text-green-600">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500" />
                       Live
                     </span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#1a1f2e]">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E7E5E4]">
                     <div className="h-full w-full bg-[#E84142]" />
                   </div>
-                  <div className="mt-2 break-all font-mono text-xs text-[#5c6370]">
+                  <div className="mt-2 break-all font-mono text-xs text-[#A8A29E]">
                     polar-app-9e2F published and running
                   </div>
                 </div>
@@ -479,7 +495,7 @@ export default function HomePage() {
 
         {/* ─── CTA ─── */}
         <section className="relative overflow-hidden py-20">
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B101B] via-[#0B101B]/95 to-[#0f1520]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#F8F6F3] via-[#F8F6F3]/95 to-[#F5F0ED]" />
 
           <motion.div
             initial={motionInitial}
@@ -491,32 +507,32 @@ export default function HomePage() {
             <motion.h2
               variants={fadeUp}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="text-display mb-12 text-4xl font-bold text-white"
+              className="text-display mb-12 text-4xl font-bold text-[#1C1917]"
             >
               Start building today
             </motion.h2>
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="w-full overflow-hidden rounded-2xl border border-white/10"
+              className="w-full overflow-hidden rounded-2xl border border-black/[0.06]"
             >
               <div className="grid items-center md:grid-cols-2">
-                <div className="bg-[#111827] p-8 text-left md:p-12">
-                  <p className="mb-8 text-[#8b919e]">
+                <div className="bg-[#1C1917] p-8 text-left md:p-12">
+                  <p className="mb-8 text-[#A8A29E]">
                     Build permanent apps with AI-generated code and instant
                     publishing. No infrastructure to set up or maintain.
                   </p>
                   <ul className="mb-8 space-y-4">
-                    <li className="flex items-center text-sm text-[#b8bcc6]">
+                    <li className="flex items-center text-sm text-[#D6D3D1]">
                       <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#E84142]" />
                       Zero-config environment
                     </li>
-                    <li className="flex items-center text-sm text-[#b8bcc6]">
-                      <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#60A5FA]" />
+                    <li className="flex items-center text-sm text-[#D6D3D1]">
+                      <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#2563EB]" />
                       No hosting costs
                     </li>
-                    <li className="flex items-center text-sm text-[#b8bcc6]">
-                      <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#FBBF24]" />
+                    <li className="flex items-center text-sm text-[#D6D3D1]">
+                      <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#D97706]" />
                       One-click publishing
                     </li>
                   </ul>
@@ -537,7 +553,7 @@ export default function HomePage() {
                     loading="lazy"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#111827]/80 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#1C1917]/80 to-transparent" />
                 </div>
               </div>
             </motion.div>
@@ -552,17 +568,17 @@ export default function HomePage() {
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         variants={fadeIn}
-        className="border-t border-white/5 bg-[#05080f] py-10"
+        className="border-t border-black/[0.06] bg-[#F3EFEC] py-10"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2">
               <Snowflake className="h-5 w-5 text-[#E84142]" />
-              <span className="text-display text-lg font-bold text-white">
+              <span className="text-display text-lg font-bold text-[#1C1917]">
                 POLAR
               </span>
             </div>
-            <p className="text-xs text-[#5c6370]">
+            <p className="text-xs text-[#A8A29E]">
               © 2026 Polar Labs · Powered by Avalanche · Build Games 2026
             </p>
           </div>
