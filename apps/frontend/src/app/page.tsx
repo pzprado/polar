@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import NextImage from "next/image";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { DM_Sans, Space_Grotesk } from "next/font/google";
 import { SUGGESTED_PROMPTS } from "@/lib/constants";
 
 const fadeUp = {
@@ -26,9 +26,9 @@ const fadeIn = {
   visible: { opacity: 1 },
 };
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
 });
 
 const spaceGrotesk = Space_Grotesk({
@@ -66,13 +66,12 @@ export default function HomePage() {
     router.push(`/app/new?prompt=${encodeURIComponent(cleaned)}`);
   };
 
-  // When user prefers reduced motion, start all elements in visible state
   const motionInitial = prefersReducedMotion ? "visible" : "hidden";
 
   return (
     <div
-      className={`${inter.variable} ${spaceGrotesk.variable} min-h-screen bg-[#0B101B] text-gray-100`}
-      style={{ fontFamily: "var(--font-inter)" }}
+      className={`${dmSans.variable} ${spaceGrotesk.variable} min-h-screen bg-[#0B101B] text-[#b8bcc6]`}
+      style={{ fontFamily: "var(--font-dm-sans)" }}
     >
       <a
         href="#main"
@@ -90,33 +89,27 @@ export default function HomePage() {
         className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#0B101B]/90 backdrop-blur-md"
       >
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2">
-            <Snowflake className="h-6 w-6 text-[#E84142]" />
-            <span className="text-display text-xl font-bold tracking-tight text-white">
-              POLAR
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Snowflake className="h-6 w-6 text-[#E84142]" />
+              <span className="text-display text-xl font-bold tracking-tight text-white">
+                POLAR
+              </span>
+            </div>
+            <span className="hidden text-xs text-[#5c6370] md:block">
+              AI-native web3 builder
             </span>
           </div>
 
-          <div className="hidden items-center gap-8 md:flex">
-            <span className="px-1 py-2 text-xs font-medium text-gray-500">
-              Features
-            </span>
-            <span className="px-1 py-2 text-xs font-medium text-gray-500">
-              Showcase
-            </span>
-            <span className="px-1 py-2 text-xs font-medium text-gray-500">
-              Docs
-            </span>
-            <Link
-              href="/app/new"
-              className="rounded-full bg-[#E84142] px-5 py-2 text-xs font-medium text-white shadow-lg shadow-red-900/20 transition-all hover:bg-red-600"
-            >
-              Launch App
-            </Link>
-          </div>
+          <Link
+            href="/app/new"
+            className="hidden rounded-full bg-[#E84142] px-5 py-2 text-xs font-medium text-white shadow-lg shadow-red-900/20 transition-colors hover:bg-red-600 md:inline-block"
+          >
+            Launch App
+          </Link>
 
           <button
-            className="p-2 text-gray-300 hover:text-white md:hidden"
+            className="p-2 text-[#8b919e] hover:text-white md:hidden"
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
@@ -132,23 +125,12 @@ export default function HomePage() {
 
         {mobileMenuOpen && (
           <div className="border-t border-white/10 px-4 pb-4 pt-2 md:hidden">
-            <div className="flex flex-col space-y-3">
-              <span className="rounded-lg px-3 py-2 text-sm font-medium text-gray-500">
-                Features
-              </span>
-              <span className="rounded-lg px-3 py-2 text-sm font-medium text-gray-500">
-                Showcase
-              </span>
-              <span className="rounded-lg px-3 py-2 text-sm font-medium text-gray-500">
-                Docs
-              </span>
-              <Link
-                href="/app/new"
-                className="rounded-lg bg-[#E84142] px-3 py-2 text-center text-sm font-medium text-white transition-all hover:bg-red-600"
-              >
-                Launch App
-              </Link>
-            </div>
+            <Link
+              href="/app/new"
+              className="block rounded-lg bg-[#E84142] px-3 py-2 text-center text-sm font-medium text-white transition-all hover:bg-red-600"
+            >
+              Launch App
+            </Link>
           </div>
         )}
       </motion.nav>
@@ -180,7 +162,7 @@ export default function HomePage() {
               className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-[#E84142]" />
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-300">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-[#8b919e]">
                 Powered by Avalanche
               </span>
             </motion.div>
@@ -230,7 +212,7 @@ export default function HomePage() {
             <motion.p
               variants={fadeUp}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mb-8 max-w-xl text-base font-light text-gray-300 md:text-lg"
+              className="mb-10 max-w-xl text-base font-light text-[#8b919e] md:text-lg"
             >
               Describe your idea. Polar generates, deploys, and hosts your
               decentralized application on Avalanche — instantly.
@@ -241,10 +223,10 @@ export default function HomePage() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="mx-auto flex w-full max-w-3xl flex-col items-center"
             >
-              <div className="mb-5 flex w-full flex-col rounded-2xl border border-white/10 bg-[#111827]/80 p-5 shadow-2xl backdrop-blur-sm">
+              <div className="mb-5 flex w-full flex-col rounded-2xl border border-white/15 bg-[#111827]/80 p-6 backdrop-blur-sm">
                 <textarea
                   aria-label="Describe your web3 app"
-                  className="h-24 w-full resize-none rounded-lg border-none bg-transparent px-1.5 py-1.5 text-xl font-light text-white placeholder-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84142]/40"
+                  className="h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-white placeholder-[#5c6370] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84142]/40"
                   placeholder="Ask Polar to build a prototype of..."
                   value={prompt}
                   onChange={(event) => setPrompt(event.target.value)}
@@ -255,9 +237,9 @@ export default function HomePage() {
                     }
                   }}
                 />
-                <div className="mt-auto flex items-center justify-end pt-3">
+                <div className="mt-auto flex items-center justify-end pt-4">
                   <button
-                    className="flex items-center justify-center rounded-full bg-[#E84142] p-3 text-white shadow-lg transition-transform hover:scale-105 hover:bg-red-600"
+                    className="flex items-center justify-center rounded-full bg-[#E84142] p-3 text-white shadow-lg transition-colors hover:bg-red-500"
                     onClick={submitPrompt}
                     type="button"
                     aria-label="Submit prompt"
@@ -272,13 +254,13 @@ export default function HomePage() {
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 className="mb-6 flex flex-wrap items-center justify-center gap-2.5"
               >
-                <span className="flex items-center gap-1 text-xs text-gray-500">
+                <span className="flex items-center gap-1 text-xs text-[#5c6370]">
                   Try one <ArrowRight className="h-3 w-3" />
                 </span>
                 {SUGGESTED_PROMPTS.map((item) => (
                   <button
                     key={item.label}
-                    className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-gray-300 transition-colors hover:bg-white/10"
+                    className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-[#b8bcc6] transition-colors hover:bg-white/10"
                     onClick={() => setPrompt(item.prompt)}
                     type="button"
                   >
@@ -290,7 +272,7 @@ export default function HomePage() {
               <motion.p
                 variants={fadeIn}
                 transition={{ duration: 0.5 }}
-                className="text-sm font-medium text-gray-400 opacity-80"
+                className="text-sm font-medium text-[#8b919e] opacity-80"
               >
                 Trusted by 100k+ users
               </motion.p>
@@ -299,7 +281,7 @@ export default function HomePage() {
         </div>
 
         {/* ─── How It Works ─── */}
-        <section className="relative bg-[#0B101B] py-24">
+        <section className="relative bg-[#0B101B] py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={motionInitial}
@@ -312,7 +294,7 @@ export default function HomePage() {
               <h2 className="text-display text-3xl font-bold text-white md:text-5xl">
                 How it works
               </h2>
-              <p className="mt-4 max-w-2xl text-gray-400">
+              <p className="mt-4 max-w-2xl text-[#8b919e]">
                 From idea to deployed dApp in three steps. No DevOps, no
                 infrastructure management.
               </p>
@@ -337,7 +319,7 @@ export default function HomePage() {
                   <h3 className="text-display mt-4 text-xl font-bold text-white">
                     {feature.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-400">
+                  <p className="mt-3 text-sm leading-relaxed text-[#8b919e]">
                     {feature.desc}
                   </p>
                 </motion.div>
@@ -347,7 +329,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── The Engine ─── */}
-        <section className="overflow-hidden bg-gradient-to-b from-[#0B101B] to-[#0f1520] py-24">
+        <section className="overflow-hidden bg-gradient-to-b from-[#0B101B] to-[#0f1520] py-32">
           <div className="mx-auto grid max-w-7xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
             <motion.div
               initial={
@@ -364,7 +346,7 @@ export default function HomePage() {
                 Built for the <br />
                 <span className="text-[#E84142]">Crypto-Native</span> Future
               </h2>
-              <p className="mb-8 text-lg text-gray-400">
+              <p className="mb-8 text-lg text-[#8b919e]">
                 Traditional apps are fragile. They rely on centralized servers
                 that can be turned off. Polar apps are built on Avalanche,
                 inheriting the security and durability of the network itself.
@@ -377,7 +359,7 @@ export default function HomePage() {
                     <h4 className="font-semibold text-white">
                       Censorship Resistant
                     </h4>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-[#8b919e]">
                       Your code belongs to you and the network. No one can take
                       it down.
                     </p>
@@ -389,7 +371,7 @@ export default function HomePage() {
                     <h4 className="font-semibold text-white">
                       Composability First
                     </h4>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-[#8b919e]">
                       Integrate with existing protocols like Trader Joe, Benqi,
                       and Aave.
                     </p>
@@ -419,7 +401,7 @@ export default function HomePage() {
                 />
                 <div className="absolute right-6 bottom-6 left-6 rounded-xl border border-white/10 bg-[#0B101B]/90 p-4 backdrop-blur-sm">
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="font-mono text-xs text-gray-300">
+                    <span className="text-xs tracking-wide text-[#8b919e]">
                       Contract Status
                     </span>
                     <span className="flex items-center gap-1 text-xs text-green-400">
@@ -430,7 +412,7 @@ export default function HomePage() {
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-700">
                     <div className="h-full w-full bg-[#E84142]" />
                   </div>
-                  <div className="mt-2 break-all font-mono text-xs text-gray-500">
+                  <div className="mt-2 break-all font-mono text-xs text-[#5c6370]">
                     0x1A4...9e2F deployed to Avalanche C-Chain
                   </div>
                 </div>
@@ -440,7 +422,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── CTA ─── */}
-        <section className="relative overflow-hidden py-24">
+        <section className="relative overflow-hidden py-20">
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B101B] via-[#0B101B]/95 to-[#0f1520]" />
 
           <motion.div
@@ -464,23 +446,20 @@ export default function HomePage() {
             >
               <div className="grid items-center md:grid-cols-2">
                 <div className="bg-[#111827] p-8 text-left md:p-12">
-                  <h3 className="mb-4 text-2xl font-bold text-white">
-                    The tools are ready
-                  </h3>
-                  <p className="mb-8 text-gray-400">
+                  <p className="mb-8 text-[#8b919e]">
                     Deploy unstoppable applications with AI-generated smart
                     contracts and instant Avalanche deployment.
                   </p>
                   <ul className="mb-8 space-y-4">
-                    <li className="flex items-center text-sm text-gray-300">
+                    <li className="flex items-center text-sm text-[#b8bcc6]">
                       <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#E84142]" />
                       Zero-config environment
                     </li>
-                    <li className="flex items-center text-sm text-gray-300">
+                    <li className="flex items-center text-sm text-[#b8bcc6]">
                       <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#E84142]" />
                       Gas-optimized contracts
                     </li>
-                    <li className="flex items-center text-sm text-gray-300">
+                    <li className="flex items-center text-sm text-[#b8bcc6]">
                       <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#E84142]" />
                       One-click verification
                     </li>
@@ -517,7 +496,7 @@ export default function HomePage() {
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         variants={fadeIn}
-        className="border-t border-white/5 bg-[#05080f] py-12"
+        className="border-t border-white/5 bg-[#05080f] py-10"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
@@ -527,7 +506,7 @@ export default function HomePage() {
                 POLAR
               </span>
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-[#5c6370]">
               © 2026 Polar Labs · Built on Avalanche · Build Games 2026
             </p>
           </div>
