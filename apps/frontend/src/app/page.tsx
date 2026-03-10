@@ -19,6 +19,7 @@ import {
 import NextImage from "next/image";
 import { DM_Sans, Space_Grotesk } from "next/font/google";
 import { SUGGESTED_PROMPTS } from "@/lib/constants";
+import { AnimatedPlaceholder } from "@/components/shared/animated-placeholder";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -45,16 +46,19 @@ const FEATURES = [
     num: "01",
     title: "Decentralized Backend",
     desc: "Your database and logic live on Avalanche. No AWS bills, no single points of failure — just immutable infrastructure that runs forever.",
+    numColor: "text-[#E84142]/25",
   },
   {
     num: "02",
     title: "AI Smart Contracts",
     desc: "Describe your logic in plain English. Polar selects from vetted Solidity templates and parameterizes them for your use case.",
+    numColor: "text-[#60A5FA]/25",
   },
   {
     num: "03",
     title: "Instant Deployment",
     desc: "From prompt to live dApp in minutes. Compiling, deploying, and verification happen automatically on Avalanche Fuji.",
+    numColor: "text-[#FBBF24]/25",
   },
 ];
 
@@ -245,34 +249,36 @@ export default function HomePage() {
               className="mx-auto flex w-full max-w-3xl flex-col items-center"
             >
               <div className="glass-panel mb-5 flex w-full flex-col rounded-2xl border border-white/15 p-6 shadow-xl shadow-black/20">
-                <textarea
-                  autoFocus
-                  aria-label="Describe your web3 app"
-                  className="h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-white placeholder-[#5c6370] focus-visible:outline-none"
-                  placeholder="Ask Polar to build a prototype of..."
-                  value={prompt}
-                  onChange={(event) => setPrompt(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" && !event.shiftKey) {
-                      event.preventDefault();
-                      submitPrompt();
-                    }
-                  }}
-                />
+                <div className="relative text-left">
+                  <AnimatedPlaceholder visible={prompt.length === 0} />
+                  <textarea
+                    autoFocus
+                    aria-label="Describe your web3 app"
+                    className="relative z-10 h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-white focus-visible:outline-none"
+                    value={prompt}
+                    onChange={(event) => setPrompt(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && !event.shiftKey) {
+                        event.preventDefault();
+                        submitPrompt();
+                      }
+                    }}
+                  />
+                </div>
                 <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
                   <div className="flex items-center gap-3 overflow-x-auto">
-                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-white transition-colors text-xs py-2 px-1" type="button" aria-label="Attach image">
+                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-[#60A5FA] transition-colors text-xs py-2 px-1" type="button" aria-label="Attach image">
                       <Image className="h-4 w-4" />
                       <span className="hidden sm:inline">Attach</span>
                     </button>
-                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-white transition-colors text-xs py-2 px-1" type="button" aria-label="Quick actions">
+                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-[#FBBF24] transition-colors text-xs py-2 px-1" type="button" aria-label="Quick actions">
                       <Zap className="h-4 w-4" />
                     </button>
-                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-white transition-colors text-xs py-2 px-1" type="button" aria-label="Build mode">
+                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-[#E84142] transition-colors text-xs py-2 px-1" type="button" aria-label="Build mode">
                       <Wrench className="h-4 w-4" />
                       <span className="hidden sm:inline">Build</span>
                     </button>
-                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-white transition-colors text-xs py-2 px-1" type="button" aria-label="Visibility">
+                    <button className="flex items-center gap-1.5 text-[#5c6370] hover:text-[#60A5FA] transition-colors text-xs py-2 px-1" type="button" aria-label="Visibility">
                       <Globe className="h-4 w-4" />
                       <span className="hidden sm:inline">Public</span>
                     </button>
@@ -296,16 +302,24 @@ export default function HomePage() {
                 <span className="flex items-center gap-1 text-xs text-[#5c6370]">
                   Try one <ArrowRight className="h-3 w-3" />
                 </span>
-                {SUGGESTED_PROMPTS.map((item) => (
-                  <button
-                    key={item.label}
-                    className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-[#b8bcc6] transition-colors hover:bg-white/10"
-                    onClick={() => setPrompt(item.prompt)}
-                    type="button"
-                  >
-                    {item.label}
-                  </button>
-                ))}
+                {SUGGESTED_PROMPTS.map((item, i) => {
+                  const chipColors = [
+                    "hover:border-[#E84142]/30 hover:bg-[#E84142]/10 hover:text-[#E84142]",
+                    "hover:border-[#60A5FA]/30 hover:bg-[#60A5FA]/10 hover:text-[#60A5FA]",
+                    "hover:border-[#FBBF24]/30 hover:bg-[#FBBF24]/10 hover:text-[#FBBF24]",
+                    "hover:border-[#60A5FA]/30 hover:bg-[#60A5FA]/10 hover:text-[#60A5FA]",
+                  ];
+                  return (
+                    <button
+                      key={item.label}
+                      className={`rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-[#b8bcc6] transition-colors ${chipColors[i % chipColors.length]}`}
+                      onClick={() => setPrompt(item.prompt)}
+                      type="button"
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
               </motion.div>
 
               <motion.p
@@ -352,7 +366,7 @@ export default function HomePage() {
                   variants={fadeUp}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 >
-                  <span className="text-display text-5xl font-bold text-[#E84142]/20">
+                  <span className={`text-display text-5xl font-bold ${feature.numColor}`}>
                     {feature.num}
                   </span>
                   <h3 className="text-display mt-4 text-xl font-bold text-white">
@@ -405,7 +419,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle2 className="mr-4 mt-1 h-5 w-5 shrink-0 text-[#E84142]" />
+                  <CheckCircle2 className="mr-4 mt-1 h-5 w-5 shrink-0 text-[#60A5FA]" />
                   <div>
                     <h4 className="font-semibold text-white">
                       Composability First
@@ -448,7 +462,7 @@ export default function HomePage() {
                       Live
                     </span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-700">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#1a1f2e]">
                     <div className="h-full w-full bg-[#E84142]" />
                   </div>
                   <div className="mt-2 break-all font-mono text-xs text-[#5c6370]">
@@ -495,17 +509,17 @@ export default function HomePage() {
                       Zero-config environment
                     </li>
                     <li className="flex items-center text-sm text-[#b8bcc6]">
-                      <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#E84142]" />
+                      <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#60A5FA]" />
                       Gas-optimized contracts
                     </li>
                     <li className="flex items-center text-sm text-[#b8bcc6]">
-                      <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#E84142]" />
+                      <CheckCircle2 className="mr-3 h-4 w-4 shrink-0 text-[#FBBF24]" />
                       One-click verification
                     </li>
                   </ul>
                   <Link
                     href="/app/new"
-                    className="inline-block w-full rounded-lg bg-white py-3 text-center font-bold text-[#0B101B] transition-colors hover:bg-gray-100"
+                    className="inline-block w-full rounded-lg bg-[#E84142] py-3 text-center font-bold text-white shadow-lg shadow-red-900/25 transition-colors hover:bg-red-500"
                   >
                     Get Started
                   </Link>
