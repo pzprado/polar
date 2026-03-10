@@ -39,7 +39,7 @@ export function PromptInput({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={disabled}
-        className="min-h-[44px] max-h-[120px] flex-1 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-[#5c6370] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84142]/40 disabled:opacity-50"
+        className="min-h-[44px] max-h-[120px] flex-1 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-[#5c6370] focus-visible:outline-none disabled:opacity-50"
         rows={1}
       />
       <motion.button

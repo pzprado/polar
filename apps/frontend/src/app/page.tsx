@@ -246,8 +246,9 @@ export default function HomePage() {
             >
               <div className="glass-panel mb-5 flex w-full flex-col rounded-2xl border border-white/15 p-6 shadow-xl shadow-black/20">
                 <textarea
+                  autoFocus
                   aria-label="Describe your web3 app"
-                  className="h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-white placeholder-[#5c6370] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84142]/40"
+                  className="h-32 w-full resize-none rounded-lg border-none bg-transparent px-2 py-2 text-lg font-light text-white placeholder-[#5c6370] focus-visible:outline-none"
                   placeholder="Ask Polar to build a prototype of..."
                   value={prompt}
                   onChange={(event) => setPrompt(event.target.value)}
