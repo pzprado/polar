@@ -290,9 +290,9 @@ export default function HomePage() {
               <motion.p
                 variants={fadeIn}
                 transition={{ duration: 0.5 }}
-                className="text-xs text-gray-500"
+                className="text-sm font-medium text-gray-400 opacity-80"
               >
-                Built for Build Games 2026 on Avalanche
+                Trusted by 100k+ users
               </motion.p>
             </motion.div>
           </motion.div>
