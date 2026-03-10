@@ -1,7 +1,6 @@
 "use client";
 
 import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { polarSandpackTheme, sandpackCustomSetup } from "@/lib/preview/sandpack-config";
 import { getSandpackFiles } from "@/lib/preview/template-files";
 
@@ -13,10 +12,10 @@ interface PreviewPanelProps {
 export function PreviewPanel({ frontendCode, contractAddress }: PreviewPanelProps) {
   if (!frontendCode) {
     return (
-      <div className="flex h-full min-h-[480px] flex-col items-center justify-center rounded-xl border border-gray-200 bg-gray-50">
-        <Skeleton className="mb-4 h-8 w-8 rounded-full" />
-        <p className="text-sm text-gray-500">Your app preview will appear here</p>
-        <p className="mt-1 text-xs text-gray-400">Describe what you want to build</p>
+      <div className="flex h-full flex-col items-center justify-center">
+        <div className="h-8 w-8 rounded-full border-2 border-white/10 mb-4" />
+        <p className="text-sm text-[#8b919e]">Your app preview will appear here</p>
+        <p className="mt-1 text-xs text-[#5c6370]">Describe what you want to build</p>
       </div>
     );
   }
@@ -24,7 +23,7 @@ export function PreviewPanel({ frontendCode, contractAddress }: PreviewPanelProp
   const files = getSandpackFiles(frontendCode, contractAddress);
 
   return (
-    <div className="h-full min-h-[480px] overflow-hidden rounded-xl border border-gray-200">
+    <div className="h-full overflow-hidden rounded-lg border border-white/10">
       <SandpackProvider
         template="react"
         theme={polarSandpackTheme}

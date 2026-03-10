@@ -1,13 +1,20 @@
 import Link from "next/link";
-import { Mountain } from "lucide-react";
+import { Snowflake } from "lucide-react";
 
-export function Logo() {
+interface LogoProps {
+  variant?: "light" | "dark";
+}
+
+export function Logo({ variant = "dark" }: LogoProps) {
+  const textColor = variant === "dark" ? "text-white" : "text-gray-900";
+  const hoverColor = variant === "dark" ? "hover:text-gray-200" : "hover:text-gray-700";
+
   return (
-    <Link href="/" className="inline-flex items-center gap-2 text-gray-900 transition-colors hover:text-gray-700">
-      <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-[#E84142] text-white">
-        <Mountain className="h-4 w-4" />
+    <Link href="/" className={`inline-flex items-center gap-2 ${textColor} ${hoverColor} transition-colors`}>
+      <Snowflake className="h-5 w-5 text-[#E84142]" />
+      <span className="text-lg font-bold tracking-tight" style={{ fontFamily: "var(--font-space-grotesk, inherit)" }}>
+        POLAR
       </span>
-      <span className="text-lg font-semibold tracking-tight">Polar</span>
     </Link>
   );
 }

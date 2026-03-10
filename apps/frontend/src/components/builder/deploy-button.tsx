@@ -1,7 +1,6 @@
 "use client";
 
 import { AlertCircle, Check, Loader2, Rocket } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface DeployButtonProps {
   onDeploy: () => void;
@@ -14,24 +13,31 @@ interface DeployButtonProps {
 export function DeployButton({ onDeploy, deploying, deployed, disabled, error }: DeployButtonProps) {
   if (deployed) {
     return (
-      <Button disabled className="bg-green-600 text-white hover:bg-green-600">
-        <Check className="mr-2 h-4 w-4" />
+      <button disabled className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white">
+        <Check className="h-4 w-4" />
         Deployed
-      </Button>
+      </button>
     );
   }
 
   if (error) {
     return (
-      <Button onClick={onDeploy} variant="destructive" className="gap-2">
+      <button
+        onClick={onDeploy}
+        className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
+      >
         <AlertCircle className="h-4 w-4" />
         Retry Deploy
-      </Button>
+      </button>
     );
   }
 
   return (
-    <Button onClick={onDeploy} disabled={disabled || deploying} className="gap-2 bg-[#E84142] text-white hover:bg-[#d13a3b]">
+    <button
+      onClick={onDeploy}
+      disabled={disabled || deploying}
+      className="flex items-center gap-2 rounded-lg bg-[#E84142] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed"
+    >
       {deploying ? (
         <>
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -43,6 +49,6 @@ export function DeployButton({ onDeploy, deploying, deployed, disabled, error }:
           Deploy to Avalanche
         </>
       )}
-    </Button>
+    </button>
   );
 }
