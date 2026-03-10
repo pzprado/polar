@@ -2,6 +2,7 @@
 
 import { KeyboardEvent, useState } from "react";
 import { Send } from "lucide-react";
+import { motion } from "motion/react";
 
 interface PromptInputProps {
   onSubmit: (message: string) => void;
@@ -41,15 +42,18 @@ export function PromptInput({
         className="min-h-[44px] max-h-[120px] flex-1 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-[#5c6370] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84142]/40 disabled:opacity-50"
         rows={1}
       />
-      <button
+      <motion.button
         onClick={handleSubmit}
         disabled={disabled || !value.trim()}
+        whileHover={!disabled && value.trim() ? { scale: 1.05 } : undefined}
+        whileTap={!disabled && value.trim() ? { scale: 0.92 } : undefined}
+        transition={{ duration: 0.12 }}
         className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-lg bg-[#E84142] text-white transition-colors hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed"
         aria-label="Send prompt"
         type="button"
       >
         <Send className="h-4 w-4" />
-      </button>
+      </motion.button>
     </div>
   );
 }
