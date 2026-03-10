@@ -20,22 +20,23 @@ export function useGeneration() {
       timestamp: Date.now(),
     };
 
-    // Capture current state before updating for the request payload
-    let currentGeneration: GenerationResult | null = null;
-    let currentMessages: ChatMessage[] = [];
-
-    setState((previous) => {
-      currentGeneration = previous.generation;
-      currentMessages = previous.messages;
-      return {
-        ...previous,
-        phase: "generating",
-        prompt,
-        error: null,
-        deployment: null,
-        messages: [...previous.messages, userMessage],
-      };
+    // Capture current state before updating
+    const snapshot = await new Promise<BuilderState>((resolve) => {
+      setState((previous) => {
+        resolve(previous);
+        return {
+          ...previous,
+          phase: "generating",
+          prompt,
+          error: null,
+          deployment: null,
+          messages: [...previous.messages, userMessage],
+        };
+      });
     });
+
+    const currentGeneration = snapshot.generation;
+    const currentMessages = snapshot.messages;
 
     try {
       // Build request with full context
