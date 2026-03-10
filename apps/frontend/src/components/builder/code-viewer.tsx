@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { Check, Code, Copy, FileCode2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -21,10 +21,15 @@ export function CodeViewer({ code, language = "frontend" }: CodeViewerProps) {
   };
 
   if (!code) {
+    const isFrontend = language === "frontend";
+    const IconComponent = isFrontend ? Code : FileCode2;
+    const iconColor = isFrontend ? "text-[#60A5FA]/30" : "text-[#FBBF24]/30";
+
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-1">
+      <div className="flex h-full flex-col items-center justify-center gap-2">
+        <IconComponent className={`h-6 w-6 ${iconColor}`} strokeWidth={1.5} />
         <p className="text-sm text-[#5c6370]">
-          {language === "frontend" ? "Your React component" : "Your Solidity contract"} lands here
+          {isFrontend ? "Your React component" : "Your Solidity contract"} lands here
         </p>
         <p className="text-xs text-[#5c6370]/60">Ready when you are</p>
       </div>

@@ -25,6 +25,12 @@ const spaceGrotesk = Space_Grotesk({
 
 type PanelView = "preview" | "frontend" | "backend";
 
+const VIEW_CONFIG: Record<PanelView, { accent: string; activeBg: string; activeText: string }> = {
+  preview:  { accent: "text-[#E84142]",  activeBg: "bg-[#E84142]/15", activeText: "text-[#E84142]" },
+  frontend: { accent: "text-[#60A5FA]",  activeBg: "bg-[#60A5FA]/15", activeText: "text-[#60A5FA]" },
+  backend:  { accent: "text-[#FBBF24]",  activeBg: "bg-[#FBBF24]/15", activeText: "text-[#FBBF24]" },
+};
+
 const VIEW_OPTIONS: { id: PanelView; label: string; shortLabel: string; icon: typeof Eye }[] = [
   { id: "preview", label: "Preview", shortLabel: "Preview", icon: Eye },
   { id: "frontend", label: "Frontend", shortLabel: "Front", icon: Code },
@@ -115,41 +121,45 @@ export default function BuilderPage() {
               {activeView === "preview" && (
                 <>
                   <p className="text-sm font-semibold text-white">Live Preview</p>
-                  <p className="text-xs text-[#5c6370]">Your generated app</p>
+                  <p className={`text-xs ${VIEW_CONFIG.preview.activeText} opacity-60`}>Your generated app</p>
                 </>
               )}
               {activeView === "frontend" && (
                 <>
                   <p className="text-sm font-semibold text-white">Frontend Code</p>
-                  <p className="text-xs text-[#5c6370]">Generated React component</p>
+                  <p className={`text-xs ${VIEW_CONFIG.frontend.activeText} opacity-60`}>Generated React component</p>
                 </>
               )}
               {activeView === "backend" && (
                 <>
                   <p className="text-sm font-semibold text-white">Smart Contract</p>
-                  <p className="text-xs text-[#5c6370]">Solidity source code</p>
+                  <p className={`text-xs ${VIEW_CONFIG.backend.activeText} opacity-60`}>Solidity source code</p>
                 </>
               )}
             </div>
 
             {/* 3-way toggle */}
             <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5">
-              {VIEW_OPTIONS.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setActiveView(id)}
-                  className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                    activeView === id
-                      ? "bg-white/10 text-white"
-                      : "text-[#5c6370] hover:text-[#8b919e]"
-                  }`}
-                  aria-pressed={activeView === id}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  {label}
-                </button>
-              ))}
+              {VIEW_OPTIONS.map(({ id, label, icon: Icon }) => {
+                const isActive = activeView === id;
+                const config = VIEW_CONFIG[id];
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setActiveView(id)}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                      isActive
+                        ? `${config.activeBg} ${config.activeText}`
+                        : "text-[#5c6370] hover:text-[#8b919e]"
+                    }`}
+                    aria-pressed={isActive}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -203,22 +213,26 @@ export default function BuilderPage() {
                 </p>
 
                 <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5">
-                  {VIEW_OPTIONS.map(({ id, shortLabel, icon: Icon }) => (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => setActiveView(id)}
-                      className={`flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${
-                        activeView === id
-                          ? "bg-white/10 text-white"
-                          : "text-[#5c6370]"
-                      }`}
-                      aria-pressed={activeView === id}
-                    >
-                      <Icon className="h-3 w-3" />
-                      {shortLabel}
-                    </button>
-                  ))}
+                  {VIEW_OPTIONS.map(({ id, shortLabel, icon: Icon }) => {
+                    const isActive = activeView === id;
+                    const config = VIEW_CONFIG[id];
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => setActiveView(id)}
+                        className={`flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${
+                          isActive
+                            ? `${config.activeBg} ${config.activeText}`
+                            : "text-[#5c6370]"
+                        }`}
+                        aria-pressed={isActive}
+                      >
+                        <Icon className="h-3 w-3" />
+                        {shortLabel}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

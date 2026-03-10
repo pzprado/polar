@@ -18,9 +18,10 @@ export function PreviewPanel({ frontendCode, contractAddress }: PreviewPanelProp
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="mb-4"
+          className="relative mb-4"
         >
-          <Snowflake className="h-8 w-8 text-[#E84142]/40" strokeWidth={1.5} />
+          <div className="absolute inset-0 -m-6 rounded-full bg-[#E84142]/[0.06] blur-xl" />
+          <Snowflake className="relative h-8 w-8 text-[#E84142]/50" strokeWidth={1.5} />
         </motion.div>
         <motion.p
           initial={{ opacity: 0, y: 6 }}

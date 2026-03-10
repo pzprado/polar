@@ -31,7 +31,7 @@ export function GenerationStatus() {
 
   return (
     <div className="flex items-start">
-      <div className="space-y-2 rounded-lg bg-white/5 px-3 py-2.5">
+      <div className="space-y-2 rounded-lg bg-[#E84142]/[0.06] px-3 py-2.5">
         <AnimatePresence>
           {THINKING_STEPS.map((step, index) => {
             if (index > currentStep) return null;

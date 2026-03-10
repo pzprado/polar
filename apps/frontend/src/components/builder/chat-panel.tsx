@@ -32,13 +32,17 @@ export function ChatPanel({ messages, generating, onSendMessage }: ChatPanelProp
             <div className="flex flex-col items-center gap-3 py-12">
               <p className="text-sm text-[#8b919e]">What do you want to build today?</p>
               <div className="flex flex-wrap justify-center gap-2">
-                {["A token for my community", "An NFT collection", "A tipping jar"].map((suggestion) => (
+                {([
+                  { text: "A token for my community", hoverBorder: "hover:border-[#FBBF24]/30", hoverText: "hover:text-[#FBBF24]" },
+                  { text: "An NFT collection", hoverBorder: "hover:border-[#60A5FA]/30", hoverText: "hover:text-[#60A5FA]" },
+                  { text: "A tipping jar", hoverBorder: "hover:border-[#34D399]/30", hoverText: "hover:text-[#34D399]" },
+                ] as const).map((suggestion) => (
                   <button
-                    key={suggestion}
-                    onClick={() => onSendMessage(suggestion)}
-                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-[#8b919e] transition-colors hover:border-[#E84142]/30 hover:text-white"
+                    key={suggestion.text}
+                    onClick={() => onSendMessage(suggestion.text)}
+                    className={`rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-[#8b919e] transition-colors ${suggestion.hoverBorder} ${suggestion.hoverText}`}
                   >
-                    {suggestion}
+                    {suggestion.text}
                   </button>
                 ))}
               </div>
@@ -49,7 +53,9 @@ export function ChatPanel({ messages, generating, onSendMessage }: ChatPanelProp
             <div key={`${message.timestamp}-${index}`} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
                 className={`max-w-[85%] rounded-lg px-3 py-2 text-sm leading-relaxed ${
-                  message.role === "user" ? "bg-[#E84142] text-white" : "bg-white/5 text-[#b8bcc6]"
+                  message.role === "user"
+                    ? "bg-[#E84142] text-white"
+                    : "border-l-2 border-[#60A5FA]/30 bg-[#60A5FA]/5 text-[#b8bcc6]"
                 }`}
               >
                 {message.content}
