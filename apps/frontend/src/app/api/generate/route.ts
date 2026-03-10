@@ -10,6 +10,7 @@ export const runtime = "nodejs";
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-20250514";
 const OLLAMA_BASE_URL = (process.env.OLLAMA_BASE_URL || "http://localhost:11434").replace(/\/$/, "");
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "kimi-k2.5";
+const OLLAMA_API_KEY = process.env.OLLAMA_API_KEY;
 
 export async function POST(request: NextRequest) {
   try {
@@ -123,11 +124,17 @@ interface OllamaChatResponse {
 
 async function generateWithOllama(systemPrompt: string, userPrompt: string): Promise<ProviderResult> {
   try {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (OLLAMA_API_KEY) {
+      headers.Authorization = `Bearer ${OLLAMA_API_KEY}`;
+    }
+
     const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         model: OLLAMA_MODEL,
         stream: false,
