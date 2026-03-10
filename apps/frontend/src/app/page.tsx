@@ -1,9 +1,8 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   ArrowUp,
@@ -17,8 +16,10 @@ import {
   Rocket,
   Snowflake,
   Wrench,
+  X,
   Zap,
 } from "lucide-react";
+import NextImage from "next/image";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { SUGGESTED_PROMPTS } from "@/lib/constants";
 
@@ -45,6 +46,8 @@ const spaceGrotesk = Space_Grotesk({
 export default function HomePage() {
   const router = useRouter();
   const [prompt, setPrompt] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   const submitPrompt = () => {
     const cleaned = prompt.trim();
@@ -52,12 +55,20 @@ export default function HomePage() {
     router.push(`/app/new?prompt=${encodeURIComponent(cleaned)}`);
   };
 
+  const motionProps = prefersReducedMotion ? { initial: false, animate: true } : {};
+
   return (
     <div
       className={`${inter.variable} ${spaceGrotesk.variable} min-h-screen bg-[#0B101B] text-slate-100`}
       style={{ fontFamily: "var(--font-inter)" }}
     >
+      {/* C3: Skip to content */}
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[#0B101B]">
+        Skip to content
+      </a>
+
       <motion.nav
+        aria-label="Main navigation"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
@@ -69,18 +80,18 @@ export default function HomePage() {
             <span className="text-display text-xl font-bold tracking-tight text-white">POLAR</span>
           </div>
 
-          <div className="hidden items-center space-x-7 md:flex">
-            <a className="text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
+          <div className="hidden items-center space-x-5 md:flex">
+            <a className="px-2 py-2 text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
               Features
             </a>
-            <a className="text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
+            <a className="px-2 py-2 text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
               Showcase
             </a>
-            <a className="text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
+            <a className="px-2 py-2 text-xs font-medium text-gray-300 transition-colors hover:text-white" href="#">
               Docs
             </a>
             <button
-              className="rounded-full bg-[#E84142] px-4 py-1.5 text-xs font-medium text-white shadow-lg shadow-red-900/20 transition-all hover:bg-red-600"
+              className="rounded-full bg-[#E84142] px-5 py-2 text-xs font-medium text-white shadow-lg shadow-red-900/20 transition-all hover:bg-red-600"
               onClick={() => router.push("/app/new")}
               type="button"
             >
@@ -88,18 +99,52 @@ export default function HomePage() {
             </button>
           </div>
 
-          <button className="text-gray-300 hover:text-white md:hidden" type="button">
-            <Menu className="h-4 w-4" />
+          <button
+            className="p-2 text-gray-300 hover:text-white md:hidden"
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-expanded={mobileMenuOpen}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
+
+        {/* Mobile menu drawer */}
+        {mobileMenuOpen && (
+          <div className="border-t border-white/10 px-4 pb-4 pt-2 md:hidden">
+            <nav className="flex flex-col space-y-3">
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-white/5 hover:text-white" href="#">
+                Features
+              </a>
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-white/5 hover:text-white" href="#">
+                Showcase
+              </a>
+              <a className="rounded-lg px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-white/5 hover:text-white" href="#">
+                Docs
+              </a>
+              <button
+                className="rounded-lg bg-[#E84142] px-3 py-2 text-sm font-medium text-white transition-all hover:bg-red-600"
+                onClick={() => router.push("/app/new")}
+                type="button"
+              >
+                Launch App
+              </button>
+            </nav>
+          </div>
+        )}
       </motion.nav>
 
+      <main id="main">
       <div className="relative flex h-screen flex-col justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
+          <NextImage
             alt="Majestic snowy mountain landscape"
             className="h-full w-full object-cover opacity-60"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5O49QrKH-qB3ziL7XX6rMotMvVLnHK-A3WaZKqel-F19elGC1IKL8Nus2HoOwbhENA1UDAyjhOIrSkhkEdNUfyu8sZO5qVQoKgqEDcubqFwFw9K2OaZaQiVXqUcbtIXDQZxXRhTVv5FNgSSnugxGY5ZnBPmzPAunW2RDuJdvvsttnbTdkP4x8jxOeXnF1nudaqdaN8s2Uxh3L4B-bxWc8wWs3MZV2Lsqi5HnRLrLU3fbDqYi8v8ySm7KFMqEyiFXfGVp8wUr0hA4"
+            fill
+            priority
+            sizes="100vw"
           />
           <div className="bg-hero-gradient absolute inset-0" />
           <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay" />
@@ -124,9 +169,9 @@ export default function HomePage() {
             {["Build", "apps", "that"].map((word, i) => (
               <motion.span
                 key={word}
-                initial={{ opacity: 0, y: 12 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, ease: "easeOut", delay: 0.5 + i * 0.1 }}
+                transition={{ duration: 0.35, ease: "easeOut", delay: prefersReducedMotion ? 0 : 0.5 + i * 0.1 }}
                 className="inline-block mr-[0.3em]"
               >
                 {word}
@@ -136,9 +181,9 @@ export default function HomePage() {
             {["live", "forever"].map((word, i) => (
               <motion.span
                 key={word}
-                initial={{ opacity: 0, y: 12 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, ease: "easeOut", delay: 0.8 + i * 0.1 }}
+                transition={{ duration: 0.35, ease: "easeOut", delay: prefersReducedMotion ? 0 : 0.8 + i * 0.1 }}
                 className="inline-block mr-[0.3em] bg-gradient-to-r from-white via-[#A5C9E5] to-blue-400 bg-clip-text text-transparent"
               >
                 {word}
@@ -155,7 +200,8 @@ export default function HomePage() {
             {/* Main Prompt Container */}
             <div className="w-full glass-panel border border-white/10 rounded-2xl p-5 mb-5 shadow-2xl flex flex-col min-h-[180px] bg-gray-900/40">
               <textarea
-                className="w-full bg-transparent border-none text-white placeholder-gray-400 focus:ring-0 focus:outline-none text-xl py-1.5 px-1.5 font-light resize-none h-24"
+                aria-label="Describe your web3 app"
+                className="w-full bg-transparent border-none text-white placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:outline-none text-xl py-1.5 px-1.5 font-light resize-none h-24 rounded-lg"
                 placeholder="Ask Polar to build a prototype of..."
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
@@ -167,27 +213,28 @@ export default function HomePage() {
                 }}
               />
               <div className="mt-auto flex items-center justify-between pt-3 border-t border-white/5">
-                <div className="flex items-center gap-5 overflow-x-auto">
-                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs" type="button">
+                <div className="flex items-center gap-3 overflow-x-auto">
+                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs py-2 px-1 disabled:opacity-40 disabled:cursor-not-allowed" type="button" disabled aria-label="Attach image (coming soon)">
                     <Image className="h-4 w-4" />
                     <span>Attach Image</span>
                   </button>
-                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs" type="button">
+                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs py-2 px-1 disabled:opacity-40 disabled:cursor-not-allowed" type="button" disabled aria-label="Quick actions (coming soon)">
                     <Zap className="h-4 w-4" />
                   </button>
-                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs" type="button">
+                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs py-2 px-1 disabled:opacity-40 disabled:cursor-not-allowed" type="button" disabled aria-label="Build mode (coming soon)">
                     <Wrench className="h-4 w-4" />
                     <span>Build mode</span>
                   </button>
-                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs" type="button">
+                  <button className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-xs py-2 px-1 disabled:opacity-40 disabled:cursor-not-allowed" type="button" disabled aria-label="Visibility (coming soon)">
                     <Globe className="h-4 w-4" />
                     <span>Public</span>
                   </button>
                 </div>
                 <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2.5 shadow-lg transition-transform hover:scale-105 flex items-center justify-center"
+                  className="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-3 shadow-lg transition-transform hover:scale-105 flex items-center justify-center"
                   onClick={submitPrompt}
                   type="button"
+                  aria-label="Submit prompt"
                 >
                   <ArrowUp className="h-4 w-4" />
                 </button>
@@ -202,7 +249,7 @@ export default function HomePage() {
               {SUGGESTED_PROMPTS.map((item) => (
                 <button
                   key={item.label}
-                  className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs hover:bg-white/10 transition-colors"
+                  className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-gray-300 text-xs hover:bg-white/10 transition-colors"
                   onClick={() => setPrompt(item.prompt)}
                   type="button"
                 >
@@ -325,14 +372,14 @@ export default function HomePage() {
                 <CheckCircle2 className="mt-1 mr-4 h-5 w-5 text-[#E84142]" />
                 <div>
                   <h4 className="font-semibold text-white">Censorship Resistant</h4>
-                  <p className="text-sm text-gray-500">Your code belongs to you and the network. No one can take it down.</p>
+                  <p className="text-sm text-gray-400">Your code belongs to you and the network. No one can take it down.</p>
                 </div>
               </div>
               <div className="flex items-start">
                 <CheckCircle2 className="mt-1 mr-4 h-5 w-5 text-[#E84142]" />
                 <div>
                   <h4 className="font-semibold text-white">Composability First</h4>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-400">
                     Easily integrate with existing protocols like Trader Joe, Benqi, and Aave.
                   </p>
                 </div>
@@ -358,10 +405,14 @@ export default function HomePage() {
           >
             <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-3xl" />
             <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl transition-transform duration-500 hover:rotate-0 lg:rotate-1">
-              <img
+              <NextImage
                 alt="Frozen futuristic laptop with code"
                 className="w-full object-cover opacity-90 transition-opacity hover:opacity-100"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuARXA6UvVeg_dm7STvvv33ASgUAQz6SwYjqGQttuDOErIq654aflL92zZE-Niw0qsvw-M3uhtLRGMv9Q1ZwaqraRE5_a76mpFAXR236y5mVnr1hX2ni0IfX65APJOzvcr7lOLtfhkOVvkrNxnITYPIWrSHaMikUrvd-Rf42_obMkvQLJLiSpABqj8PiPLzVuJ-89aYQdmOUO3dk1yGx7OVTQMLo4O4ITA2Ls_y67jrFjt3gnWIz-6T_g1h8KXKc8PEnrkce-_Rvs2U"
+                width={800}
+                height={600}
+                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="glass-panel absolute right-6 bottom-6 left-6 rounded-xl border border-white/20 p-4">
                 <div className="mb-2 flex items-center justify-between">
@@ -384,7 +435,7 @@ export default function HomePage() {
 
       <section className="relative overflow-hidden py-24">
         <div
-          className="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
+          className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{
             backgroundImage:
               "url('https://lh3.googleusercontent.com/aida-public/AB6AXuB13MbSy6aXx7swN-UE9FjPbrVc38LmYicM1TCXM8DZC-Qm-0KI6HCDo0CRFe39Hyl2PyKzJFGrklSfQeDR80wtNZ3igVrUlHGL5qTh112ahQvy4sX3sli7m4263quxv3dFXPM2vJ2a6F5CI8jbqhu0xm6g-83KpIIOJWNwrrh3SswZK6k7gHGN_Oobzmj5ESexBDvAaPv15EhEjAo1vpp-N_lyVo7eLHw7GqcYeSBuR-75Utdc2MHqms51sw_qZtviJf27EX3V6RE')",
@@ -428,10 +479,13 @@ export default function HomePage() {
               </div>
 
               <div className="relative h-64 overflow-hidden md:h-full">
-                <img
+                <NextImage
                   alt="Frozen trophy prize"
                   className="h-full w-full scale-110 object-cover transition-transform duration-700 hover:scale-100"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuAr2gWYOIES5kU1WFw-eRWgFxhhFUge3HDFufQhWgSUvyz-JFPrpKEH2Kit_yAEOrWVtOtvZGcsqFOuN_1afStX0um4sqVkeAZEV2Xqp6QPg69Bdr0gBJxA6YVJ9vHjTjUYSEXn_UUV5eCHpA-HCPRDhnLS2a548z8oGgLv805xiPeUbvcLuO4bJRZ77oKmKUIUyLFvFTUFG7XVkCpczZJz83KxgNhufxlsb0PR_MCo8d9SCVsIsqg-VwE7l2_E__vuPl7X2i_82uA"
+                  fill
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-transparent" />
               </div>
@@ -439,6 +493,7 @@ export default function HomePage() {
           </motion.div>
         </motion.div>
       </section>
+      </main>
 
       <motion.footer
         initial="hidden"
@@ -455,15 +510,15 @@ export default function HomePage() {
                 <Snowflake className="h-6 w-6 text-[#E84142]" />
                 <span className="text-display text-xl font-bold text-white">POLAR</span>
               </div>
-              <p className="mb-4 text-sm text-gray-500">Building the immutable web, one AI prompt at a time.</p>
+              <p className="mb-4 text-sm text-gray-400">Building the immutable web, one AI prompt at a time.</p>
               <div className="flex space-x-4">
-                <a className="text-gray-500 transition-colors hover:text-white" href="#">
+                <a className="text-gray-400 transition-colors hover:text-white" href="#">
                   <span className="text-sm">Twitter</span>
                 </a>
-                <a className="text-gray-500 transition-colors hover:text-white" href="#">
+                <a className="text-gray-400 transition-colors hover:text-white" href="#">
                   <span className="text-sm">Discord</span>
                 </a>
-                <a className="text-gray-500 transition-colors hover:text-white" href="#">
+                <a className="text-gray-400 transition-colors hover:text-white" href="#">
                   <span className="text-sm">GitHub</span>
                 </a>
               </div>
@@ -471,7 +526,7 @@ export default function HomePage() {
 
             <div>
               <h4 className="mb-4 font-semibold text-white">Platform</h4>
-              <ul className="space-y-2 text-sm text-gray-500">
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <a className="transition-colors hover:text-[#E84142]" href="#">
                     AI Builder
@@ -497,7 +552,7 @@ export default function HomePage() {
 
             <div>
               <h4 className="mb-4 font-semibold text-white">Resources</h4>
-              <ul className="space-y-2 text-sm text-gray-500">
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <a className="transition-colors hover:text-[#E84142]" href="#">
                     Documentation
@@ -523,7 +578,7 @@ export default function HomePage() {
 
             <div>
               <h4 className="mb-4 font-semibold text-white">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-500">
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <a className="transition-colors hover:text-[#E84142]" href="#">
                     Privacy Policy
@@ -543,56 +598,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 md:flex-row">
-            <p className="text-center text-xs text-gray-600 md:text-left">
+          <div className="border-t border-white/5 pt-8">
+            <p className="text-center text-xs text-gray-400">
               © 2026 Polar Labs. All rights reserved. Powered by Avalanche.
             </p>
-            <div className="flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-3 py-1">
-              <div className="h-2 w-2 rounded-full bg-green-500" />
-              <span className="text-xs text-gray-400">Systems Operational</span>
-            </div>
           </div>
         </div>
       </motion.footer>
 
-      <style jsx global>{`
-        .text-display {
-          font-family: var(--font-space-grotesk);
-        }
-
-        button,
-        a[href] {
-          cursor: pointer;
-        }
-
-        .glass-panel {
-          background: rgba(18, 26, 43, 0.6);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .bg-hero-gradient {
-          background: linear-gradient(to bottom, rgba(11, 16, 27, 0.3), rgba(11, 16, 27, 1));
-        }
-
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-          background: #0b101b;
-        }
-
-        ::-webkit-scrollbar-thumb {
-          background: #2d3a52;
-          border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-          background: #3e4c66;
-        }
-      `}</style>
     </div>
   );
 }

@@ -65,3 +65,48 @@
     @apply font-sans;
   }
 }
+
+/* Polar landing page utilities */
+.text-display {
+  font-family: var(--font-space-grotesk);
+}
+
+button,
+a[href] {
+  cursor: pointer;
+}
+
+.glass-panel {
+  background: rgba(18, 26, 43, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bg-hero-gradient {
+  background: linear-gradient(to bottom, rgba(11, 16, 27, 0.3), rgba(11, 16, 27, 1));
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b101b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2d3a52;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3e4c66;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2d3a52 #0b101b;
+}
