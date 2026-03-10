@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Code, Eye, FileCode2, Rocket } from "lucide-react";
+import { Code, Eye, FileCode2, MessageSquare, Rocket } from "lucide-react";
 import { DM_Sans, Space_Grotesk } from "next/font/google";
 import { ChatPanel } from "@/components/builder/chat-panel";
 import { CodeViewer } from "@/components/builder/code-viewer";
@@ -25,10 +25,10 @@ const spaceGrotesk = Space_Grotesk({
 
 type PanelView = "preview" | "frontend" | "backend";
 
-const VIEW_OPTIONS: { id: PanelView; label: string; icon: typeof Eye }[] = [
-  { id: "preview", label: "Preview", icon: Eye },
-  { id: "frontend", label: "Frontend", icon: Code },
-  { id: "backend", label: "Backend", icon: FileCode2 },
+const VIEW_OPTIONS: { id: PanelView; label: string; shortLabel: string; icon: typeof Eye }[] = [
+  { id: "preview", label: "Preview", shortLabel: "Preview", icon: Eye },
+  { id: "frontend", label: "Frontend", shortLabel: "Front", icon: Code },
+  { id: "backend", label: "Backend", shortLabel: "Back", icon: FileCode2 },
 ];
 
 export default function BuilderPage() {
@@ -36,6 +36,7 @@ export default function BuilderPage() {
   const { state, generate, setDeployment, setPhase } = useGeneration();
   const { deploying, result: deployResult, error: deployError, deploy } = useDeploy();
   const [activeView, setActiveView] = useState<PanelView>("preview");
+  const [mobileTab, setMobileTab] = useState<"chat" | "panel">("chat");
 
   useEffect(() => {
     const prompt = searchParams.get("prompt");
@@ -50,6 +51,13 @@ export default function BuilderPage() {
     }
   }, [deployResult, setDeployment]);
 
+  // Auto-switch to panel view on mobile when generation completes
+  useEffect(() => {
+    if (state.phase === "generated" && state.generation) {
+      setMobileTab("panel");
+    }
+  }, [state.phase, state.generation]);
+
   const handleDeploy = async () => {
     if (!state.generation) return;
     setPhase("deploying");
@@ -60,22 +68,22 @@ export default function BuilderPage() {
 
   return (
     <div
-      className={`${dmSans.variable} ${spaceGrotesk.variable} flex h-screen flex-col bg-[#0B101B]`}
+      className={`${dmSans.variable} ${spaceGrotesk.variable} flex h-dvh flex-col bg-[#0B101B]`}
       style={{ fontFamily: "var(--font-dm-sans)" }}
     >
       {/* ─── Header ─── */}
-      <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-4">
-        <div className="flex items-center gap-4">
+      <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-3 sm:px-4">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
           <Logo variant="dark" />
-          <div className="h-5 w-px bg-white/10" />
-          <span className="text-sm font-medium text-[#8b919e]">{appName}</span>
+          <div className="hidden h-5 w-px bg-white/10 sm:block" />
+          <span className="hidden text-sm font-medium text-[#8b919e] sm:block truncate">{appName}</span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {deployResult?.success && (
             <span className="flex items-center gap-1.5 text-xs text-green-400">
               <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
-              Live
+              <span className="hidden sm:inline">Live</span>
             </span>
           )}
           <DeployButton
@@ -88,8 +96,8 @@ export default function BuilderPage() {
         </div>
       </header>
 
-      {/* ─── Body ─── */}
-      <div className="flex min-h-0 flex-1 overflow-hidden">
+      {/* ─── Desktop Body (2-column) ─── */}
+      <div className="hidden min-h-0 flex-1 overflow-hidden md:flex">
         {/* Chat Panel */}
         <div className="w-[340px] shrink-0">
           <ChatPanel
@@ -173,6 +181,101 @@ export default function BuilderPage() {
               <DeployResultPanel result={deployResult} />
             </div>
           )}
+        </div>
+      </div>
+
+      {/* ─── Mobile Body (single column with tab switch) ─── */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:hidden">
+        {/* Mobile content area */}
+        <div className="min-h-0 flex-1 overflow-hidden">
+          {mobileTab === "chat" ? (
+            <ChatPanel
+              messages={state.messages}
+              generating={state.phase === "generating"}
+              onSendMessage={(message) => void generate(message)}
+            />
+          ) : (
+            <div className="flex h-full flex-col bg-[#0B101B]">
+              {/* Mobile panel header with compact toggle */}
+              <div className="flex items-center justify-between border-b border-white/10 px-3 py-2.5">
+                <p className="text-sm font-semibold text-white">
+                  {activeView === "preview" ? "Preview" : activeView === "frontend" ? "Frontend" : "Contract"}
+                </p>
+
+                <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5">
+                  {VIEW_OPTIONS.map(({ id, shortLabel, icon: Icon }) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setActiveView(id)}
+                      className={`flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${
+                        activeView === id
+                          ? "bg-white/10 text-white"
+                          : "text-[#5c6370]"
+                      }`}
+                      aria-pressed={activeView === id}
+                    >
+                      <Icon className="h-3 w-3" />
+                      {shortLabel}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Panel content */}
+              <div className="min-h-0 flex-1 p-3">
+                {activeView === "preview" && (
+                  <PreviewPanel
+                    frontendCode={state.generation?.frontendCode ?? null}
+                    contractAddress={deployResult?.contractAddress}
+                  />
+                )}
+                {activeView === "frontend" && (
+                  <CodeViewer
+                    code={state.generation?.frontendCode ?? null}
+                    language="frontend"
+                  />
+                )}
+                {activeView === "backend" && (
+                  <CodeViewer
+                    code={state.generation?.contractSource ?? null}
+                    language="backend"
+                  />
+                )}
+              </div>
+
+              {/* Deploy result on mobile */}
+              {deployResult && (
+                <div className="border-t border-white/10 p-3">
+                  <DeployResultPanel result={deployResult} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* ─── Mobile Bottom Tab Bar ─── */}
+        <div className="flex shrink-0 border-t border-white/10 bg-[#0B101B]">
+          <button
+            type="button"
+            onClick={() => setMobileTab("chat")}
+            className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors ${
+              mobileTab === "chat" ? "text-[#E84142]" : "text-[#5c6370]"
+            }`}
+          >
+            <MessageSquare className="h-5 w-5" />
+            Chat
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileTab("panel")}
+            className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors ${
+              mobileTab === "panel" ? "text-[#E84142]" : "text-[#5c6370]"
+            }`}
+          >
+            <Eye className="h-5 w-5" />
+            Output
+          </button>
         </div>
       </div>
     </div>

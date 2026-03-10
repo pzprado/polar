@@ -20,7 +20,7 @@ export function ChatPanel({ messages, generating, onSendMessage }: ChatPanelProp
   }, [messages, generating]);
 
   return (
-    <div className="flex h-full min-h-0 flex-col border-r border-white/10 bg-[#0B101B]">
+    <div className="flex h-full min-h-0 flex-col border-r-0 md:border-r border-white/10 bg-[#0B101B]">
       <div className="border-b border-white/10 px-4 py-3">
         <h2 className="text-sm font-semibold text-white">Chat</h2>
         <p className="text-xs text-[#5c6370]">Describe what you want to build</p>
