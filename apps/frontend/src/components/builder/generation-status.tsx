@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
 
 const THINKING_STEPS = [
-  "Understanding your request...",
-  "Selecting contract template...",
-  "Configuring smart contract parameters...",
-  "Generating frontend code...",
-  "Wiring contract interactions...",
-  "Finalizing your app...",
+  "Reading your mind... just kidding, reading your prompt",
+  "Picking the perfect smart contract template",
+  "Teaching your contract some new tricks",
+  "Crafting a shiny frontend",
+  "Wiring everything to the blockchain",
+  "Almost there... adding the finishing touches",
 ];
 
 const STEP_INTERVAL = 3000;
