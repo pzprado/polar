@@ -116,11 +116,34 @@ export default function HomePage() {
             <span className="text-[11px] font-medium uppercase tracking-wide text-blue-200">Powered by Avalanche</span>
           </motion.div>
 
-          <motion.h1 variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="text-display mb-4 text-4xl leading-tight font-bold tracking-tight text-white drop-shadow-2xl md:text-6xl">
-            Build apps that <br />
-            <span className="bg-gradient-to-r from-white via-[#A5C9E5] to-blue-400 bg-clip-text text-transparent">
-              live forever
-            </span>
+          <motion.h1
+            variants={fadeUp}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="text-display mb-4 text-4xl leading-tight font-bold tracking-tight text-white drop-shadow-2xl md:text-6xl"
+          >
+            {["Build", "apps", "that"].map((word, i) => (
+              <motion.span
+                key={word}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut", delay: 0.5 + i * 0.1 }}
+                className="inline-block mr-[0.3em]"
+              >
+                {word}
+              </motion.span>
+            ))}
+            <br />
+            {["live", "forever"].map((word, i) => (
+              <motion.span
+                key={word}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut", delay: 0.8 + i * 0.1 }}
+                className="inline-block mr-[0.3em] bg-gradient-to-r from-white via-[#A5C9E5] to-blue-400 bg-clip-text text-transparent"
+              >
+                {word}
+              </motion.span>
+            ))}
           </motion.h1>
 
           <motion.p variants={fadeUp} transition={{ duration: 0.5, ease: "easeOut" }} className="mb-8 max-w-xl text-base font-light text-gray-300 md:text-lg">
@@ -522,7 +545,7 @@ export default function HomePage() {
 
           <div className="flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 md:flex-row">
             <p className="text-center text-xs text-gray-600 md:text-left">
-              © 2024 Polar Labs. All rights reserved. Powered by Avalanche.
+              © 2026 Polar Labs. All rights reserved. Powered by Avalanche.
             </p>
             <div className="flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-3 py-1">
               <div className="h-2 w-2 rounded-full bg-green-500" />
@@ -535,6 +558,11 @@ export default function HomePage() {
       <style jsx global>{`
         .text-display {
           font-family: var(--font-space-grotesk);
+        }
+
+        button,
+        a[href] {
+          cursor: pointer;
         }
 
         .glass-panel {
