@@ -11,6 +11,12 @@ export const metadata: Metadata = {
     description: "AI-powered web3 app builder for Avalanche",
     type: "website",
   },
+  appleWebApp: {
+    statusBarStyle: "black-translucent",
+  },
+  other: {
+    "theme-color": "#0B101B",
+  },
 };
 
 export default function RootLayout({
@@ -20,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-background text-foreground antialiased">
+      <body className="min-h-screen bg-[#0B101B] text-foreground antialiased">
         {children}
         <Analytics />
       </body>

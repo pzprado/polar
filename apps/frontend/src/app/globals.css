@@ -58,7 +58,8 @@
 
   html,
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: #0B101B;
   }
 
   body {
