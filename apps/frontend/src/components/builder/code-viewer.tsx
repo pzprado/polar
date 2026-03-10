@@ -29,7 +29,7 @@ export function CodeViewer({ code, language = "frontend" }: CodeViewerProps) {
       <div className="flex h-full flex-col items-center justify-center gap-2">
         <IconComponent className={`h-6 w-6 ${iconColor}`} strokeWidth={1.5} />
         <p className="text-sm text-[#A8A29E]">
-          {isFrontend ? "Your React component" : "Your Solidity contract"} lands here
+          {isFrontend ? "Your React component" : "Your backend logic"} lands here
         </p>
         <p className="text-xs text-[#A8A29E]/60">Ready when you are</p>
       </div>

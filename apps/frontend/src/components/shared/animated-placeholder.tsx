@@ -76,8 +76,8 @@ export function AnimatedPlaceholder({ visible }: { visible: boolean }) {
             className="relative inline-block"
           >
             <span
-              className="text-[#E84142]/60"
-              style={{ textShadow: "0 0 12px rgba(232, 65, 66, 0.4)" }}
+              className="text-[#E84142]/80"
+              style={{ textShadow: "0 0 16px rgba(232, 65, 66, 0.25)" }}
             >
               {ROTATING_OPTIONS[activeOption]}
             </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
@@ -47,19 +47,22 @@ const FEATURES = [
     num: "01",
     title: "Permanent Backend",
     desc: "Your app logic runs on infrastructure that never shuts down. No AWS bills, no servers to babysit — just code that keeps running.",
-    numColor: "text-[#E84142]/25",
+    numColor: "text-[#E84142]/40",
+    accent: "border-t-2 border-[#E84142]/30",
   },
   {
     num: "02",
     title: "AI-Powered Code",
     desc: "Describe what you want in plain English. Polar picks the right architecture and writes the code for you.",
-    numColor: "text-[#2563EB]/25",
+    numColor: "text-[#2563EB]/40",
+    accent: "border-t-2 border-[#2563EB]/30",
   },
   {
     num: "03",
     title: "Instant Launch",
     desc: "From prompt to live app in minutes. Building, testing, and publishing happen automatically.",
-    numColor: "text-[#D97706]/25",
+    numColor: "text-[#D97706]/40",
+    accent: "border-t-2 border-[#D97706]/30",
   },
 ];
 
@@ -67,7 +70,15 @@ export default function HomePage() {
   const router = useRouter();
   const [prompt, setPrompt] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const submitPrompt = () => {
     const cleaned = prompt.trim();
@@ -95,7 +106,11 @@ export default function HomePage() {
         initial={prefersReducedMotion ? false : { opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="fixed top-0 z-50 w-full border-b border-black/[0.06] bg-[#F8F6F3]/90 backdrop-blur-md"
+        className={`fixed top-0 z-50 w-full transition-[background-color,border-color,backdrop-filter] duration-300 ${
+          scrolled
+            ? "border-b border-black/[0.06] bg-[#F8F6F3]/90 backdrop-blur-md"
+            : "border-b border-transparent bg-transparent"
+        }`}
       >
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
@@ -167,8 +182,8 @@ export default function HomePage() {
           <div className="absolute inset-0 z-0">
             <NextImage
               alt="Majestic snowy mountain landscape"
-              className="h-full w-full object-cover opacity-50"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5O49QrKH-qB3ziL7XX6rMotMvVLnHK-A3WaZKqel-F19elGC1IKL8Nus2HoOwbhENA1UDAyjhOIrSkhkEdNUfyu8sZO5qVQoKgqEDcubqFwFw9K2OaZaQiVXqUcbtIXDQZxXRhTVv5FNgSSnugxGY5ZnBPmzPAunW2RDuJdvvsttnbTdkP4x8jxOeXnF1nudaqdaN8s2Uxh3L4B-bxWc8wWs3MZV2Lsqi5HnRLrLU3fbDqYi8v8ySm7KFMqEyiFXfGVp8wUr0hA4"
+              className="h-full w-full object-cover opacity-60"
+              src="/images/hero-matterhorn-day.jpg"
               fill
               priority
               sizes="100vw"
@@ -187,7 +202,7 @@ export default function HomePage() {
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-black/[0.03] px-3 py-1"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#E84142]/15 bg-[#E84142]/[0.04] px-3 py-1"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-[#E84142]" />
               <span className="text-[11px] font-medium uppercase tracking-wide text-[#78716C]">
@@ -368,6 +383,7 @@ export default function HomePage() {
                   key={feature.num}
                   variants={fadeUp}
                   transition={{ duration: 0.5, ease: "easeOut" }}
+                  className={`pt-6 ${feature.accent}`}
                 >
                   <span className={`text-display text-5xl font-bold ${feature.numColor}`}>
                     {feature.num}
@@ -385,7 +401,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── The Engine ─── */}
-        <section className="overflow-hidden bg-gradient-to-b from-[#F8F6F3] to-[#F0EDEA] py-32">
+        <section className="overflow-hidden bg-gradient-to-b from-[#FEF7F4] to-[#F5F0ED] py-32">
           <div className="mx-auto grid max-w-7xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
             <motion.div
               initial={
@@ -479,7 +495,7 @@ export default function HomePage() {
 
         {/* ─── CTA ─── */}
         <section className="relative overflow-hidden py-20">
-          <div className="absolute inset-0 bg-gradient-to-t from-[#F8F6F3] via-[#F8F6F3]/95 to-[#F0EDEA]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#F8F6F3] via-[#F8F6F3]/95 to-[#F5F0ED]" />
 
           <motion.div
             initial={motionInitial}
@@ -552,7 +568,7 @@ export default function HomePage() {
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         variants={fadeIn}
-        className="border-t border-black/[0.06] bg-[#EFEDEA] py-10"
+        className="border-t border-black/[0.06] bg-[#F3EFEC] py-10"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
