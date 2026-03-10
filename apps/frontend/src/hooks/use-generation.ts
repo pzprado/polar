@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { BuilderPhase, BuilderState, ChatMessage, GenerationResult } from "@/lib/types";
+import { BuilderPhase, BuilderState, ChatMessage, GenerationRequest, GenerationResult } from "@/lib/types";
 
 export function useGeneration() {
   const [state, setState] = useState<BuilderState>({
@@ -20,20 +20,41 @@ export function useGeneration() {
       timestamp: Date.now(),
     };
 
-    setState((previous) => ({
-      ...previous,
-      phase: "generating",
-      prompt,
-      error: null,
-      deployment: null,
-      messages: [...previous.messages, userMessage],
-    }));
+    // Capture current state before updating for the request payload
+    let currentGeneration: GenerationResult | null = null;
+    let currentMessages: ChatMessage[] = [];
+
+    setState((previous) => {
+      currentGeneration = previous.generation;
+      currentMessages = previous.messages;
+      return {
+        ...previous,
+        phase: "generating",
+        prompt,
+        error: null,
+        deployment: null,
+        messages: [...previous.messages, userMessage],
+      };
+    });
 
     try {
+      // Build request with full context
+      const requestBody: GenerationRequest = {
+        prompt,
+        history: currentMessages.map((m) => ({
+          role: m.role,
+          content: m.content,
+        })),
+        currentFrontendCode: currentGeneration?.frontendCode ?? undefined,
+        currentContractSource: currentGeneration?.contractSource ?? undefined,
+        currentTemplateId: currentGeneration?.templateId ?? undefined,
+        currentContractParameters: currentGeneration?.contractParameters ?? undefined,
+      };
+
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
