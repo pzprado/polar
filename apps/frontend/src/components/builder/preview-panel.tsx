@@ -14,8 +14,8 @@ export function PreviewPanel({ frontendCode, contractAddress }: PreviewPanelProp
     return (
       <div className="flex h-full flex-col items-center justify-center">
         <div className="h-8 w-8 rounded-full border-2 border-white/10 mb-4" />
-        <p className="text-sm text-[#8b919e]">Your app preview will appear here</p>
-        <p className="mt-1 text-xs text-[#5c6370]">Describe what you want to build</p>
+        <p className="text-sm font-medium text-white">Welcome to Your Blank App</p>
+        <p className="mt-1 text-xs text-[#5c6370]">Start chatting to build your app</p>
       </div>
     );
   }
