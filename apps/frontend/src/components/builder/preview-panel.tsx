@@ -3,6 +3,8 @@
 import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import { polarSandpackTheme, sandpackCustomSetup } from "@/lib/preview/sandpack-config";
 import { getSandpackFiles } from "@/lib/preview/template-files";
+import { motion } from "motion/react";
+import { Snowflake } from "lucide-react";
 
 interface PreviewPanelProps {
   frontendCode: string | null;
@@ -13,9 +15,29 @@ export function PreviewPanel({ frontendCode, contractAddress }: PreviewPanelProp
   if (!frontendCode) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
-        <div className="h-8 w-8 rounded-full border-2 border-white/10 mb-4" />
-        <p className="text-sm font-medium text-white">Welcome to Your Blank App</p>
-        <p className="mt-1 text-xs text-[#5c6370]">Start chatting to build your app</p>
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="mb-4"
+        >
+          <Snowflake className="h-8 w-8 text-[#E84142]/40" strokeWidth={1.5} />
+        </motion.div>
+        <motion.p
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+          className="text-sm font-medium text-white"
+        >
+          Your app starts here
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 1, 0.5, 1] }}
+          className="mt-1 text-xs text-[#5c6370]"
+        >
+          Tell me what to build and I'll make it happen
+        </motion.p>
       </div>
     );
   }
