@@ -1,4 +1,5 @@
 import { ContractCategory } from "@/lib/types";
+import { getAllSkillContent } from "./skill-content";
 
 const TEMPLATE_CATALOG = `## Available Smart Contract Templates
 
@@ -87,22 +88,26 @@ The frontend_code MUST follow these rules:
 
 1. Self-contained: Single file, no imports except React and ethers.
 2. Default export: The component must be the default export.
-3. Styling: Use inline styles only, keep it clean and modern.
+3. Styling: Use inline styles only. Follow the design skills below for quality.
 4. Contract interaction: Use ABI + contract address if available.
    - Before deployment, show a demo UI with simulated data.
    - Contract address is injected as window.__POLAR_CONTRACT_ADDRESS__.
 5. ethers usage: Use ethers v6 APIs.
-6. Error handling: Wrap contract calls in try/catch.
-7. Design: Light UI, rounded corners, Avalanche red (#E84142) for primary buttons.
-8. Mock mode: Show useful UI even before deployment.
-9. Keep it simple and focused.
+6. Mock mode: Show useful UI even before deployment.
+7. Keep it simple and focused.
 
 ## Important Notes
 - Do NOT output raw Solidity code.
 - Parameter values must be valid and reasonable for the selected template.
 - contract_name should be PascalCase and match the requested app.
 - For ENTRY_FEE, convert AVAX values to wei.
-- Always provide all parameters for the selected template.`;
+- Always provide all parameters for the selected template.
+
+## Design & Quality Skills
+
+Follow ALL of the guidelines below when generating the React component. These are mandatory, not suggestions.
+
+${getAllSkillContent()}`;
 }
 
 export function buildCurrentCodeContext(opts: {
