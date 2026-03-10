@@ -106,7 +106,7 @@ a[href] {
 }
 
 /* Firefox scrollbar */
-* {
+body {
   scrollbar-width: thin;
   scrollbar-color: #2d3a52 #0b101b;
 }
