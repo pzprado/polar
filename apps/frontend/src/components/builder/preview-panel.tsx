@@ -1,6 +1,6 @@
 "use client";
 
-import { SandpackPreview, SandpackProvider, SandpackFileExplorer, SandpackLayout } from "@codesandbox/sandpack-react";
+import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import { polarSandpackTheme, sandpackCustomSetup } from "@/lib/preview/sandpack-config";
 import { getSandpackFiles } from "@/lib/preview/template-files";
 import { SandpackErrorReporter } from "./sandpack-error-reporter";
@@ -20,11 +20,6 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
     () => (frontendFiles ? getSandpackFiles(frontendFiles, contractAddress) : null),
     [frontendFiles, contractAddress],
   );
-
-  const visibleFiles = useMemo(() => {
-    if (!frontendFiles) return [];
-    return frontendFiles.map((f) => f.path.replace(/\.jsx$/, ".js"));
-  }, [frontendFiles]);
 
   if (!frontendFiles || !files) {
     return (
@@ -57,8 +52,6 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
     );
   }
 
-  const showExplorer = frontendFiles.length > 1;
-
   return (
     <div className="h-full overflow-hidden rounded-lg border border-black/[0.06] [&_.sp-wrapper]:!h-full [&_.sp-layout]:!h-full [&_.sp-preview-container]:!h-full [&_.sp-preview-iframe]:!h-full">
       <SandpackProvider
@@ -70,26 +63,14 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
           autorun: true,
           autoReload: true,
           externalResources: [],
-          visibleFiles: showExplorer ? visibleFiles : undefined,
           activeFile: "/App.js",
         }}
       >
-        {showExplorer ? (
-          <SandpackLayout>
-            <SandpackFileExplorer style={{ height: "100%", minHeight: 0 }} />
-            <SandpackPreview
-              style={{ height: "100%", minHeight: 0, flex: 1 }}
-              showOpenInCodeSandbox={false}
-              showRefreshButton
-            />
-          </SandpackLayout>
-        ) : (
-          <SandpackPreview
-            style={{ height: "100%", minHeight: 0 }}
-            showOpenInCodeSandbox={false}
-            showRefreshButton
-          />
-        )}
+        <SandpackPreview
+          style={{ height: "100%", minHeight: 0 }}
+          showOpenInCodeSandbox={false}
+          showRefreshButton
+        />
         {onError && <SandpackErrorReporter onError={onError} />}
       </SandpackProvider>
     </div>

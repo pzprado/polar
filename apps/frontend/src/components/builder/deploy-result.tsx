@@ -33,6 +33,33 @@ export function DeployResultPanel({ result }: DeployResultPanelProps) {
         Live on Fuji
       </span>
 
+      {/* Frontend URL — prominent CTA */}
+      {result.frontendUrl && (
+        <div className="rounded-lg border border-green-500/20 bg-green-500/5 p-3">
+          <p className="mb-2 text-xs font-medium text-green-700">Your app is live</p>
+          <CopyField
+            label="App URL"
+            value={result.frontendUrl}
+            copied={copied === "url"}
+            onCopy={() => copyText(result.frontendUrl!, "url")}
+          />
+          <a
+            href={result.frontendUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-700"
+          >
+            Visit Your App
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+      )}
+
+      {result.frontendError && (
+        <p className="text-xs text-amber-600">Frontend deploy note: {result.frontendError}</p>
+      )}
+
+      {/* Contract details — secondary */}
       {result.contractAddress && (
         <CopyField
           label="Contract Address"
@@ -51,8 +78,8 @@ export function DeployResultPanel({ result }: DeployResultPanelProps) {
         />
       )}
 
-      <div className="flex flex-wrap gap-3 border-t border-black/[0.06] pt-3">
-        {result.explorerUrl && (
+      {result.explorerUrl && (
+        <div className="border-t border-black/[0.06] pt-3">
           <a
             href={result.explorerUrl}
             target="_blank"
@@ -62,22 +89,7 @@ export function DeployResultPanel({ result }: DeployResultPanelProps) {
             View on Snowtrace
             <ExternalLink className="h-3 w-3" />
           </a>
-        )}
-        {result.frontendUrl && (
-          <a
-            href={result.frontendUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-[#2563EB] hover:underline"
-          >
-            View Live App
-            <ExternalLink className="h-3 w-3" />
-          </a>
-        )}
-      </div>
-
-      {result.frontendError && (
-        <p className="text-xs text-amber-600">Frontend deploy note: {result.frontendError}</p>
+        </div>
       )}
 
       <p className="text-xs text-[#A8A29E]">Enable Kite AI payments — coming soon</p>

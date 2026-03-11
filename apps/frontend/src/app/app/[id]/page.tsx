@@ -118,10 +118,22 @@ export default function BuilderPage() {
 
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {deployResult?.success && (
-            <span className="flex items-center gap-1.5 text-xs text-green-600">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="hidden sm:inline">Live</span>
-            </span>
+            deployResult.frontendUrl ? (
+              <a
+                href={deployResult.frontendUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs text-green-600 hover:text-green-700 transition-colors"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="hidden sm:inline underline">Live</span>
+              </a>
+            ) : (
+              <span className="flex items-center gap-1.5 text-xs text-green-600">
+                <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="hidden sm:inline">Live</span>
+              </span>
+            )
           )}
           <DeployButton
             onDeploy={handleDeploy}
