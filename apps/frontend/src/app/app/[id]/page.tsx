@@ -63,10 +63,11 @@ export default function BuilderPage() {
     }
   }, [deployResult, setDeployment]);
 
-  // Auto-switch to panel view on mobile when generation completes
+  // Auto-switch to panel view on mobile when generation completes + reset auto-fix counter
   useEffect(() => {
     if (state.phase === "generated" && state.generation) {
       setMobileTab("panel");
+      autoFixCountRef.current = 0;
     }
   }, [state.phase, state.generation]);
 

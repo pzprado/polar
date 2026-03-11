@@ -21,6 +21,13 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
     [frontendFiles, contractAddress],
   );
 
+  // Force Sandpack to fully remount when files change — prevents stale error screens
+  const sandpackKey = useMemo(() => {
+    if (!frontendFiles) return "empty";
+    const hash = frontendFiles.map((f) => f.path + f.content.length).join("|");
+    return hash;
+  }, [frontendFiles]);
+
   if (!frontendFiles || !files) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
@@ -55,6 +62,7 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
   return (
     <div className="h-full overflow-hidden rounded-lg border border-black/[0.06] [&_.sp-wrapper]:!h-full [&_.sp-layout]:!h-full [&_.sp-preview-container]:!h-full [&_.sp-preview-iframe]:!h-full">
       <SandpackProvider
+        key={sandpackKey}
         template="react"
         theme={polarSandpackTheme}
         files={files}

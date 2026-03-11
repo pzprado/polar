@@ -11,6 +11,9 @@ interface SandpackErrorReporterProps {
  * Headless component that sits inside SandpackProvider and detects
  * bundler/compile errors + runtime errors, then reports them via onError.
  * Debounces to avoid rapid-fire reports during Sandpack hot-reload cycles.
+ *
+ * Because the parent uses a `key` on SandpackProvider, this component
+ * remounts on every file change — so reportedErrorRef starts fresh each time.
  */
 export function SandpackErrorReporter({ onError }: SandpackErrorReporterProps) {
   const { sandpack, listen } = useSandpack();
@@ -19,7 +22,7 @@ export function SandpackErrorReporter({ onError }: SandpackErrorReporterProps) {
 
   const reportError = useCallback(
     (message: string) => {
-      // Don't report the same error twice
+      // Don't report the same error twice within the same mount cycle
       if (reportedErrorRef.current === message) return;
 
       // Clear any pending debounce

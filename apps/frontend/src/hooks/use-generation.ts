@@ -303,7 +303,7 @@ export function useGeneration() {
 
     try {
       const requestBody: GenerationRequest = {
-        prompt: `The generated app has an error in the preview. Fix this error while keeping all existing functionality intact:\n\n${errorMessage}`,
+        prompt: `The generated app has a runtime error in the Sandpack preview. The error is:\n\n"${errorMessage}"\n\nFix the root cause of this error. Common causes:\n- BigInt conversion: never use Number() on BigInt values, use .toString() instead\n- Missing imports: ensure all component imports resolve to existing files\n- Undefined variables: check all referenced state/props exist\n\nOutput the COMPLETE fixed code for ALL files.`,
         interviewSummary: summary ?? undefined,
         currentFrontendCode: currentState.generation.frontendCode,
         currentFrontendFiles: currentState.generation.frontendFiles,
