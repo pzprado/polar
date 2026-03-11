@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Code, Eye, FileCode2, MessageSquare, Rocket } from "lucide-react";
 import { DM_Sans, Space_Grotesk } from "next/font/google";
 import { ChatPanel } from "@/components/builder/chat-panel";
 import { CodeViewer } from "@/components/builder/code-viewer";
+import { MultiFileCodeViewer } from "@/components/builder/multi-file-code-viewer";
 import { DeployButton } from "@/components/builder/deploy-button";
 import { DeployResultPanel } from "@/components/builder/deploy-result";
 import { PreviewPanel } from "@/components/builder/preview-panel";
@@ -39,10 +40,14 @@ const VIEW_OPTIONS: { id: PanelView; label: string; shortLabel: string; icon: ty
 
 export default function BuilderPage() {
   const searchParams = useSearchParams();
-  const { state, generate, startInterview, respondToInterview, skipInterview, setDeployment, setPhase } = useGeneration();
+  const { state, generate, fixError, startInterview, respondToInterview, skipInterview, setDeployment, setPhase } = useGeneration();
   const { deploying, result: deployResult, error: deployError, deploy } = useDeploy();
   const [activeView, setActiveView] = useState<PanelView>("preview");
   const [mobileTab, setMobileTab] = useState<"chat" | "panel">("chat");
+
+  // Auto-fix: track attempts per generation cycle, max 2 retries
+  const autoFixCountRef = useRef(0);
+  const MAX_AUTO_FIXES = 2;
 
   // On load: start with product interview instead of immediate generation
   useEffect(() => {
@@ -68,17 +73,33 @@ export default function BuilderPage() {
   const handleDeploy = async () => {
     if (!state.generation) return;
     setPhase("deploying");
-    await deploy(state.generation.contractSource, state.generation.contractName);
+    await deploy({
+      contractSource: state.generation.contractSource,
+      contractName: state.generation.contractName,
+      frontendFiles: state.generation.frontendFiles,
+    });
   };
 
   // Route messages to interview or generation based on current phase
   const handleSendMessage = (message: string) => {
+    autoFixCountRef.current = 0; // Reset auto-fix counter on user action
     if (state.phase === "interviewing") {
       void respondToInterview(message);
     } else {
       void generate(message);
     }
   };
+
+  // Auto-fix preview errors: detect Sandpack errors and ask the AI to fix them
+  const handlePreviewError = useCallback(
+    (error: string) => {
+      if (state.phase === "generated" && autoFixCountRef.current < MAX_AUTO_FIXES) {
+        autoFixCountRef.current++;
+        void fixError(error);
+      }
+    },
+    [state.phase, fixError],
+  );
 
   const appName = state.generation?.contractName || "New App";
 
@@ -179,15 +200,13 @@ export default function BuilderPage() {
           <div className="min-h-0 flex-1 p-4">
             {activeView === "preview" && (
               <PreviewPanel
-                frontendCode={state.generation?.frontendCode ?? null}
+                frontendFiles={state.generation?.frontendFiles ?? null}
                 contractAddress={deployResult?.contractAddress}
+                onError={handlePreviewError}
               />
             )}
             {activeView === "frontend" && (
-              <CodeViewer
-                code={state.generation?.frontendCode ?? null}
-                language="frontend"
-              />
+              <MultiFileCodeViewer files={state.generation?.frontendFiles ?? null} />
             )}
             {activeView === "backend" && (
               <CodeViewer
@@ -254,15 +273,12 @@ export default function BuilderPage() {
               <div className="min-h-0 flex-1 p-3">
                 {activeView === "preview" && (
                   <PreviewPanel
-                    frontendCode={state.generation?.frontendCode ?? null}
+                    frontendFiles={state.generation?.frontendFiles ?? null}
                     contractAddress={deployResult?.contractAddress}
                   />
                 )}
                 {activeView === "frontend" && (
-                  <CodeViewer
-                    code={state.generation?.frontendCode ?? null}
-                    language="frontend"
-                  />
+                  <MultiFileCodeViewer files={state.generation?.frontendFiles ?? null} />
                 )}
                 {activeView === "backend" && (
                   <CodeViewer

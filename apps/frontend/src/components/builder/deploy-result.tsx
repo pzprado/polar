@@ -51,7 +51,7 @@ export function DeployResultPanel({ result }: DeployResultPanelProps) {
         />
       )}
 
-      <div className="border-t border-black/[0.06] pt-3">
+      <div className="flex flex-wrap gap-3 border-t border-black/[0.06] pt-3">
         {result.explorerUrl && (
           <a
             href={result.explorerUrl}
@@ -63,7 +63,22 @@ export function DeployResultPanel({ result }: DeployResultPanelProps) {
             <ExternalLink className="h-3 w-3" />
           </a>
         )}
+        {result.frontendUrl && (
+          <a
+            href={result.frontendUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs text-[#2563EB] hover:underline"
+          >
+            View Live App
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        )}
       </div>
+
+      {result.frontendError && (
+        <p className="text-xs text-amber-600">Frontend deploy note: {result.frontendError}</p>
+      )}
 
       <p className="text-xs text-[#A8A29E]">Enable Kite AI payments — coming soon</p>
     </div>

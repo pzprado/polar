@@ -60,6 +60,7 @@ export function useGeneration() {
           content: m.content,
         })),
         currentFrontendCode: currentGeneration?.frontendCode ?? undefined,
+        currentFrontendFiles: currentGeneration?.frontendFiles ?? undefined,
         currentContractSource: currentGeneration?.contractSource ?? undefined,
         currentTemplateId: currentGeneration?.templateId ?? undefined,
         currentContractParameters: currentGeneration?.contractParameters ?? undefined,
@@ -269,6 +270,82 @@ export function useGeneration() {
     });
   }, [generate]);
 
+  const fixError = useCallback(async (errorMessage: string) => {
+    // Read current state without modifying it
+    const currentState = await new Promise<BuilderState>((resolve) => {
+      setState((prev) => {
+        resolve(prev);
+        return prev;
+      });
+    });
+
+    // Only auto-fix if we have generated code in the right phase
+    if (currentState.phase !== "generated" || !currentState.generation) return null;
+
+    // Transition to generating with a "fixing" message
+    const fixingMessage: ChatMessage = {
+      role: "assistant",
+      content: "Spotted an issue in the preview. Fixing it now...",
+      timestamp: Date.now(),
+    };
+
+    setState((prev) => ({
+      ...prev,
+      phase: "generating",
+      error: null,
+      messages: [...prev.messages, fixingMessage],
+    }));
+
+    const summary = interviewSummaryRef.current;
+
+    try {
+      const requestBody: GenerationRequest = {
+        prompt: `The generated app has an error in the preview. Fix this error while keeping all existing functionality intact:\n\n${errorMessage}`,
+        interviewSummary: summary ?? undefined,
+        currentFrontendCode: currentState.generation.frontendCode,
+        currentFrontendFiles: currentState.generation.frontendFiles,
+        currentContractSource: currentState.generation.contractSource,
+        currentTemplateId: currentState.generation.templateId,
+        currentContractParameters: currentState.generation.contractParameters,
+      };
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Fix failed");
+      }
+
+      const result: GenerationResult = await response.json();
+
+      const successMessage: ChatMessage = {
+        role: "assistant",
+        content: result.explanation,
+        timestamp: Date.now(),
+      };
+
+      setState((prev) => ({
+        ...prev,
+        phase: "generated",
+        generation: result,
+        messages: [...prev.messages, successMessage],
+      }));
+
+      return result;
+    } catch {
+      // Silently fail auto-fix — stay in generated phase so user can still interact
+      setState((prev) => ({
+        ...prev,
+        phase: "generated",
+      }));
+      return null;
+    }
+  }, []);
+
   const setDeployment = useCallback((deployment: BuilderState["deployment"]) => {
     setState((previous) => ({
       ...previous,
@@ -281,5 +358,5 @@ export function useGeneration() {
     setState((previous) => ({ ...previous, phase }));
   }, []);
 
-  return { state, generate, startInterview, respondToInterview, skipInterview, setDeployment, setPhase };
+  return { state, generate, fixError, startInterview, respondToInterview, skipInterview, setDeployment, setPhase };
 }

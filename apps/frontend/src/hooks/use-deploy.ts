@@ -1,13 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { DeployResult } from "@/lib/types";
+import { DeployResult, GeneratedFile } from "@/lib/types";
+
+interface DeployOptions {
+  contractSource: string;
+  contractName: string;
+  frontendFiles?: GeneratedFile[];
+  appSlug?: string;
+}
 
 interface UseDeployReturn {
   deploying: boolean;
   result: DeployResult | null;
   error: string | null;
-  deploy: (contractSource: string, contractName: string) => Promise<DeployResult | null>;
+  deploy: (options: DeployOptions) => Promise<DeployResult | null>;
   reset: () => void;
 }
 
@@ -16,7 +23,7 @@ export function useDeploy(): UseDeployReturn {
   const [result, setResult] = useState<DeployResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const deploy = async (contractSource: string, contractName: string): Promise<DeployResult | null> => {
+  const deploy = async (options: DeployOptions): Promise<DeployResult | null> => {
     setDeploying(true);
     setResult(null);
     setError(null);
@@ -25,7 +32,7 @@ export function useDeploy(): UseDeployReturn {
       const response = await fetch("/api/deploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contractSource, contractName }),
+        body: JSON.stringify(options),
       });
 
       const data: DeployResult = await response.json();

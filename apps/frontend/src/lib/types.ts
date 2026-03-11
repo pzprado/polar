@@ -1,5 +1,11 @@
 export type ContractCategory = "token" | "nft" | "game" | "tipping";
 
+export interface GeneratedFile {
+  path: string;        // e.g., "/components/TipForm.jsx"
+  content: string;
+  description?: string;
+}
+
 export interface ContractTemplate {
   id: ContractCategory;
   name: string;
@@ -22,6 +28,7 @@ export interface GenerationRequest {
   interviewSummary?: string;
   history?: { role: "user" | "assistant"; content: string }[];
   currentFrontendCode?: string;
+  currentFrontendFiles?: GeneratedFile[];
   currentContractSource?: string;
   currentTemplateId?: ContractCategory;
   currentContractParameters?: Record<string, string>;
@@ -33,12 +40,16 @@ export interface GenerationResult {
   contractSource: string;
   contractParameters: Record<string, string>;
   frontendCode: string;
+  frontendFiles: GeneratedFile[];
+  entryComponent: string;
   explanation: string;
 }
 
 export interface DeployRequest {
   contractSource: string;
   contractName: string;
+  frontendFiles?: GeneratedFile[];
+  appSlug?: string;
 }
 
 export interface DeployResult {
@@ -48,6 +59,9 @@ export interface DeployResult {
   explorerUrl?: string;
   abi?: unknown[];
   error?: string;
+  frontendUrl?: string;
+  vercelDeploymentId?: string;
+  frontendError?: string;
 }
 
 export type BuilderPhase = "idle" | "interviewing" | "generating" | "generated" | "deploying" | "deployed";

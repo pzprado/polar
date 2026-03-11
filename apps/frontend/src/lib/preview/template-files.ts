@@ -1,13 +1,22 @@
+import { GeneratedFile } from "@/lib/types";
+
 export function getSandpackFiles(
-  frontendCode: string,
+  frontendFiles: GeneratedFile[],
   contractAddress?: string,
 ): Record<string, string> {
-  return {
-    "/App.js": frontendCode,
+  const files: Record<string, string> = {
     "/index.js": getEntryFile(),
     "/index.html": getHtmlFile(),
     "/setup.js": getSetupFile(contractAddress),
   };
+
+  // Map AI-generated files into Sandpack — normalize .jsx to .js for Sandpack
+  for (const file of frontendFiles) {
+    const sandpackPath = file.path.replace(/\.jsx$/, ".js");
+    files[sandpackPath] = file.content;
+  }
+
+  return files;
 }
 
 function getEntryFile(): string {

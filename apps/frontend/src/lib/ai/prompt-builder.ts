@@ -1,4 +1,4 @@
-import { ContractCategory } from "@/lib/types";
+import { ContractCategory, GeneratedFile } from "@/lib/types";
 import { getAllSkillContent } from "./skill-content";
 
 const TEMPLATE_CATALOG = `## Available Smart Contract Templates
@@ -76,25 +76,34 @@ A brief, friendly explanation of what you built or changed (2-3 sentences). Writ
 When iterating, describe what changed — not the full app again.
 </explanation>
 
-<frontend_code>
-// Your React component here
-// IMPORTANT: This must be a COMPLETE, self-contained React component
-// It will be rendered in a Sandpack iframe
-</frontend_code>
+<frontend_files>
+<file path="/App.jsx" description="Main app entry point">
+// Root component — this is always required
+</file>
+<file path="/components/SomeWidget.jsx" description="A reusable widget">
+// Additional component
+</file>
+</frontend_files>
 
-## React Component Requirements
+## Multi-Component Architecture
 
-The frontend_code MUST follow these rules:
+Generate 2-5 files per app following this structure:
+- \`/App.jsx\` — **REQUIRED** entry point. Default export. Imports and composes other components.
+- \`/components/*.jsx\` — Extracted UI components (forms, cards, lists, headers, etc.)
+- \`/lib/constants.js\` — Optional: shared constants, config values, ABI arrays
 
-1. Self-contained: Single file, no imports except React and ethers.
-2. Default export: The component must be the default export.
-3. Styling: Use inline styles only. Follow the design skills below for quality.
-4. Contract interaction: Use ABI + contract address if available.
-   - Before deployment, show a demo UI with simulated data.
-   - Contract address is injected as window.__POLAR_CONTRACT_ADDRESS__.
-5. ethers usage: Use ethers v6 APIs.
-6. Mock mode: Show useful UI even before deployment.
-7. Keep it simple and focused.
+### Rules for multi-file output:
+
+1. \`/App.jsx\` is ALWAYS the entry point and MUST be included.
+2. Components import each other using relative paths: \`import TipForm from "./components/TipForm"\`
+3. Only \`/App.jsx\` should be the default export root. Sub-components are also default exports of their own files.
+4. No external imports except React and ethers — both are available globally.
+5. Use inline styles only. Follow the design skills below for quality.
+6. Contract address is injected as \`window.__POLAR_CONTRACT_ADDRESS__\`.
+7. ethers usage: Use ethers v6 APIs.
+8. Mock mode: Show useful UI even before deployment (simulated data).
+9. Keep total files to 8 or fewer.
+10. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
 
 ## Important Notes
 - Do NOT output raw Solidity code.
@@ -112,6 +121,7 @@ ${getAllSkillContent()}`;
 
 export function buildCurrentCodeContext(opts: {
   frontendCode?: string;
+  frontendFiles?: GeneratedFile[];
   contractSource?: string;
   templateId?: ContractCategory;
   contractParameters?: Record<string, string>;
@@ -126,7 +136,13 @@ export function buildCurrentCodeContext(opts: {
     parts.push(`\nContract parameters:\n${JSON.stringify(opts.contractParameters, null, 2)}`);
   }
 
-  if (opts.frontendCode) {
+  // Prefer multi-file context, fall back to single frontendCode
+  if (opts.frontendFiles && opts.frontendFiles.length > 0) {
+    parts.push(`\nCurrent frontend files:`);
+    for (const file of opts.frontendFiles) {
+      parts.push(`\n--- ${file.path}${file.description ? ` (${file.description})` : ""} ---\n\`\`\`jsx\n${file.content}\n\`\`\``);
+    }
+  } else if (opts.frontendCode) {
     parts.push(`\nCurrent frontend code:\n\`\`\`jsx\n${opts.frontendCode}\n\`\`\``);
   }
 
@@ -134,7 +150,7 @@ export function buildCurrentCodeContext(opts: {
     parts.push(`\nCurrent smart contract source:\n\`\`\`solidity\n${opts.contractSource}\n\`\`\``);
   }
 
-  parts.push("\nThe user wants to make changes to this app. Modify it based on their next message. Output the FULL updated code, not a diff.");
+  parts.push("\nThe user wants to make changes to this app. Modify it based on their next message. Output the FULL updated code for ALL files, not a diff.");
 
   return parts.join("\n");
 }

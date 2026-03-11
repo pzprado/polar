@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 }
 
 function buildMessages(body: GenerationRequest): LLMMessage[] {
-  const hasExistingCode = body.currentFrontendCode || body.currentContractSource;
+  const hasExistingCode = body.currentFrontendCode || body.currentFrontendFiles || body.currentContractSource;
   const hasHistory = body.history && body.history.length > 0;
 
   // Build the user prompt, enriched with interview context if available
@@ -56,6 +56,7 @@ function buildMessages(body: GenerationRequest): LLMMessage[] {
   if (hasExistingCode) {
     const codeContext = buildCurrentCodeContext({
       frontendCode: body.currentFrontendCode,
+      frontendFiles: body.currentFrontendFiles,
       contractSource: body.currentContractSource,
       templateId: body.currentTemplateId,
       contractParameters: body.currentContractParameters,
