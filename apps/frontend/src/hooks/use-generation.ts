@@ -261,13 +261,16 @@ export function useGeneration() {
   }, [generate]);
 
   const skipInterview = useCallback(async () => {
-    // Read the prompt from current state and go straight to generation
-    setState((previous) => {
-      // Trigger generation with the original prompt (no interview context)
-      // We do this outside setState to avoid nesting async calls
-      void generate(previous.prompt);
-      return previous;
+    // Read the prompt from current state, then generate outside the updater
+    const currentPrompt = await new Promise<string>((resolve) => {
+      setState((previous) => {
+        resolve(previous.prompt);
+        return previous;
+      });
     });
+    if (currentPrompt) {
+      await generate(currentPrompt);
+    }
   }, [generate]);
 
   const fixError = useCallback(async (errorMessage: string) => {
