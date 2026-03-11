@@ -177,38 +177,155 @@ Common errors:
 - After success, refresh relevant data (balances, lists).
 - Initialize with sensible defaults — render something useful before wallet connection.`;
 
-export const SKILL_COMPONENT_PATTERNS = `# Component Patterns (Tailwind)
+export const SKILL_COMPONENT_PATTERNS = `# Component Patterns (shadcn/ui)
 
-Generate polished, consistent components using Tailwind utility classes.
+Pre-installed UI components are available at \`./components/ui/\`. ALWAYS use these instead of raw HTML + Tailwind for buttons, cards, inputs, badges, tabs, dialogs, separators, and loading skeletons.
 
-## Buttons
-- Primary: \`className="bg-polar hover:bg-polar-dark text-white font-medium px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"\`
-- Secondary: \`className="bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium px-4 py-2.5 rounded-lg transition-colors"\`
-- Outline: \`className="border border-stone-200 hover:bg-stone-50 text-stone-700 font-medium px-4 py-2.5 rounded-lg transition-colors"\`
-- Ghost: \`className="hover:bg-stone-100 text-stone-600 font-medium px-4 py-2.5 rounded-lg transition-colors"\`
-- One primary action per section. Secondary actions use outline or ghost.
+## Import Paths
+- From \`/App.tsx\`: \`import { Button } from "./components/ui/button"\`
+- From \`/components/*.tsx\`: \`import { Button } from "./ui/button"\`
 
-## Inputs
-- Base: \`className="w-full h-10 px-3 text-sm border border-stone-200 rounded-lg outline-none focus:ring-2 focus:ring-polar/20 focus:border-polar transition-all"\`
-- Error: add \`border-red-300 focus:ring-red-200\` with \`<p className="text-xs text-red-500 mt-1">Error message</p>\` below
-- Label: \`className="block text-sm font-medium text-stone-700 mb-1.5"\`
+## Button
+\`\`\`tsx
+import { Button } from "./components/ui/button";
 
-## Cards
-- \`className="bg-white border border-black/[0.08] rounded-xl p-6 shadow-sm"\`
-- Card header: \`<h3 className="text-base font-semibold text-stone-900">Title</h3><p className="text-sm text-stone-500 mt-1">Description</p>\`
+<Button>Primary Action</Button>
+<Button variant="outline">Secondary</Button>
+<Button variant="secondary">Muted</Button>
+<Button variant="destructive">Delete</Button>
+<Button variant="ghost">Subtle</Button>
+<Button variant="link">Link</Button>
+<Button size="sm">Small</Button>
+<Button size="lg">Large</Button>
+<Button size="icon"><IconComponent /></Button>
+<Button disabled>Disabled</Button>
+\`\`\`
+Variants: default, destructive, outline, secondary, ghost, link
+Sizes: default, sm, lg, icon
+One primary action per section. Secondary actions use variant="outline" or variant="ghost".
 
-## Badges
-- \`className="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full"\`
-- Success: \`bg-green-50 text-green-700\`
-- Error: \`bg-red-50 text-red-700\`
-- Warning: \`bg-amber-50 text-amber-700\`
-- Info: \`bg-blue-50 text-blue-700\`
+## Card
+\`\`\`tsx
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./components/ui/card";
 
-## Layout
+<Card>
+  <CardHeader>
+    <CardTitle>Title</CardTitle>
+    <CardDescription>Supporting description text</CardDescription>
+  </CardHeader>
+  <CardContent>
+    Main content area
+  </CardContent>
+  <CardFooter>
+    <Button>Action</Button>
+  </CardFooter>
+</Card>
+\`\`\`
+
+## Input
+\`\`\`tsx
+import { Input } from "./components/ui/input";
+
+<Input placeholder="Enter amount..." />
+<Input type="number" inputMode="decimal" placeholder="0.00" />
+\`\`\`
+Label: \`<label className="block text-sm font-medium text-foreground mb-1.5">Label</label>\`
+Error: \`<p className="text-xs text-destructive mt-1">Error message</p>\`
+
+## Textarea
+\`\`\`tsx
+import { Textarea } from "./components/ui/textarea";
+
+<Textarea placeholder="Enter message..." />
+\`\`\`
+
+## Badge
+\`\`\`tsx
+import { Badge } from "./components/ui/badge";
+
+<Badge>Active</Badge>
+<Badge variant="secondary">Pending</Badge>
+<Badge variant="destructive">Failed</Badge>
+<Badge variant="outline">Draft</Badge>
+\`\`\`
+Variants: default, secondary, destructive, outline
+
+## Tabs
+\`\`\`tsx
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
+
+<Tabs defaultValue="overview">
+  <TabsList>
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="details">Details</TabsTrigger>
+  </TabsList>
+  <TabsContent value="overview">Overview content</TabsContent>
+  <TabsContent value="details">Details content</TabsContent>
+</Tabs>
+\`\`\`
+
+## Dialog
+\`\`\`tsx
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./components/ui/dialog";
+
+<Dialog>
+  <DialogTrigger asChild>
+    <Button variant="outline">Open Dialog</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Confirm Action</DialogTitle>
+      <DialogDescription>This action cannot be undone.</DialogDescription>
+    </DialogHeader>
+    <DialogFooter>
+      <Button>Confirm</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+\`\`\`
+
+## Separator
+\`\`\`tsx
+import { Separator } from "./components/ui/separator";
+
+<Separator />
+<Separator orientation="vertical" />
+\`\`\`
+
+## Skeleton (loading placeholders)
+\`\`\`tsx
+import { Skeleton } from "./components/ui/skeleton";
+
+<Skeleton className="h-4 w-32" />
+<Skeleton className="h-8 w-full" />
+<Skeleton className="h-12 w-12 rounded-full" />
+\`\`\`
+
+## Combining Components
+Use Card as containers, Button for actions, Input for data entry:
+\`\`\`tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Send Tip</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="flex flex-col gap-4">
+      <Input placeholder="Amount in AVAX" type="number" />
+      <Textarea placeholder="Leave a message..." />
+    </div>
+  </CardContent>
+  <CardFooter>
+    <Button className="w-full">Send Tip</Button>
+  </CardFooter>
+</Card>
+\`\`\`
+
+## Styling Rules
+- Use UI components for standard elements. Use raw Tailwind ONLY for custom layouts, spacing, and elements not covered by these components.
+- Theme colors: \`bg-primary\`, \`text-foreground\`, \`bg-muted\`, \`text-muted-foreground\`, \`border-border\`, \`bg-card\`, \`text-destructive\`
+- Page wrapper: \`<div className="min-h-screen bg-background"><div className="max-w-2xl mx-auto px-4 py-8">...</div></div>\`
 - Group related actions: \`flex items-center gap-2\`
-- Stack forms: \`flex flex-col gap-4\`
-- Separator: \`<div className="border-t border-black/[0.08] my-4" />\`
-- Page wrapper: \`<div className="min-h-screen bg-stone-50"><div className="max-w-2xl mx-auto px-4 py-8">...</div></div>\``;
+- Stack forms: \`flex flex-col gap-4\``;
 
 export const SKILL_WAGMI_PATTERNS = `# Wagmi/Viem Patterns
 

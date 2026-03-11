@@ -5,6 +5,7 @@ import { polarSandpackTheme, getSandpackSetup } from "@/lib/preview/sandpack-con
 import { getSandpackFiles } from "@/lib/preview/template-files";
 import { SandpackErrorReporter, SandpackErrorDetail } from "./sandpack-error-reporter";
 import { ContractCategory, GeneratedFile } from "@/lib/types";
+import { ThemeName } from "@/lib/preview/theme-presets";
 import { motion } from "motion/react";
 import { Snowflake } from "lucide-react";
 import { useMemo } from "react";
@@ -15,12 +16,13 @@ interface PreviewPanelProps {
   templateId?: ContractCategory;
   contractParams?: Record<string, string>;
   onError?: (error: SandpackErrorDetail) => void;
+  theme?: ThemeName;
 }
 
-export function PreviewPanel({ frontendFiles, contractAddress, templateId, contractParams, onError }: PreviewPanelProps) {
+export function PreviewPanel({ frontendFiles, contractAddress, templateId, contractParams, onError, theme }: PreviewPanelProps) {
   const files = useMemo(
-    () => (frontendFiles ? getSandpackFiles(frontendFiles, contractAddress, templateId, contractParams) : null),
-    [frontendFiles, contractAddress, templateId, contractParams],
+    () => (frontendFiles ? getSandpackFiles(frontendFiles, contractAddress, templateId, contractParams, theme) : null),
+    [frontendFiles, contractAddress, templateId, contractParams, theme],
   );
 
   // Resolve dependencies dynamically based on what the AI imported

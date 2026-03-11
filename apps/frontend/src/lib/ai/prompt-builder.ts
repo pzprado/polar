@@ -99,14 +99,15 @@ Generate 2-5 files per app following this structure:
 1. \`/App.tsx\` is ALWAYS the entry point and MUST be included.
 2. Components import each other using relative paths: \`import TipForm from "./components/TipForm"\`
 3. Only \`/App.tsx\` should be the default export root. Sub-components are also default exports of their own files.
-4. No external imports except React, wagmi, and viem — all are available globally.
+4. No external imports except React, wagmi, viem, and the pre-installed UI components at \`./components/ui/\`. All are available globally.
 5. **Styling: Use Tailwind CSS classes.** Tailwind is pre-configured. Use className for all styling. Avoid inline styles except for truly dynamic values.
-6. Contract address is injected as \`window.__POLAR_CONTRACT_ADDRESS__\`.
-7. Blockchain interaction: Use wagmi hooks (\`useReadContract\`, \`useWriteContract\`, \`useAccount\`, \`useConnect\`, \`useBalance\`, etc.) and viem for utilities (\`parseEther\`, \`formatEther\`, \`parseAbi\`, etc.). NEVER use ethers.js.
-8. The app is wrapped in a WagmiProvider — you do NOT need to set up providers or config, just use hooks directly.
-9. The preview has a built-in mock RPC — all wagmi read hooks return realistic data without deployment. Write standard wagmi code. No mock branches or placeholder data needed.
-10. Keep total files to 8 or fewer.
-11. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
+6. **UI Components:** Pre-installed shadcn/ui components are available at \`./components/ui/\`. ALWAYS import and use \`Button\`, \`Card\`, \`Input\`, \`Badge\`, \`Tabs\`, \`Dialog\`, \`Separator\`, \`Skeleton\`, and \`Textarea\` from these instead of building them with raw HTML + Tailwind. See the Component Patterns skill for usage.
+7. Contract address is injected as \`window.__POLAR_CONTRACT_ADDRESS__\`.
+8. Blockchain interaction: Use wagmi hooks (\`useReadContract\`, \`useWriteContract\`, \`useAccount\`, \`useConnect\`, \`useBalance\`, etc.) and viem for utilities (\`parseEther\`, \`formatEther\`, \`parseAbi\`, etc.). NEVER use ethers.js.
+9. The app is wrapped in a WagmiProvider — you do NOT need to set up providers or config, just use hooks directly.
+10. The preview has a built-in mock RPC — all wagmi read hooks return realistic data without deployment. Write standard wagmi code. No mock branches or placeholder data needed.
+11. Keep total files to 8 or fewer.
+12. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
 
 ## Important Notes
 - Do NOT output raw Solidity code.

@@ -1,10 +1,13 @@
 import { GeneratedFile } from "@/lib/types";
 import { resolveDependencies } from "./dependency-resolver";
+import { getDeployedUiComponentFiles } from "@/lib/preview/ui-components";
+import { getThemeCssVariables, ThemeName, DEFAULT_THEME } from "@/lib/preview/theme-presets";
 
 export function assembleNextProject(
   frontendFiles: GeneratedFile[],
   contractAddress: string,
   appName: string,
+  theme?: ThemeName,
 ): Record<string, string> {
   const files: Record<string, string> = {};
 
@@ -80,7 +83,7 @@ module.exports = nextConfig;
     2,
   );
 
-  // tailwind.config.js
+  // tailwind.config.js — includes CSS variable color mappings for shadcn/ui
   files["tailwind.config.js"] = `/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./generated/**/*.{js,ts,jsx,tsx}"],
@@ -88,6 +91,40 @@ module.exports = {
     extend: {
       colors: {
         polar: { DEFAULT: "#E84142", dark: "#c7282a" },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
         sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
@@ -107,10 +144,13 @@ module.exports = {
 };
 `;
 
-  // app/globals.css
+  // app/globals.css — includes CSS variable theme + Tailwind directives
+  const cssVars = getThemeCssVariables(theme || DEFAULT_THEME);
   files["app/globals.css"] = `@tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+${cssVars}
 
 body {
   min-height: 100vh;
@@ -128,7 +168,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-white text-gray-900 antialiased">
+      <body className="bg-background text-foreground antialiased">
         {children}
       </body>
     </html>
@@ -189,6 +229,12 @@ export default function Page() {
   };
 }
 `;
+
+  // Inject shadcn/ui component library into generated/ directory
+  const uiComponents = getDeployedUiComponentFiles();
+  for (const [path, content] of Object.entries(uiComponents)) {
+    files[path] = content;
+  }
 
   // Map AI-generated files into generated/ directory
   for (const file of frontendFiles) {

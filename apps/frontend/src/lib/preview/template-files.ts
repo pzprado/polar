@@ -1,19 +1,24 @@
 import { ContractCategory, GeneratedFile } from "@/lib/types";
 import { generateMockRpcSource, MOCK_CONTRACT_ADDRESS } from "./mock-rpc-generator";
+import { getThemeCssVariables, ThemeName } from "./theme-presets";
+import { getUiComponentFiles } from "./ui-components";
 
 export function getSandpackFiles(
   frontendFiles: GeneratedFile[],
   contractAddress?: string,
   templateId?: ContractCategory,
   contractParams?: Record<string, string>,
+  theme?: ThemeName,
 ): Record<string, string> {
   const useMockRpc = !contractAddress && !!templateId;
 
   const files: Record<string, string> = {
     "/index.tsx": getEntryFile(),
-    "/index.html": getHtmlFile(),
+    "/index.html": getHtmlFile(theme),
     "/setup.ts": getSetupFile(contractAddress, useMockRpc),
     "/wagmi-config.ts": useMockRpc ? getMockWagmiConfigFile() : getWagmiConfigFile(),
+    // Inject shadcn/ui component library
+    ...getUiComponentFiles(),
   };
 
   if (useMockRpc && templateId && contractParams) {
@@ -21,6 +26,7 @@ export function getSandpackFiles(
   }
 
   // Map AI-generated files into Sandpack as-is (.tsx/.ts extensions preserved)
+  // These are added last so AI can override UI components if needed
   for (const file of frontendFiles) {
     files[file.path] = file.content;
   }
@@ -81,7 +87,9 @@ export const config = createConfig({
 `;
 }
 
-function getHtmlFile(): string {
+function getHtmlFile(theme?: ThemeName): string {
+  const cssVars = getThemeCssVariables(theme);
+
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -96,6 +104,40 @@ function getHtmlFile(): string {
         extend: {
           colors: {
             polar: { DEFAULT: '#E84142', dark: '#c7282a' },
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: {
+              DEFAULT: 'hsl(var(--primary))',
+              foreground: 'hsl(var(--primary-foreground))',
+            },
+            secondary: {
+              DEFAULT: 'hsl(var(--secondary))',
+              foreground: 'hsl(var(--secondary-foreground))',
+            },
+            destructive: {
+              DEFAULT: 'hsl(var(--destructive))',
+              foreground: 'hsl(var(--destructive-foreground))',
+            },
+            muted: {
+              DEFAULT: 'hsl(var(--muted))',
+              foreground: 'hsl(var(--muted-foreground))',
+            },
+            accent: {
+              DEFAULT: 'hsl(var(--accent))',
+              foreground: 'hsl(var(--accent-foreground))',
+            },
+            card: {
+              DEFAULT: 'hsl(var(--card))',
+              foreground: 'hsl(var(--card-foreground))',
+            },
+          },
+          borderRadius: {
+            lg: 'var(--radius)',
+            md: 'calc(var(--radius) - 2px)',
+            sm: 'calc(var(--radius) - 4px)',
           },
           fontFamily: {
             sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
@@ -105,11 +147,12 @@ function getHtmlFile(): string {
     };
   </script>
   <style>
-    body { min-height: 100vh; }
-    #root { min-height: 100vh; }
+  ${cssVars}
+  body { min-height: 100vh; }
+  #root { min-height: 100vh; }
   </style>
 </head>
-<body class="bg-white text-gray-900 antialiased">
+<body class="bg-background text-foreground antialiased">
   <div id="root"></div>
 </body>
 </html>

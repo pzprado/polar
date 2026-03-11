@@ -26,6 +26,7 @@ const KNOWN_PACKAGES: Record<string, string> = {
   "@radix-ui/react-slot": "^1.1.0",
   "@radix-ui/react-label": "^2.1.0",
   "@radix-ui/react-toast": "^1.2.0",
+  "radix-ui": "^1.1.0",
 
   // Animation
   "framer-motion": "^11.15.0",
