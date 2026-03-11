@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { BuilderPhase, BuilderState, ChatMessage, GenerationRequest, GenerationResult } from "@/lib/types";
+import { SandpackErrorDetail } from "@/components/builder/sandpack-error-reporter";
 
 interface InterviewApiResponse {
   message: string;
@@ -273,7 +274,7 @@ export function useGeneration() {
     }
   }, [generate]);
 
-  const fixError = useCallback(async (errorMessage: string) => {
+  const fixError = useCallback(async (errorDetail: SandpackErrorDetail) => {
     // Read current state without modifying it
     const currentState = await new Promise<BuilderState>((resolve) => {
       setState((prev) => {
@@ -303,7 +304,7 @@ export function useGeneration() {
 
     try {
       const requestBody: GenerationRequest = {
-        prompt: `The generated app has a runtime error in the Sandpack preview. The error is:\n\n"${errorMessage}"\n\nFix the root cause of this error. Common causes:\n- BigInt conversion: never use Number() on BigInt values, use .toString() instead\n- Missing imports: ensure all component imports resolve to existing files\n- Undefined variables: check all referenced state/props exist\n\nOutput the COMPLETE fixed code for ALL files.`,
+        prompt: buildFixErrorPrompt(errorDetail, currentState.generation.frontendFiles),
         interviewSummary: summary ?? undefined,
         currentFrontendCode: currentState.generation.frontendCode,
         currentFrontendFiles: currentState.generation.frontendFiles,
@@ -362,4 +363,57 @@ export function useGeneration() {
   }, []);
 
   return { state, generate, fixError, startInterview, respondToInterview, skipInterview, setDeployment, setPhase };
+}
+
+function buildFixErrorPrompt(
+  error: SandpackErrorDetail,
+  files?: { path: string; content: string }[],
+): string {
+  const parts: string[] = [
+    "The generated app has an error in the Sandpack preview. Fix the root cause.",
+    "",
+    "## Error Details",
+    `**Message:** ${error.message}`,
+  ];
+
+  if (error.title && error.title !== error.message) {
+    parts.push(`**Title:** ${error.title}`);
+  }
+  if (error.path) {
+    parts.push(`**File:** ${error.path}`);
+  }
+  if (error.line) {
+    parts.push(`**Line:** ${error.line}${error.column ? `, Column: ${error.column}` : ""}`);
+  }
+
+  // If we know which file errored and have its content, include the relevant snippet
+  if (error.path && error.line && files) {
+    const errorFile = files.find(
+      (f) => error.path === f.path || error.path === f.path.replace(/\.jsx$/, ".js"),
+    );
+    if (errorFile) {
+      const lines = errorFile.content.split("\n");
+      const start = Math.max(0, error.line - 5);
+      const end = Math.min(lines.length, error.line + 5);
+      const snippet = lines
+        .slice(start, end)
+        .map((l, i) => {
+          const lineNum = start + i + 1;
+          const marker = lineNum === error.line ? ">>>" : "   ";
+          return `${marker} ${lineNum}: ${l}`;
+        })
+        .join("\n");
+      parts.push("", "## Code Around Error", "```", snippet, "```");
+    }
+  }
+
+  parts.push(
+    "",
+    "## Instructions",
+    "- Fix ONLY the error — do not redesign or restructure the app",
+    "- Output the COMPLETE fixed code for ALL files",
+    "- Common causes: BigInt to Number conversion (use .toString()), missing imports, undefined variables, incorrect hook usage",
+  );
+
+  return parts.join("\n");
 }

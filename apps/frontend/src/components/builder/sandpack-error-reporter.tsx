@@ -3,8 +3,16 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useSandpack } from "@codesandbox/sandpack-react";
 
+export interface SandpackErrorDetail {
+  message: string;
+  title?: string;
+  path?: string;
+  line?: number;
+  column?: number;
+}
+
 interface SandpackErrorReporterProps {
-  onError: (error: string) => void;
+  onError: (error: SandpackErrorDetail) => void;
 }
 
 /**
@@ -21,17 +29,17 @@ export function SandpackErrorReporter({ onError }: SandpackErrorReporterProps) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const reportError = useCallback(
-    (message: string) => {
+    (detail: SandpackErrorDetail) => {
       // Don't report the same error twice within the same mount cycle
-      if (reportedErrorRef.current === message) return;
+      if (reportedErrorRef.current === detail.message) return;
 
       // Clear any pending debounce
       if (debounceRef.current) clearTimeout(debounceRef.current);
 
       // Wait 3s for Sandpack to settle before reporting
       debounceRef.current = setTimeout(() => {
-        reportedErrorRef.current = message;
-        onError(message);
+        reportedErrorRef.current = detail.message;
+        onError(detail);
       }, 3000);
     },
     [onError],
@@ -45,19 +53,39 @@ export function SandpackErrorReporter({ onError }: SandpackErrorReporterProps) {
     }
   }, [sandpack.error]);
 
-  // Detect bundler/compile errors
+  // Detect bundler/compile errors — includes file path, line, column
   useEffect(() => {
     if (sandpack.error?.message) {
-      reportError(sandpack.error.message);
+      reportError({
+        message: sandpack.error.message,
+        title: sandpack.error.title,
+        path: sandpack.error.path,
+        line: sandpack.error.line,
+        column: sandpack.error.column,
+      });
     }
   }, [sandpack.error, reportError]);
 
   // Detect runtime errors via Sandpack message listener
   useEffect(() => {
     const unsub = listen((msg) => {
-      const m = msg as { type: string; action?: string; message?: string; title?: string };
+      const m = msg as {
+        type: string;
+        action?: string;
+        message?: string;
+        title?: string;
+        path?: string;
+        line?: number;
+        column?: number;
+      };
       if (m.type === "action" && m.action === "show-error" && (m.message || m.title)) {
-        reportError(m.message || m.title || "Runtime error");
+        reportError({
+          message: m.message || m.title || "Runtime error",
+          title: m.title,
+          path: m.path,
+          line: m.line,
+          column: m.column,
+        });
       }
     });
     return unsub;

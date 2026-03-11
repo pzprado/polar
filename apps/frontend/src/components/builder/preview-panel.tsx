@@ -3,7 +3,7 @@
 import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import { polarSandpackTheme, sandpackCustomSetup } from "@/lib/preview/sandpack-config";
 import { getSandpackFiles } from "@/lib/preview/template-files";
-import { SandpackErrorReporter } from "./sandpack-error-reporter";
+import { SandpackErrorReporter, SandpackErrorDetail } from "./sandpack-error-reporter";
 import { GeneratedFile } from "@/lib/types";
 import { motion } from "motion/react";
 import { Snowflake } from "lucide-react";
@@ -12,7 +12,7 @@ import { useMemo } from "react";
 interface PreviewPanelProps {
   frontendFiles: GeneratedFile[] | null;
   contractAddress?: string;
-  onError?: (error: string) => void;
+  onError?: (error: SandpackErrorDetail) => void;
 }
 
 export function PreviewPanel({ frontendFiles, contractAddress, onError }: PreviewPanelProps) {

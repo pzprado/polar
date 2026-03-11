@@ -10,6 +10,7 @@ import { MultiFileCodeViewer } from "@/components/builder/multi-file-code-viewer
 import { DeployButton } from "@/components/builder/deploy-button";
 import { DeployResultPanel } from "@/components/builder/deploy-result";
 import { PreviewPanel } from "@/components/builder/preview-panel";
+import { SandpackErrorDetail } from "@/components/builder/sandpack-error-reporter";
 import { Logo } from "@/components/shared/logo";
 import { useDeploy } from "@/hooks/use-deploy";
 import { useGeneration } from "@/hooks/use-generation";
@@ -93,7 +94,7 @@ export default function BuilderPage() {
 
   // Auto-fix preview errors: detect Sandpack errors and ask the AI to fix them
   const handlePreviewError = useCallback(
-    (error: string) => {
+    (error: SandpackErrorDetail) => {
       if (state.phase === "generated" && autoFixCountRef.current < MAX_AUTO_FIXES) {
         autoFixCountRef.current++;
         void fixError(error);
