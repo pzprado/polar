@@ -13,9 +13,9 @@ export function validateFrontendFiles(files: GeneratedFile[]): ValidationResult 
   const errors: string[] = [];
 
   // Must have an App entry point
-  const hasApp = files.some((f) => f.path === "/App.jsx" || f.path === "/App.js" || f.path === "/App.tsx");
+  const hasApp = files.some((f) => f.path === "/App.tsx" || f.path === "/App.jsx" || f.path === "/App.js");
   if (!hasApp) {
-    errors.push("Missing /App.jsx entry point");
+    errors.push("Missing /App.tsx entry point");
   }
 
   // Check each file for common issues

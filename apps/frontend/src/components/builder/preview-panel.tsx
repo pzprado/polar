@@ -4,7 +4,7 @@ import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
 import { polarSandpackTheme, getSandpackSetup } from "@/lib/preview/sandpack-config";
 import { getSandpackFiles } from "@/lib/preview/template-files";
 import { SandpackErrorReporter, SandpackErrorDetail } from "./sandpack-error-reporter";
-import { GeneratedFile } from "@/lib/types";
+import { ContractCategory, GeneratedFile } from "@/lib/types";
 import { motion } from "motion/react";
 import { Snowflake } from "lucide-react";
 import { useMemo } from "react";
@@ -12,13 +12,15 @@ import { useMemo } from "react";
 interface PreviewPanelProps {
   frontendFiles: GeneratedFile[] | null;
   contractAddress?: string;
+  templateId?: ContractCategory;
+  contractParams?: Record<string, string>;
   onError?: (error: SandpackErrorDetail) => void;
 }
 
-export function PreviewPanel({ frontendFiles, contractAddress, onError }: PreviewPanelProps) {
+export function PreviewPanel({ frontendFiles, contractAddress, templateId, contractParams, onError }: PreviewPanelProps) {
   const files = useMemo(
-    () => (frontendFiles ? getSandpackFiles(frontendFiles, contractAddress) : null),
-    [frontendFiles, contractAddress],
+    () => (frontendFiles ? getSandpackFiles(frontendFiles, contractAddress, templateId, contractParams) : null),
+    [frontendFiles, contractAddress, templateId, contractParams],
   );
 
   // Resolve dependencies dynamically based on what the AI imported
@@ -69,7 +71,7 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
     <div className="h-full overflow-hidden rounded-lg border border-black/[0.06] [&_.sp-wrapper]:!h-full [&_.sp-layout]:!h-full [&_.sp-preview-container]:!h-full [&_.sp-preview-iframe]:!h-full">
       <SandpackProvider
         key={sandpackKey}
-        template="react"
+        template="react-ts"
         theme={polarSandpackTheme}
         files={files}
         customSetup={customSetup}
@@ -77,7 +79,7 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
           autorun: true,
           autoReload: true,
           externalResources: [],
-          activeFile: "/App.js",
+          activeFile: "/App.tsx",
         }}
       >
         <SandpackPreview

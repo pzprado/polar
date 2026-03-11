@@ -40,11 +40,14 @@ export function parseGenerationResponse(rawResponse: string): GenerationResult {
 
   if (frontendFiles.length > 0) {
     files = frontendFiles;
-    entryComponent = files.find((f) => f.path === "/App.jsx")?.path || files[0].path;
+    entryComponent =
+      files.find((f) => f.path === "/App.tsx")?.path ||
+      files.find((f) => f.path === "/App.jsx")?.path ||
+      files[0].path;
   } else {
     const cleaned = cleanFrontendCode(singleFrontendCode!);
-    files = [{ path: "/App.jsx", content: cleaned, description: "Main app component" }];
-    entryComponent = "/App.jsx";
+    files = [{ path: "/App.tsx", content: cleaned, description: "Main app component" }];
+    entryComponent = "/App.tsx";
   }
 
   // Derive frontendCode from entry component for backward compat

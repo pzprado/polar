@@ -77,35 +77,36 @@ When iterating, describe what changed — not the full app again.
 </explanation>
 
 <frontend_files>
-<file path="/App.jsx" description="Main app entry point">
+<file path="/App.tsx" description="Main app entry point">
 // Root component — this is always required
 </file>
-<file path="/components/SomeWidget.jsx" description="A reusable widget">
+<file path="/components/SomeWidget.tsx" description="A reusable widget">
 // Additional component
 </file>
 </frontend_files>
 
+All files MUST use TypeScript with \`.tsx\` extensions (or \`.ts\` for non-JSX files). NEVER use \`.js\` or \`.jsx\`.
+
 ## Multi-Component Architecture
 
 Generate 2-5 files per app following this structure:
-- \`/App.jsx\` — **REQUIRED** entry point. Default export. Imports and composes other components.
-- \`/components/*.jsx\` — Extracted UI components (forms, cards, lists, headers, etc.)
-- \`/lib/constants.js\` — Optional: shared constants, config values, ABI arrays
+- \`/App.tsx\` — **REQUIRED** entry point. Default export. Imports and composes other components.
+- \`/components/*.tsx\` — Extracted UI components (forms, cards, lists, headers, etc.)
+- \`/lib/constants.ts\` — Optional: shared constants, config values, ABI arrays
 
 ### Rules for multi-file output:
 
-1. \`/App.jsx\` is ALWAYS the entry point and MUST be included.
+1. \`/App.tsx\` is ALWAYS the entry point and MUST be included.
 2. Components import each other using relative paths: \`import TipForm from "./components/TipForm"\`
-3. Only \`/App.jsx\` should be the default export root. Sub-components are also default exports of their own files.
+3. Only \`/App.tsx\` should be the default export root. Sub-components are also default exports of their own files.
 4. No external imports except React, wagmi, and viem — all are available globally.
 5. **Styling: Use Tailwind CSS classes.** Tailwind is pre-configured. Use className for all styling. Avoid inline styles except for truly dynamic values.
 6. Contract address is injected as \`window.__POLAR_CONTRACT_ADDRESS__\`.
 7. Blockchain interaction: Use wagmi hooks (\`useReadContract\`, \`useWriteContract\`, \`useAccount\`, \`useConnect\`, \`useBalance\`, etc.) and viem for utilities (\`parseEther\`, \`formatEther\`, \`parseAbi\`, etc.). NEVER use ethers.js.
 8. The app is wrapped in a WagmiProvider — you do NOT need to set up providers or config, just use hooks directly.
-9. **CRITICAL BigInt rule:** wagmi/viem return BigInt values. NEVER use \`Number(bigintVal)\` or math operators (+, -, *, /) with mixed BigInt and Number. Always use \`formatEther(bigintVal)\` or \`bigintVal.toString()\` to display values. For arithmetic, keep everything as BigInt: \`bigintA + bigintB\`.
-10. Mock mode: Show useful UI even before deployment (simulated data).
-11. Keep total files to 8 or fewer.
-12. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
+9. The preview has a built-in mock RPC — all wagmi read hooks return realistic data without deployment. Write standard wagmi code. No mock branches or placeholder data needed.
+10. Keep total files to 8 or fewer.
+11. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
 
 ## Important Notes
 - Do NOT output raw Solidity code.
@@ -142,10 +143,10 @@ export function buildCurrentCodeContext(opts: {
   if (opts.frontendFiles && opts.frontendFiles.length > 0) {
     parts.push(`\nCurrent frontend files:`);
     for (const file of opts.frontendFiles) {
-      parts.push(`\n--- ${file.path}${file.description ? ` (${file.description})` : ""} ---\n\`\`\`jsx\n${file.content}\n\`\`\``);
+      parts.push(`\n--- ${file.path}${file.description ? ` (${file.description})` : ""} ---\n\`\`\`tsx\n${file.content}\n\`\`\``);
     }
   } else if (opts.frontendCode) {
-    parts.push(`\nCurrent frontend code:\n\`\`\`jsx\n${opts.frontendCode}\n\`\`\``);
+    parts.push(`\nCurrent frontend code:\n\`\`\`tsx\n${opts.frontendCode}\n\`\`\``);
   }
 
   if (opts.contractSource) {

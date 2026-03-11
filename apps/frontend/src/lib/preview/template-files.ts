@@ -1,20 +1,28 @@
-import { GeneratedFile } from "@/lib/types";
+import { ContractCategory, GeneratedFile } from "@/lib/types";
+import { generateMockRpcSource, MOCK_CONTRACT_ADDRESS } from "./mock-rpc-generator";
 
 export function getSandpackFiles(
   frontendFiles: GeneratedFile[],
   contractAddress?: string,
+  templateId?: ContractCategory,
+  contractParams?: Record<string, string>,
 ): Record<string, string> {
+  const useMockRpc = !contractAddress && !!templateId;
+
   const files: Record<string, string> = {
-    "/index.js": getEntryFile(),
+    "/index.tsx": getEntryFile(),
     "/index.html": getHtmlFile(),
-    "/setup.js": getSetupFile(contractAddress),
-    "/wagmi-config.js": getWagmiConfigFile(),
+    "/setup.ts": getSetupFile(contractAddress, useMockRpc),
+    "/wagmi-config.ts": useMockRpc ? getMockWagmiConfigFile() : getWagmiConfigFile(),
   };
 
-  // Map AI-generated files into Sandpack — normalize .jsx to .js for Sandpack
+  if (useMockRpc && templateId && contractParams) {
+    files["/mock-rpc.ts"] = generateMockRpcSource(templateId, contractParams);
+  }
+
+  // Map AI-generated files into Sandpack as-is (.tsx/.ts extensions preserved)
   for (const file of frontendFiles) {
-    const sandpackPath = file.path.replace(/\.jsx$/, ".js");
-    files[sandpackPath] = file.content;
+    files[file.path] = file.content;
   }
 
   return files;
@@ -32,7 +40,7 @@ import App from "./App";
 
 const queryClient = new QueryClient();
 
-const root = createRoot(document.getElementById("root"));
+const root = createRoot(document.getElementById("root")!);
 root.render(
   <WagmiProvider config={config}>
     <QueryClientProvider client={queryClient}>
@@ -52,6 +60,22 @@ export const config = createConfig({
   chains: [avalancheFuji],
   transports: {
     [avalancheFuji.id]: http(),
+  },
+});
+`;
+}
+
+function getMockWagmiConfigFile(): string {
+  return `
+import { createConfig } from "wagmi";
+import { avalancheFuji } from "wagmi/chains";
+import { custom } from "viem";
+import { handleRequest } from "./mock-rpc";
+
+export const config = createConfig({
+  chains: [avalancheFuji],
+  transports: {
+    [avalancheFuji.id]: custom({ request: handleRequest }),
   },
 });
 `;
@@ -92,10 +116,16 @@ function getHtmlFile(): string {
 `;
 }
 
-function getSetupFile(contractAddress?: string): string {
+function getSetupFile(contractAddress?: string, useMockRpc?: boolean): string {
+  const address = contractAddress
+    ? `"${contractAddress}"`
+    : useMockRpc
+      ? `"${MOCK_CONTRACT_ADDRESS}"`
+      : "null";
+
   return `
 if (typeof window !== "undefined") {
-  window.__POLAR_CONTRACT_ADDRESS__ = ${contractAddress ? `"${contractAddress}"` : "null"};
+  (window as any).__POLAR_CONTRACT_ADDRESS__ = ${address};
 }
 `;
 }

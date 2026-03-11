@@ -150,13 +150,6 @@ export const SKILL_HARDEN = `# Resilience
 
 Blockchain interactions fail often. Handle every failure gracefully.
 
-## Wallet Connection
-- Use wagmi's \`useAccount\` and \`useConnect\` hooks.
-- Show "Connect Wallet" button — don't auto-connect.
-- Handle rejection: "Connection declined. Click to try again."
-- Handle missing wallet: "No wallet detected. Install MetaMask to continue."
-- Show connected address truncated: \`address.slice(0, 6) + "..." + address.slice(-4)\`
-
 ## Transaction Handling
 Every contract call: validate inputs → show pending state → wait for receipt → show result.
 - Disable the button and show spinner during pending.
@@ -221,42 +214,8 @@ export const SKILL_WAGMI_PATTERNS = `# Wagmi/Viem Patterns
 
 All blockchain interaction uses wagmi hooks and viem utilities. Follow these patterns EXACTLY.
 
-## CRITICAL: BigInt Handling
-wagmi and viem return BigInt values for all on-chain numbers (balances, amounts, token supplies, etc.).
-
-NEVER DO THIS (will crash with "Cannot convert a BigInt value to a number"):
-\`\`\`jsx
-// WRONG — these all crash
-const formatted = Number(balance) / 1e18;
-const display = balance / 1000000000000000000;
-const sum = balance + 100; // mixing BigInt and Number
-Math.floor(balance); // Math doesn't work with BigInt
-\`\`\`
-
-ALWAYS DO THIS:
-\`\`\`jsx
-import { formatEther, formatUnits, parseEther } from "viem";
-
-// Display a wei balance as readable string
-const display = formatEther(balance); // "1.5" (string)
-
-// Display token amount with custom decimals
-const display = formatUnits(amount, 18); // "1.5" (string)
-
-// Convert user input to wei for sending
-const weiValue = parseEther("1.5"); // 1500000000000000000n (BigInt)
-
-// BigInt arithmetic — keep everything BigInt
-const total = balanceA + balanceB; // both BigInt, OK
-const half = balance / 2n; // BigInt literal with 'n' suffix
-
-// Display with formatting
-const readableBalance = formatEther(balance);
-<span>{readableBalance} AVAX</span>
-\`\`\`
-
 ## Reading Contract Data
-\`\`\`jsx
+\`\`\`tsx
 import { useReadContract } from "wagmi";
 
 const { data: balance, isLoading } = useReadContract({
@@ -271,7 +230,7 @@ const display = balance ? formatEther(balance) : "0";
 \`\`\`
 
 ## Writing to Contracts
-\`\`\`jsx
+\`\`\`tsx
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEther } from "viem";
 
@@ -290,7 +249,7 @@ const handleSend = () => {
 \`\`\`
 
 ## Wallet Connection
-\`\`\`jsx
+\`\`\`tsx
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 
@@ -305,7 +264,7 @@ const { disconnect } = useDisconnect();
 \`\`\`
 
 ## Reading Native Balance
-\`\`\`jsx
+\`\`\`tsx
 import { useBalance } from "wagmi";
 import { formatEther } from "viem";
 
@@ -316,7 +275,7 @@ const display = balance ? balance.formatted : "0";
 
 ## ABI Definition
 Define ABIs as const arrays for type safety:
-\`\`\`jsx
+\`\`\`tsx
 const abi = [
   { type: "function", name: "balanceOf", inputs: [{ name: "owner", type: "address" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
   { type: "function", name: "transfer", inputs: [{ name: "to", type: "address" }, { name: "amount", type: "uint256" }], outputs: [{ name: "", type: "bool" }], stateMutability: "nonpayable" },

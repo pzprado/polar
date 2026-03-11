@@ -389,7 +389,7 @@ function buildFixErrorPrompt(
   // If we know which file errored and have its content, include the relevant snippet
   if (error.path && error.line && files) {
     const errorFile = files.find(
-      (f) => error.path === f.path || error.path === f.path.replace(/\.jsx$/, ".js"),
+      (f) => error.path === f.path || error.path === f.path.replace(/\.tsx$/, ".ts").replace(/\.jsx$/, ".js"),
     );
     if (errorFile) {
       const lines = errorFile.content.split("\n");
@@ -403,16 +403,14 @@ function buildFixErrorPrompt(
           return `${marker} ${lineNum}: ${l}`;
         })
         .join("\n");
-      parts.push("", "## Code Around Error", "```", snippet, "```");
+      parts.push("", "## Code Around Error", "```tsx", snippet, "```");
     }
   }
 
+  parts.push("", "## Instructions", "- Fix ONLY the error — do not redesign or restructure the app");
+  parts.push("- Output the COMPLETE fixed code for ALL files using .tsx extensions");
   parts.push(
-    "",
-    "## Instructions",
-    "- Fix ONLY the error — do not redesign or restructure the app",
-    "- Output the COMPLETE fixed code for ALL files",
-    "- Common causes: BigInt to Number conversion (use .toString()), missing imports, undefined variables, incorrect hook usage",
+    "- Common causes: missing imports, undefined variables, incorrect hook usage, BigInt to Number conversion",
   );
 
   return parts.join("\n");

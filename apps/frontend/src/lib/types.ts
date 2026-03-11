@@ -1,7 +1,7 @@
 export type ContractCategory = "token" | "nft" | "game" | "tipping";
 
 export interface GeneratedFile {
-  path: string;        // e.g., "/components/TipForm.jsx"
+  path: string;        // e.g., "/components/TipForm.tsx"
   content: string;
   description?: string;
 }

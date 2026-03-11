@@ -216,6 +216,8 @@ export default function BuilderPage() {
               <PreviewPanel
                 frontendFiles={state.generation?.frontendFiles ?? null}
                 contractAddress={deployResult?.contractAddress}
+                templateId={state.generation?.templateId}
+                contractParams={state.generation?.contractParameters}
                 onError={handlePreviewError}
               />
             )}
@@ -289,6 +291,8 @@ export default function BuilderPage() {
                   <PreviewPanel
                     frontendFiles={state.generation?.frontendFiles ?? null}
                     contractAddress={deployResult?.contractAddress}
+                    templateId={state.generation?.templateId}
+                    contractParams={state.generation?.contractParameters}
                     onError={handlePreviewError}
                   />
                 )}

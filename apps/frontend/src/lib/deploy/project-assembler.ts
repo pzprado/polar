@@ -192,7 +192,7 @@ export default function Page() {
 
   // Map AI-generated files into generated/ directory
   for (const file of frontendFiles) {
-    // /App.jsx -> generated/App.jsx, /components/Foo.jsx -> generated/components/Foo.jsx
+    // /App.tsx -> generated/App.tsx, /components/Foo.tsx -> generated/components/Foo.tsx
     const destPath = `generated${file.path}`;
     files[destPath] = file.content;
   }
