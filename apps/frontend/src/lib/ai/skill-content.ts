@@ -199,10 +199,41 @@ Common errors:
 - After success, refresh relevant data (balances, lists).
 - Initialize with sensible defaults — render something useful before wallet connection.`;
 
+export const SKILL_COMPONENT_PATTERNS = `# Component Patterns (shadcn/ui Style)
+
+Generate components following shadcn/ui's design language, adapted for inline styles.
+
+## Buttons
+- Primary: { backgroundColor: '#E84142', color: 'white', border: 'none', borderRadius: 6, padding: '10px 20px', fontWeight: 500, cursor: 'pointer' }
+- Secondary: { backgroundColor: 'rgba(0,0,0,0.06)', color: '#57534E', border: 'none', borderRadius: 6, padding: '10px 20px' }
+- Outline: { backgroundColor: 'transparent', color: '#57534E', border: '1px solid rgba(0,0,0,0.15)', borderRadius: 6, padding: '10px 20px' }
+- Ghost: { backgroundColor: 'transparent', color: '#57534E', border: 'none', padding: '10px 20px' }
+- One primary action per section. Secondary actions use outline or ghost.
+
+## Inputs
+- Base: { width: '100%', height: 40, padding: '8px 12px', fontSize: 14, border: '1px solid rgba(0,0,0,0.15)', borderRadius: 6, outline: 'none' }
+- Focus: { borderColor: '#E84142', boxShadow: '0 0 0 2px rgba(232,65,66,0.15)' }
+- Error: { borderColor: '#dc2626' } with red helper text below.
+- Label: 14px, fontWeight 500, marginBottom 6, color #1C1917.
+
+## Cards
+- { backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, padding: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }
+- Card header: title (16px semibold) + optional description (14px muted).
+
+## Badges
+- { display: 'inline-flex', alignItems: 'center', fontSize: 12, fontWeight: 500, padding: '2px 10px', borderRadius: 9999 }
+- Status: success (green-tinted), error (red-tinted), warning (amber-tinted), info (blue-tinted).
+
+## Layout Composition
+- Group related actions with gap: 8. Stack forms vertically with gap: 16.
+- Use separator: { height: 1, backgroundColor: 'rgba(0,0,0,0.08)', margin: '16px 0' } between sections.
+- Form pattern: label → input → helper text, stacked vertically.`;
+
 /** All skills concatenated, ready to inject into the system prompt. */
 export function getAllSkillContent(): string {
   return [
     SKILL_FRONTEND_DESIGN,
+    SKILL_COMPONENT_PATTERNS,
     SKILL_COPYWRITING,
     SKILL_COLORIZE,
     SKILL_DELIGHT,

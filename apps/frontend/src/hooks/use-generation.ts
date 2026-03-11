@@ -1,19 +1,31 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { BuilderPhase, BuilderState, ChatMessage, GenerationRequest, GenerationResult } from "@/lib/types";
+
+interface InterviewApiResponse {
+  message: string;
+  complete: boolean;
+  summary: string | null;
+  error?: string;
+}
 
 export function useGeneration() {
   const [state, setState] = useState<BuilderState>({
     phase: "idle",
     prompt: "",
+    interviewSummary: null,
     messages: [],
     generation: null,
     deployment: null,
     error: null,
   });
 
-  const generate = useCallback(async (prompt: string) => {
+  // Ref to track the interview summary for use in auto-triggered generation
+  // (avoids stale closure issues with setState batching)
+  const interviewSummaryRef = useRef<string | null>(null);
+
+  const generate = useCallback(async (prompt: string, overrideSummary?: string | null) => {
     const userMessage: ChatMessage = {
       role: "user",
       content: prompt,
@@ -37,11 +49,12 @@ export function useGeneration() {
 
     const currentGeneration = snapshot.generation;
     const currentMessages = snapshot.messages;
+    const summary = overrideSummary !== undefined ? overrideSummary : interviewSummaryRef.current;
 
     try {
-      // Build request with full context
       const requestBody: GenerationRequest = {
         prompt,
+        interviewSummary: summary ?? undefined,
         history: currentMessages.map((m) => ({
           role: m.role,
           content: m.content,
@@ -99,6 +112,163 @@ export function useGeneration() {
     }
   }, []);
 
+  const startInterview = useCallback(async (prompt: string) => {
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: prompt,
+      timestamp: Date.now(),
+    };
+
+    setState((previous) => ({
+      ...previous,
+      phase: "interviewing",
+      prompt,
+      error: null,
+      messages: [...previous.messages, userMessage],
+    }));
+
+    try {
+      const response = await fetch("/api/interview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Interview failed");
+      }
+
+      const result: InterviewApiResponse = await response.json();
+
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: result.message,
+        timestamp: Date.now(),
+      };
+
+      if (result.complete && result.summary) {
+        // Interview completed in one round — store summary and auto-generate
+        interviewSummaryRef.current = result.summary;
+        setState((previous) => ({
+          ...previous,
+          interviewSummary: result.summary,
+          messages: [...previous.messages, assistantMessage],
+        }));
+        await generate(prompt, result.summary);
+      } else {
+        setState((previous) => ({
+          ...previous,
+          messages: [...previous.messages, assistantMessage],
+        }));
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Interview failed";
+
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: `Sorry, I encountered an error: ${message}. Please try again.`,
+        timestamp: Date.now(),
+      };
+
+      setState((previous) => ({
+        ...previous,
+        phase: "idle",
+        error: message,
+        messages: [...previous.messages, assistantMessage],
+      }));
+    }
+  }, [generate]);
+
+  const respondToInterview = useCallback(async (answer: string) => {
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: answer,
+      timestamp: Date.now(),
+    };
+
+    // Capture messages for building history
+    const snapshot = await new Promise<BuilderState>((resolve) => {
+      setState((previous) => {
+        resolve(previous);
+        return {
+          ...previous,
+          error: null,
+          messages: [...previous.messages, userMessage],
+        };
+      });
+    });
+
+    try {
+      // Build history from all previous messages (excluding the one we just added,
+      // since the answer goes as the `prompt` field)
+      const history = snapshot.messages.map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+
+      const response = await fetch("/api/interview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: answer, history }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Interview failed");
+      }
+
+      const result: InterviewApiResponse = await response.json();
+
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: result.message,
+        timestamp: Date.now(),
+      };
+
+      if (result.complete && result.summary) {
+        // Interview done — store summary and auto-trigger generation
+        interviewSummaryRef.current = result.summary;
+        setState((previous) => ({
+          ...previous,
+          interviewSummary: result.summary,
+          messages: [...previous.messages, assistantMessage],
+        }));
+        await generate(snapshot.prompt, result.summary);
+      } else {
+        setState((previous) => ({
+          ...previous,
+          messages: [...previous.messages, assistantMessage],
+        }));
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Interview failed";
+
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: `Sorry, I encountered an error: ${message}. Please try again.`,
+        timestamp: Date.now(),
+      };
+
+      setState((previous) => ({
+        ...previous,
+        phase: "idle",
+        error: message,
+        messages: [...previous.messages, assistantMessage],
+      }));
+    }
+  }, [generate]);
+
+  const skipInterview = useCallback(async () => {
+    // Read the prompt from current state and go straight to generation
+    setState((previous) => {
+      // Trigger generation with the original prompt (no interview context)
+      // We do this outside setState to avoid nesting async calls
+      void generate(previous.prompt);
+      return previous;
+    });
+  }, [generate]);
+
   const setDeployment = useCallback((deployment: BuilderState["deployment"]) => {
     setState((previous) => ({
       ...previous,
@@ -111,5 +281,5 @@ export function useGeneration() {
     setState((previous) => ({ ...previous, phase }));
   }, []);
 
-  return { state, generate, setDeployment, setPhase };
+  return { state, generate, startInterview, respondToInterview, skipInterview, setDeployment, setPhase };
 }

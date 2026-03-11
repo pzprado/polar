@@ -19,6 +19,7 @@ export interface TemplateParameter {
 
 export interface GenerationRequest {
   prompt: string;
+  interviewSummary?: string;
   history?: { role: "user" | "assistant"; content: string }[];
   currentFrontendCode?: string;
   currentContractSource?: string;
@@ -49,11 +50,12 @@ export interface DeployResult {
   error?: string;
 }
 
-export type BuilderPhase = "idle" | "generating" | "generated" | "deploying" | "deployed";
+export type BuilderPhase = "idle" | "interviewing" | "generating" | "generated" | "deploying" | "deployed";
 
 export interface BuilderState {
   phase: BuilderPhase;
   prompt: string;
+  interviewSummary: string | null;
   messages: ChatMessage[];
   generation: GenerationResult | null;
   deployment: DeployResult | null;

@@ -1,34 +1,46 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ArrowRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage } from "@/lib/types";
 import { GenerationStatus } from "./generation-status";
+import { InterviewStatus } from "./interview-status";
 import { PromptInput } from "./prompt-input";
 
 interface ChatPanelProps {
   messages: ChatMessage[];
   generating: boolean;
+  interviewing: boolean;
   onSendMessage: (message: string) => void;
+  onSkipInterview?: () => void;
 }
 
-export function ChatPanel({ messages, generating, onSendMessage }: ChatPanelProps) {
+export function ChatPanel({ messages, generating, interviewing, onSendMessage, onSkipInterview }: ChatPanelProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, generating]);
+  }, [messages, generating, interviewing]);
+
+  // Show the thinking indicator when interviewing and waiting for AI response
+  // (user just sent a message, AI hasn't replied yet)
+  const waitingForInterviewResponse = interviewing && messages.length > 0 && messages[messages.length - 1].role === "user";
 
   return (
     <div className="flex h-full min-h-0 flex-col border-r-0 md:border-r border-black/[0.06] bg-[#F8F6F3]">
       <div className="border-b border-black/[0.06] px-4 py-3">
-        <h2 className="text-sm font-semibold text-[#1C1917]">Chat</h2>
-        <p className="text-xs text-[#A8A29E]">Describe what you want to build</p>
+        <h2 className="text-sm font-semibold text-[#1C1917]">
+          {interviewing ? "Product Brief" : "Chat"}
+        </h2>
+        <p className="text-xs text-[#A8A29E]">
+          {interviewing ? "Quick questions to shape your app" : "Describe what you want to build"}
+        </p>
       </div>
 
       <ScrollArea className="min-h-0 flex-1 px-4">
         <div className="space-y-4 py-4">
-          {messages.length === 0 && !generating && (
+          {messages.length === 0 && !generating && !interviewing && (
             <div className="flex flex-col items-center gap-3 py-12">
               <p className="text-sm text-[#78716C]">What do you want to build today?</p>
               <div className="flex flex-wrap justify-center gap-2">
@@ -52,7 +64,7 @@ export function ChatPanel({ messages, generating, onSendMessage }: ChatPanelProp
           {messages.map((message, index) => (
             <div key={`${message.timestamp}-${index}`} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[85%] rounded-lg px-3 py-2 text-sm leading-relaxed ${
+                className={`max-w-[85%] rounded-lg px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap ${
                   message.role === "user"
                     ? "bg-[#E84142] text-white"
                     : "border-l-2 border-[#2563EB]/20 bg-[#2563EB]/[0.04] text-[#57534E]"
@@ -63,13 +75,24 @@ export function ChatPanel({ messages, generating, onSendMessage }: ChatPanelProp
             </div>
           ))}
 
+          {waitingForInterviewResponse && <InterviewStatus />}
           {generating && <GenerationStatus />}
           <div ref={bottomRef} />
         </div>
       </ScrollArea>
 
       <div className="border-t border-black/[0.06] p-3">
-        <PromptInput onSubmit={onSendMessage} disabled={generating} />
+        {interviewing && onSkipInterview && (
+          <button
+            type="button"
+            onClick={onSkipInterview}
+            className="mb-2 flex w-full items-center justify-center gap-1.5 rounded-md py-1.5 text-xs text-[#A8A29E] transition-colors hover:text-[#78716C]"
+          >
+            Skip, just build it
+            <ArrowRight className="h-3 w-3" />
+          </button>
+        )}
+        <PromptInput onSubmit={onSendMessage} disabled={generating || waitingForInterviewResponse} />
       </div>
     </div>
   );

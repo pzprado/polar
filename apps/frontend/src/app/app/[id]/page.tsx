@@ -39,17 +39,18 @@ const VIEW_OPTIONS: { id: PanelView; label: string; shortLabel: string; icon: ty
 
 export default function BuilderPage() {
   const searchParams = useSearchParams();
-  const { state, generate, setDeployment, setPhase } = useGeneration();
+  const { state, generate, startInterview, respondToInterview, skipInterview, setDeployment, setPhase } = useGeneration();
   const { deploying, result: deployResult, error: deployError, deploy } = useDeploy();
   const [activeView, setActiveView] = useState<PanelView>("preview");
   const [mobileTab, setMobileTab] = useState<"chat" | "panel">("chat");
 
+  // On load: start with product interview instead of immediate generation
   useEffect(() => {
     const prompt = searchParams.get("prompt");
     if (prompt && state.phase === "idle" && state.messages.length === 0) {
-      void generate(prompt);
+      void startInterview(prompt);
     }
-  }, [generate, searchParams, state.messages.length, state.phase]);
+  }, [startInterview, searchParams, state.messages.length, state.phase]);
 
   useEffect(() => {
     if (deployResult) {
@@ -68,6 +69,15 @@ export default function BuilderPage() {
     if (!state.generation) return;
     setPhase("deploying");
     await deploy(state.generation.contractSource, state.generation.contractName);
+  };
+
+  // Route messages to interview or generation based on current phase
+  const handleSendMessage = (message: string) => {
+    if (state.phase === "interviewing") {
+      void respondToInterview(message);
+    } else {
+      void generate(message);
+    }
   };
 
   const appName = state.generation?.contractName || "New App";
@@ -109,7 +119,9 @@ export default function BuilderPage() {
           <ChatPanel
             messages={state.messages}
             generating={state.phase === "generating"}
-            onSendMessage={(message) => void generate(message)}
+            interviewing={state.phase === "interviewing"}
+            onSendMessage={handleSendMessage}
+            onSkipInterview={state.phase === "interviewing" ? skipInterview : undefined}
           />
         </div>
 
@@ -202,7 +214,9 @@ export default function BuilderPage() {
             <ChatPanel
               messages={state.messages}
               generating={state.phase === "generating"}
-              onSendMessage={(message) => void generate(message)}
+              interviewing={state.phase === "interviewing"}
+              onSendMessage={handleSendMessage}
+              onSkipInterview={state.phase === "interviewing" ? skipInterview : undefined}
             />
           ) : (
             <div className="flex h-full flex-col bg-[#F8F6F3]">
