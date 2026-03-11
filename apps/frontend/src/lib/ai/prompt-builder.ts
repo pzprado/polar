@@ -102,9 +102,10 @@ Generate 2-5 files per app following this structure:
 6. Contract address is injected as \`window.__POLAR_CONTRACT_ADDRESS__\`.
 7. Blockchain interaction: Use wagmi hooks (\`useReadContract\`, \`useWriteContract\`, \`useAccount\`, \`useConnect\`, \`useBalance\`, etc.) and viem for utilities (\`parseEther\`, \`formatEther\`, \`parseAbi\`, etc.). NEVER use ethers.js.
 8. The app is wrapped in a WagmiProvider — you do NOT need to set up providers or config, just use hooks directly.
-9. Mock mode: Show useful UI even before deployment (simulated data).
-10. Keep total files to 8 or fewer.
-11. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
+9. **CRITICAL BigInt rule:** wagmi/viem return BigInt values. NEVER use \`Number(bigintVal)\` or math operators (+, -, *, /) with mixed BigInt and Number. Always use \`formatEther(bigintVal)\` or \`bigintVal.toString()\` to display values. For arithmetic, keep everything as BigInt: \`bigintA + bigintB\`.
+10. Mock mode: Show useful UI even before deployment (simulated data).
+11. Keep total files to 8 or fewer.
+12. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
 
 ## Important Notes
 - Do NOT output raw Solidity code.
