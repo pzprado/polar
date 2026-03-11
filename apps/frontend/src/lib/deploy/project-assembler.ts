@@ -24,6 +24,11 @@ export function assembleNextProject(
         "react-dom": "^18.3.0",
         ethers: "^6.16.0",
       },
+      devDependencies: {
+        typescript: "^5.4.0",
+        "@types/react": "^18.3.0",
+        "@types/node": "^20.0.0",
+      },
     },
     null,
     2,
@@ -38,13 +43,40 @@ const nextConfig = {
 module.exports = nextConfig;
 `;
 
-  // app/layout.jsx
-  files["app/layout.jsx"] = `export const metadata = {
+  // tsconfig.json
+  files["tsconfig.json"] = JSON.stringify(
+    {
+      compilerOptions: {
+        target: "es5",
+        lib: ["dom", "dom.iterable", "esnext"],
+        allowJs: true,
+        skipLibCheck: true,
+        strict: false,
+        noEmit: true,
+        esModuleInterop: true,
+        module: "esnext",
+        moduleResolution: "bundler",
+        resolveJsonModule: true,
+        isolatedModules: true,
+        jsx: "preserve",
+        incremental: true,
+        plugins: [{ name: "next" }],
+        paths: { "@/*": ["./*"] },
+      },
+      include: ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+      exclude: ["node_modules"],
+    },
+    null,
+    2,
+  );
+
+  // app/layout.tsx
+  files["app/layout.tsx"] = `export const metadata = {
   title: "${appName}",
   description: "Built with Polar on Avalanche",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body style={{ margin: 0, fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
@@ -55,8 +87,8 @@ export default function RootLayout({ children }) {
 }
 `;
 
-  // app/page.jsx — imports the generated App component
-  files["app/page.jsx"] = `"use client";
+  // app/page.tsx — imports the generated App component
+  files["app/page.tsx"] = `"use client";
 
 import App from "../generated/App";
 
