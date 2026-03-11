@@ -38,13 +38,13 @@ const nextConfig = {
 module.exports = nextConfig;
 `;
 
-  // app/layout.tsx
-  files["app/layout.tsx"] = `export const metadata = {
+  // app/layout.jsx
+  files["app/layout.jsx"] = `export const metadata = {
   title: "${appName}",
   description: "Built with Polar on Avalanche",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body style={{ margin: 0, fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
@@ -55,8 +55,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 `;
 
-  // app/page.tsx — imports the generated App component
-  files["app/page.tsx"] = `"use client";
+  // app/page.jsx — imports the generated App component
+  files["app/page.jsx"] = `"use client";
 
 import App from "../generated/App";
 
