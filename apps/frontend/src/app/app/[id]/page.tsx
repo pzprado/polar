@@ -275,6 +275,7 @@ export default function BuilderPage() {
                   <PreviewPanel
                     frontendFiles={state.generation?.frontendFiles ?? null}
                     contractAddress={deployResult?.contractAddress}
+                    onError={handlePreviewError}
                   />
                 )}
                 {activeView === "frontend" && (
