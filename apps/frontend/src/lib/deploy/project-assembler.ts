@@ -30,6 +30,9 @@ export function assembleNextProject(
         typescript: "^5.4.0",
         "@types/react": "^18.3.0",
         "@types/node": "^20.0.0",
+        tailwindcss: "^3.4.0",
+        postcss: "^8.4.0",
+        autoprefixer: "^10.4.0",
       },
     },
     null,
@@ -72,8 +75,47 @@ module.exports = nextConfig;
     2,
   );
 
+  // tailwind.config.js
+  files["tailwind.config.js"] = `/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./app/**/*.{js,ts,jsx,tsx}", "./generated/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        polar: { DEFAULT: "#E84142", dark: "#c7282a" },
+      },
+      fontFamily: {
+        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+      },
+    },
+  },
+  plugins: [],
+};
+`;
+
+  // postcss.config.js
+  files["postcss.config.js"] = `module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+`;
+
+  // app/globals.css
+  files["app/globals.css"] = `@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  min-height: 100vh;
+}
+`;
+
   // app/layout.tsx
-  files["app/layout.tsx"] = `export const metadata = {
+  files["app/layout.tsx"] = `import "./globals.css";
+
+export const metadata = {
   title: "${appName}",
   description: "Built with Polar on Avalanche",
 };
@@ -81,7 +123,7 @@ module.exports = nextConfig;
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+      <body className="bg-white text-gray-900 antialiased">
         {children}
       </body>
     </html>

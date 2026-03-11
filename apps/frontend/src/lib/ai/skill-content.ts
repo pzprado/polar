@@ -2,46 +2,48 @@
  * AI generation skills — design and quality guidelines injected into the system prompt.
  *
  * Each skill is a focused set of rules that the LLM follows when generating
- * React components. The source-of-truth markdown lives in ./skills/*.md;
- * this file re-exports the content as strings so it bundles reliably on Vercel.
+ * React components. Uses Tailwind CSS classes for all styling.
  *
- * To add a new skill: create the .md file, then add a named export here.
+ * To add a new skill: create the export, then add it to getAllSkillContent().
  */
 
 export const SKILL_FRONTEND_DESIGN = `# Frontend Design
 
 You produce distinctive, polished UI — not generic AI-generated interfaces. Every component should look intentionally designed.
 
-## Typography
-- Use a clear 3-level hierarchy: heading (24-28px, bold), subheading (16-18px, semibold), body (14-15px, normal).
-- Set line-height: 1.5 for body text, 1.2 for headings.
-- Limit line length to ~65 characters for readability.
-- Use letter-spacing: -0.02em on headings for a tighter, designed feel.
+## Typography (Tailwind)
+- Headings: \`text-2xl font-bold tracking-tight\` or \`text-xl font-semibold\`
+- Subheadings: \`text-lg font-semibold\` or \`text-base font-medium\`
+- Body: \`text-sm text-gray-600\` or \`text-base text-gray-700\`
+- Muted: \`text-xs text-gray-400\`
+- Max width for readability: \`max-w-prose\`
 
-## Color
-- Build from a small palette: one primary accent, one neutral scale, semantic colors (success green, error red, warning amber).
-- Use Polar red #E84142 as the primary accent for buttons and key actions.
-- Tint neutrals warm — never use pure gray. Neutral scale: #1C1917, #57534E, #78716C, #A8A29E, #D6D3D1, #F5F5F4.
-- 60-30-10 rule: 60% neutral backgrounds/text, 30% supporting colors, 10% accent.
-- Body text contrast: 4.5:1 minimum against background.
+## Color (Tailwind)
+- Primary accent: \`bg-polar text-white hover:bg-polar-dark\` (Polar red #E84142)
+- Warm neutral scale: stone palette — \`text-stone-900\`, \`text-stone-600\`, \`text-stone-400\`, \`bg-stone-50\`
+- 60-30-10: mostly neutral backgrounds, supporting stone tones, 10% polar accent
+- Body text contrast: always \`text-stone-700\` or darker on white/light backgrounds
 
-## Layout & Spacing
-- Use a 4px-based scale: 4, 8, 12, 16, 24, 32, 48, 64px.
-- Create visual rhythm with varied spacing — tight for related items, generous between sections.
-- Don't wrap everything in cards. Use spacing and alignment to create structure.
-- Left-align text by default. Center only for hero/CTA sections.
-- Use flexbox with gap for consistent spacing between children.
+## Layout & Spacing (Tailwind)
+- Spacing scale: \`p-1\` (4px), \`p-2\` (8px), \`p-3\` (12px), \`p-4\` (16px), \`p-6\` (24px), \`p-8\` (32px)
+- Sections: \`space-y-6\` or \`space-y-8\` between major sections
+- Related items: \`space-y-2\` or \`gap-2\`
+- Container: \`max-w-2xl mx-auto px-4 py-8\` for focused apps, \`max-w-4xl\` for dashboards
+- Use \`flex\` with \`gap-*\` for horizontal layouts, \`flex flex-col gap-*\` for vertical
+- Left-align by default. \`text-center\` only for hero/CTA sections.
 
-## Visual Details
-- border-radius: 8-12px for containers, 6px for buttons/inputs, 9999px for pills.
-- Prefer subtle box-shadows: "0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04)".
-- Use borders sparingly — 1px solid with low-opacity colors like rgba(0,0,0,0.08).
+## Visual Details (Tailwind)
+- Containers: \`rounded-xl\` (12px) or \`rounded-lg\` (8px)
+- Buttons/inputs: \`rounded-md\` (6px)
+- Pills/badges: \`rounded-full\`
+- Shadows: \`shadow-sm\` for cards. Never \`shadow-2xl\`.
+- Borders: \`border border-black/[0.08]\` — subtle, low opacity
 
 ## Anti-Patterns (NEVER)
-- No large icons with rounded corners above headings.
-- No identical card grids with icon + heading + text repeated.
+- No large icons with rounded corners above headings
+- No identical card grids with icon + heading + text repeated
 - No gradient text. No glassmorphism. No purple-blue gradients.
-- No bounce/elastic easing. No monospace fonts for "technical" feel.
+- No bounce/elastic animations. No monospace fonts for "technical" feel.
 - Not every button primary — one primary action, rest secondary/ghost.`;
 
 export const SKILL_COPYWRITING = `# Copywriting
@@ -76,101 +78,84 @@ export const SKILL_COLORIZE = `# Color Strategy
 
 Use color to communicate meaning and create hierarchy. Every color needs a purpose.
 
-## Semantic Colors
-- Success: #16a34a (green) — confirmations, live status, completed
-- Error: #dc2626 (red) — failures, destructive actions, validation
-- Warning: #d97706 (amber) — pending states, notices
-- Info: #2563eb (blue) — informational, links, secondary actions
-- Primary: #E84142 (Polar red) — primary buttons, brand elements
+## Semantic Colors (Tailwind)
+- Success: \`text-green-600 bg-green-50 border-green-200\`
+- Error: \`text-red-600 bg-red-50 border-red-200\`
+- Warning: \`text-amber-600 bg-amber-50 border-amber-200\`
+- Info: \`text-blue-600 bg-blue-50 border-blue-200\`
+- Primary: \`text-white bg-polar hover:bg-polar-dark\`
 
 ## Application
-- Status indicators: colored dots (8px) + matching text. Green dot + "Live".
-- State backgrounds: very low opacity. Success: rgba(22,163,74,0.08). Error: rgba(220,38,38,0.08).
-- Primary actions: #E84142. Secondary: subtle borders/ghost. Destructive: red on confirmation only.
-
-## Ready-to-Use Palette
-Primary: #E84142, Primary hover: #dc2626
-Text: #1C1917 (primary), #57534E (secondary), #78716C (muted), #A8A29E (faint)
-Surface: #FEFDFB, Background: #F8F6F3, Border: rgba(0,0,0,0.08)
-Success: #16a34a, Error: #dc2626, Warning: #d97706, Info: #2563eb
+- Status indicators: \`<span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-green-500" />Live</span>\`
+- State backgrounds: use very light tints: \`bg-green-50\`, \`bg-red-50\`
+- Primary actions: \`bg-polar\`. Secondary: \`bg-stone-100\` or \`border border-stone-200\`. Destructive: red on confirmation only.
 
 ## Rules
 - Never use color as the only indicator — pair with icons or text.
 - Don't put gray text on colored backgrounds.
-- Stick to 2-3 accent colors beyond neutrals. Ensure 4.5:1 text contrast.`;
+- Stick to 2-3 accent colors beyond neutrals.`;
 
 export const SKILL_DELIGHT = `# Delight
 
 Add personality and polish. Delight enhances usability, never delays it.
 
 ## Loading States
-- Show skeleton/placeholder layouts while loading — not a centered spinner.
+- Show skeleton/placeholder layouts: \`<div className="h-4 w-32 animate-pulse rounded bg-stone-200" />\`
 - Use specific messages: "Connecting wallet...", "Sending tip..."
 - For multi-step processes, show progress with the current step.
 
 ## Success Moments
 - Green checkmark + brief congrats: "Tip sent!" not "Transaction successful"
-- Show key detail (amount, tx hash) + next action ("Send another" / "View on explorer")
-- Subtle scale + fade-in CSS animation for success state.
+- Show key detail (amount, tx hash) + next action
+- Subtle entrance: use Tailwind \`animate-in\` or a simple CSS @keyframes fadeIn
 
-## Empty States
-- Make them welcoming: explain what will appear, provide a first action.
-- Example: "Your tip jar is empty. Share your page to start receiving tips."
-
-## Interactive Feedback
-- Buttons: hover (slightly darker), active (scale down slightly), disabled (opacity 0.5, cursor: not-allowed).
-- Input focus: colored border or box-shadow ring.
-- Form validation: inline feedback on blur.
+## Interactive Feedback (Tailwind)
+- Buttons: \`hover:bg-polar-dark active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-colors\`
+- Input focus: \`focus:ring-2 focus:ring-polar/20 focus:border-polar outline-none\`
+- Transitions: \`transition-all duration-200\`
 
 ## CSS Animations
-Use a <style> tag for keyframes since you can't import animation libraries:
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
-@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.5 } }
-@keyframes spin { to { transform: rotate(360deg) } }
-Then apply: style={{ animation: 'fadeIn 0.3s ease-out' }}
+For custom animations, add a \`<style>\` tag in the component:
+\`\`\`
+<style>{\`@keyframes fadeIn { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }\`}</style>
+\`\`\`
+Then use: \`style={{ animation: 'fadeIn 0.3s ease-out' }}\`
 
 ## Rules
 - Animations < 300ms for feedback, < 500ms for transitions.
 - Pick 2-3 key animation moments per screen, not everything.
-- No bounce, no elastic, no parallax. Keep it subtle.`;
+- No bounce, no elastic, no parallax.`;
 
 export const SKILL_ADAPT = `# Responsive Design
 
 Apps must work on both desktop and mobile. Users share app links that get opened on phones.
 
-## Layout
-- Flexbox with flexWrap: 'wrap' for reflowing layouts.
-- maxWidth on containers (640px for focused apps, 960px for dashboards).
-- Percentage widths or flex: 1 instead of fixed pixels.
-- Stack vertically on narrow screens — no horizontal scrolling.
-
-## Responsive Patterns (Inline Styles)
-- Flexbox wrapping: display: 'flex', flexWrap: 'wrap', gap: '16px'
-- Min-width children: flex: '1 1 280px' — items wrap below 280px.
-- Use a <style> tag for media queries when needed:
-  @media (max-width: 640px) { .card-grid { flex-direction: column } }
+## Layout (Tailwind)
+- Container: \`max-w-2xl mx-auto px-4\`
+- Responsive grid: \`grid grid-cols-1 sm:grid-cols-2 gap-4\`
+- Stack on mobile: \`flex flex-col sm:flex-row gap-4\`
+- Full-width on mobile: \`w-full sm:w-auto\`
 
 ## Touch Targets
-- All interactive elements: at least 44x44px.
-- Add padding to small elements to increase tap area.
-- Space interactive elements 8px+ apart.
-- Buttons: padding 12px 24px minimum.
+- All interactive elements: \`min-h-[44px]\` at minimum
+- Buttons: \`px-4 py-2.5\` minimum padding
+- Space interactive elements: \`gap-2\` or more apart
 
 ## Text & Inputs
-- Body text: 14-16px minimum. Never below 12px.
-- Inputs: width 100%, fontSize 16px (prevents iOS zoom).
-- Use inputMode="numeric" for numbers, inputMode="decimal" for amounts.`;
+- Body text: \`text-sm\` (14px) minimum. Never \`text-[10px]\`.
+- Inputs: \`w-full text-base\` (16px prevents iOS zoom)
+- Use \`inputMode="numeric"\` for numbers, \`inputMode="decimal"\` for amounts`;
 
 export const SKILL_HARDEN = `# Resilience
 
 Blockchain interactions fail often. Handle every failure gracefully.
 
 ## Wallet Connection
-- Check window.ethereum exists before connecting.
+- Use wagmi's \`useAccount\` and \`useConnect\` hooks.
 - Show "Connect Wallet" button — don't auto-connect.
 - Handle rejection: "Connection declined. Click to try again."
 - Handle missing wallet: "No wallet detected. Install MetaMask to continue."
-- Show connected address truncated: 0x1234...abcd.
+- Show connected address truncated: \`address.slice(0, 6) + "..." + address.slice(-4)\`
 
 ## Transaction Handling
 Every contract call: validate inputs → show pending state → wait for receipt → show result.
@@ -189,8 +174,8 @@ Common errors:
 - Disable submit until all required fields valid.
 
 ## Display Safety
-- Truncate long addresses/hashes with ellipsis.
-- Format large numbers with commas (1,000,000).
+- Truncate long addresses/hashes with \`truncate\` class.
+- Format large numbers with commas.
 - Handle zero/null explicitly — never show "undefined" or "NaN".
 - AVAX amounts: 4 decimal places max.
 
@@ -199,35 +184,38 @@ Common errors:
 - After success, refresh relevant data (balances, lists).
 - Initialize with sensible defaults — render something useful before wallet connection.`;
 
-export const SKILL_COMPONENT_PATTERNS = `# Component Patterns (shadcn/ui Style)
+export const SKILL_COMPONENT_PATTERNS = `# Component Patterns (Tailwind)
 
-Generate components following shadcn/ui's design language, adapted for inline styles.
+Generate polished, consistent components using Tailwind utility classes.
 
 ## Buttons
-- Primary: { backgroundColor: '#E84142', color: 'white', border: 'none', borderRadius: 6, padding: '10px 20px', fontWeight: 500, cursor: 'pointer' }
-- Secondary: { backgroundColor: 'rgba(0,0,0,0.06)', color: '#57534E', border: 'none', borderRadius: 6, padding: '10px 20px' }
-- Outline: { backgroundColor: 'transparent', color: '#57534E', border: '1px solid rgba(0,0,0,0.15)', borderRadius: 6, padding: '10px 20px' }
-- Ghost: { backgroundColor: 'transparent', color: '#57534E', border: 'none', padding: '10px 20px' }
+- Primary: \`className="bg-polar hover:bg-polar-dark text-white font-medium px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"\`
+- Secondary: \`className="bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium px-4 py-2.5 rounded-lg transition-colors"\`
+- Outline: \`className="border border-stone-200 hover:bg-stone-50 text-stone-700 font-medium px-4 py-2.5 rounded-lg transition-colors"\`
+- Ghost: \`className="hover:bg-stone-100 text-stone-600 font-medium px-4 py-2.5 rounded-lg transition-colors"\`
 - One primary action per section. Secondary actions use outline or ghost.
 
 ## Inputs
-- Base: { width: '100%', height: 40, padding: '8px 12px', fontSize: 14, border: '1px solid rgba(0,0,0,0.15)', borderRadius: 6, outline: 'none' }
-- Focus: { borderColor: '#E84142', boxShadow: '0 0 0 2px rgba(232,65,66,0.15)' }
-- Error: { borderColor: '#dc2626' } with red helper text below.
-- Label: 14px, fontWeight 500, marginBottom 6, color #1C1917.
+- Base: \`className="w-full h-10 px-3 text-sm border border-stone-200 rounded-lg outline-none focus:ring-2 focus:ring-polar/20 focus:border-polar transition-all"\`
+- Error: add \`border-red-300 focus:ring-red-200\` with \`<p className="text-xs text-red-500 mt-1">Error message</p>\` below
+- Label: \`className="block text-sm font-medium text-stone-700 mb-1.5"\`
 
 ## Cards
-- { backgroundColor: 'white', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, padding: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }
-- Card header: title (16px semibold) + optional description (14px muted).
+- \`className="bg-white border border-black/[0.08] rounded-xl p-6 shadow-sm"\`
+- Card header: \`<h3 className="text-base font-semibold text-stone-900">Title</h3><p className="text-sm text-stone-500 mt-1">Description</p>\`
 
 ## Badges
-- { display: 'inline-flex', alignItems: 'center', fontSize: 12, fontWeight: 500, padding: '2px 10px', borderRadius: 9999 }
-- Status: success (green-tinted), error (red-tinted), warning (amber-tinted), info (blue-tinted).
+- \`className="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full"\`
+- Success: \`bg-green-50 text-green-700\`
+- Error: \`bg-red-50 text-red-700\`
+- Warning: \`bg-amber-50 text-amber-700\`
+- Info: \`bg-blue-50 text-blue-700\`
 
-## Layout Composition
-- Group related actions with gap: 8. Stack forms vertically with gap: 16.
-- Use separator: { height: 1, backgroundColor: 'rgba(0,0,0,0.08)', margin: '16px 0' } between sections.
-- Form pattern: label → input → helper text, stacked vertically.`;
+## Layout
+- Group related actions: \`flex items-center gap-2\`
+- Stack forms: \`flex flex-col gap-4\`
+- Separator: \`<div className="border-t border-black/[0.08] my-4" />\`
+- Page wrapper: \`<div className="min-h-screen bg-stone-50"><div className="max-w-2xl mx-auto px-4 py-8">...</div></div>\``;
 
 /** All skills concatenated, ready to inject into the system prompt. */
 export function getAllSkillContent(): string {

@@ -65,17 +65,27 @@ function getHtmlFile(): string {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Polar Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            polar: { DEFAULT: '#E84142', dark: '#c7282a' },
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #ffffff;
-      color: #1f2937;
-    }
+    body { min-height: 100vh; }
     #root { min-height: 100vh; }
   </style>
 </head>
-<body>
+<body class="bg-white text-gray-900 antialiased">
   <div id="root"></div>
 </body>
 </html>

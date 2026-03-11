@@ -98,7 +98,7 @@ Generate 2-5 files per app following this structure:
 2. Components import each other using relative paths: \`import TipForm from "./components/TipForm"\`
 3. Only \`/App.jsx\` should be the default export root. Sub-components are also default exports of their own files.
 4. No external imports except React, wagmi, and viem — all are available globally.
-5. Use inline styles only. Follow the design skills below for quality.
+5. **Styling: Use Tailwind CSS classes.** Tailwind is pre-configured. Use className for all styling. Avoid inline styles except for truly dynamic values.
 6. Contract address is injected as \`window.__POLAR_CONTRACT_ADDRESS__\`.
 7. Blockchain interaction: Use wagmi hooks (\`useReadContract\`, \`useWriteContract\`, \`useAccount\`, \`useConnect\`, \`useBalance\`, etc.) and viem for utilities (\`parseEther\`, \`formatEther\`, \`parseAbi\`, etc.). NEVER use ethers.js.
 8. The app is wrapped in a WagmiProvider — you do NOT need to set up providers or config, just use hooks directly.
