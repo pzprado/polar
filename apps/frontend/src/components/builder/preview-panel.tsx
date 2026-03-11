@@ -1,7 +1,7 @@
 "use client";
 
 import { SandpackPreview, SandpackProvider } from "@codesandbox/sandpack-react";
-import { polarSandpackTheme, sandpackCustomSetup } from "@/lib/preview/sandpack-config";
+import { polarSandpackTheme, getSandpackSetup } from "@/lib/preview/sandpack-config";
 import { getSandpackFiles } from "@/lib/preview/template-files";
 import { SandpackErrorReporter, SandpackErrorDetail } from "./sandpack-error-reporter";
 import { GeneratedFile } from "@/lib/types";
@@ -19,6 +19,12 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
   const files = useMemo(
     () => (frontendFiles ? getSandpackFiles(frontendFiles, contractAddress) : null),
     [frontendFiles, contractAddress],
+  );
+
+  // Resolve dependencies dynamically based on what the AI imported
+  const customSetup = useMemo(
+    () => (frontendFiles ? getSandpackSetup(frontendFiles) : { dependencies: {} }),
+    [frontendFiles],
   );
 
   // Force Sandpack to fully remount when files change — prevents stale error screens
@@ -66,7 +72,7 @@ export function PreviewPanel({ frontendFiles, contractAddress, onError }: Previe
         template="react"
         theme={polarSandpackTheme}
         files={files}
-        customSetup={sandpackCustomSetup}
+        customSetup={customSetup}
         options={{
           autorun: true,
           autoReload: true,

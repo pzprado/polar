@@ -1,4 +1,6 @@
 import type { SandpackTheme } from "@codesandbox/sandpack-react";
+import { GeneratedFile } from "@/lib/types";
+import { getAllDependencies } from "@/lib/deploy/dependency-resolver";
 
 export const polarSandpackTheme: SandpackTheme = {
   colors: {
@@ -32,12 +34,8 @@ export const polarSandpackTheme: SandpackTheme = {
   },
 };
 
-export const sandpackDependencies: Record<string, string> = {
-  wagmi: "^2.14.0",
-  viem: "^2.21.0",
-  "@tanstack/react-query": "^5.62.0",
-};
-
-export const sandpackCustomSetup = {
-  dependencies: sandpackDependencies,
-};
+export function getSandpackSetup(files: GeneratedFile[]) {
+  return {
+    dependencies: getAllDependencies(files),
+  };
+}

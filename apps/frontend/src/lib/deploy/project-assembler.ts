@@ -1,4 +1,5 @@
 import { GeneratedFile } from "@/lib/types";
+import { resolveDependencies } from "./dependency-resolver";
 
 export function assembleNextProject(
   frontendFiles: GeneratedFile[],
@@ -6,6 +7,9 @@ export function assembleNextProject(
   appName: string,
 ): Record<string, string> {
   const files: Record<string, string> = {};
+
+  // Detect extra dependencies from AI-generated code
+  const extraDeps = resolveDependencies(frontendFiles);
 
   // package.json
   files["package.json"] = JSON.stringify(
@@ -25,6 +29,7 @@ export function assembleNextProject(
         wagmi: "^2.14.0",
         viem: "^2.21.0",
         "@tanstack/react-query": "^5.62.0",
+        ...extraDeps,
       },
       devDependencies: {
         typescript: "^5.4.0",
