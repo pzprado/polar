@@ -8,6 +8,7 @@ export function getSandpackFiles(
     "/index.js": getEntryFile(),
     "/index.html": getHtmlFile(),
     "/setup.js": getSetupFile(contractAddress),
+    "/wagmi-config.js": getWagmiConfigFile(),
   };
 
   // Map AI-generated files into Sandpack — normalize .jsx to .js for Sandpack
@@ -23,16 +24,36 @@ function getEntryFile(): string {
   return `
 import React from "react";
 import { createRoot } from "react-dom/client";
-import * as ethers from "ethers";
+import { WagmiProvider } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { config } from "./wagmi-config";
 import "./setup";
 import App from "./App";
 
-if (typeof window !== "undefined") {
-  window.ethers = ethers;
-}
+const queryClient = new QueryClient();
 
 const root = createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(
+  <WagmiProvider config={config}>
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  </WagmiProvider>
+);
+`;
+}
+
+function getWagmiConfigFile(): string {
+  return `
+import { createConfig, http } from "wagmi";
+import { avalancheFuji } from "wagmi/chains";
+
+export const config = createConfig({
+  chains: [avalancheFuji],
+  transports: {
+    [avalancheFuji.id]: http(),
+  },
+});
 `;
 }
 

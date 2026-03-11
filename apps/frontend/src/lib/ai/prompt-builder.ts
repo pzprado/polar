@@ -97,13 +97,14 @@ Generate 2-5 files per app following this structure:
 1. \`/App.jsx\` is ALWAYS the entry point and MUST be included.
 2. Components import each other using relative paths: \`import TipForm from "./components/TipForm"\`
 3. Only \`/App.jsx\` should be the default export root. Sub-components are also default exports of their own files.
-4. No external imports except React and ethers — both are available globally.
+4. No external imports except React, wagmi, and viem — all are available globally.
 5. Use inline styles only. Follow the design skills below for quality.
 6. Contract address is injected as \`window.__POLAR_CONTRACT_ADDRESS__\`.
-7. ethers usage: Use ethers v6 APIs.
-8. Mock mode: Show useful UI even before deployment (simulated data).
-9. Keep total files to 8 or fewer.
-10. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
+7. Blockchain interaction: Use wagmi hooks (\`useReadContract\`, \`useWriteContract\`, \`useAccount\`, \`useConnect\`, \`useBalance\`, etc.) and viem for utilities (\`parseEther\`, \`formatEther\`, \`parseAbi\`, etc.). NEVER use ethers.js.
+8. The app is wrapped in a WagmiProvider — you do NOT need to set up providers or config, just use hooks directly.
+9. Mock mode: Show useful UI even before deployment (simulated data).
+10. Keep total files to 8 or fewer.
+11. Each \`<file>\` tag MUST have a \`path\` attribute and contain the COMPLETE file content.
 
 ## Important Notes
 - Do NOT output raw Solidity code.

@@ -22,7 +22,9 @@ export function assembleNextProject(
         next: "^14.2.0",
         react: "^18.3.0",
         "react-dom": "^18.3.0",
-        ethers: "^6.16.0",
+        wagmi: "^2.14.0",
+        viem: "^2.21.0",
+        "@tanstack/react-query": "^5.62.0",
       },
       devDependencies: {
         typescript: "^5.4.0",
@@ -87,13 +89,45 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 `;
 
+  // app/providers.tsx — wagmi + react-query setup
+  files["app/providers.tsx"] = `"use client";
+
+import { WagmiProvider, createConfig, http } from "wagmi";
+import { avalancheFuji } from "wagmi/chains";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactNode, useState } from "react";
+
+const config = createConfig({
+  chains: [avalancheFuji],
+  transports: {
+    [avalancheFuji.id]: http(),
+  },
+});
+
+export function Providers({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
+}
+`;
+
   // app/page.tsx — imports the generated App component
   files["app/page.tsx"] = `"use client";
 
 import App from "../generated/App";
+import { Providers } from "./providers";
 
 export default function Page() {
-  return <App />;
+  return (
+    <Providers>
+      <App />
+    </Providers>
+  );
 }
 `;
 

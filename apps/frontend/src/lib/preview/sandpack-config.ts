@@ -33,7 +33,9 @@ export const polarSandpackTheme: SandpackTheme = {
 };
 
 export const sandpackDependencies: Record<string, string> = {
-  ethers: "^6.16.0",
+  wagmi: "^2.14.0",
+  viem: "^2.21.0",
+  "@tanstack/react-query": "^5.62.0",
 };
 
 export const sandpackCustomSetup = {

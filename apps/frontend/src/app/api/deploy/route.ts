@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { compileContract } from "@/lib/contracts/compiler";
 import { deployContract } from "@/lib/contracts/deployer";
+import { validateFrontendFiles } from "@/lib/deploy/build-validator";
 import { assembleNextProject } from "@/lib/deploy/project-assembler";
 import { deployToVercel } from "@/lib/deploy/vercel-deployer";
 import { DeployRequest, DeployResult } from "@/lib/types";
@@ -39,10 +40,17 @@ export async function POST(request: NextRequest) {
 
     const result: DeployResult = { ...deployResult };
 
-    // Step 2: If frontend files provided, deploy to Vercel
+    // Step 2: If frontend files provided, validate and deploy to Vercel
     if (body.frontendFiles && body.frontendFiles.length > 0 && process.env.VERCEL_TOKEN) {
       const contractAddress = deployResult.contractAddress || "";
       const appSlug = body.appSlug || body.contractName.toLowerCase().replace(/[^a-z0-9]/g, "-");
+
+      // Validate frontend files before deploying
+      const validation = validateFrontendFiles(body.frontendFiles);
+      if (!validation.valid) {
+        result.frontendError = `Build validation failed: ${validation.errors.join("; ")}`;
+        return NextResponse.json(result);
+      }
 
       const projectFiles = assembleNextProject(body.frontendFiles, contractAddress, body.contractName);
       const vercelResult = await deployToVercel(projectFiles, appSlug);

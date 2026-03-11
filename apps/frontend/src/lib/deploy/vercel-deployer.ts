@@ -60,9 +60,11 @@ export async function deployToVercel(
 
   const data = await response.json();
 
+  // Use the production alias (appSlug.vercel.app) instead of the unique deployment URL,
+  // since deployment URLs are only visible to the authenticated Vercel user
   return {
     success: true,
-    url: `https://${data.url}`,
+    url: `https://${appSlug}.vercel.app`,
     deploymentId: data.id,
   };
 }
