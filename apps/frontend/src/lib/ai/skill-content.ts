@@ -214,6 +214,27 @@ export const SKILL_WAGMI_PATTERNS = `# Wagmi/Viem Patterns
 
 All blockchain interaction uses wagmi hooks and viem utilities. Follow these patterns EXACTLY.
 
+## BigInt Values
+wagmi hooks return BigInt for all on-chain numbers (balances, supplies, fees, etc.).
+Use viem utilities to format — never convert manually:
+\`\`\`tsx
+import { formatEther, formatUnits, parseEther } from "viem";
+
+// Display BigInt values as readable strings
+formatEther(balance)          // BigInt → "1.5"
+formatUnits(amount, decimals) // BigInt with custom decimals
+balance.toString()            // raw string
+
+// BigInt arithmetic — use 'n' suffix for literals
+balance / 2n                  // OK
+balance + otherBigInt         // OK
+
+// Parse user input to BigInt
+parseEther("1.5")             // → 1500000000000000000n
+\`\`\`
+Never pass BigInt to \`Number()\`, \`Math.pow()\`, \`Math.floor()\`, \`parseInt()\`, \`.toFixed()\`,
+or use operators between BigInt and Number (\`balance / 1e18\`, \`balance * 100\`).
+
 ## Reading Contract Data
 \`\`\`tsx
 import { useReadContract } from "wagmi";
